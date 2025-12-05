@@ -1,0 +1,15 @@
+{
+ "creation": "2025-07-14 19:12:57.978930",
+ "docstatus": 0,
+ "doctype": "Client Script",
+ "dt": "User Timesheet",
+ "enabled": 1,
+ "idx": 0,
+ "modified": "2025-11-25 10:09:06.258297",
+ "modified_by": "iodyshev@dinord.email",
+ "module": "Dinext Projects",
+ "name": "UT List Reprocess JE",
+ "owner": "ikhmel@dinord.ru",
+ "script": "function add_reprocces_button( listview ) {\r\n    if (frappe.user.has_role('Dinext_Projects_Director') || frappe.user.has_role('Dinext_Projects_Admin') ) {\r\n        listview.page.add_action_item(__(\"\u041f\u0435\u0440\u0435\u043f\u0440\u043e\u0432\u0435\u0441\u0442\u0438 \u043f\u0440\u043e\u0432\u043e\u0434\u043a\u0438\"), async () => {\r\n            let uts = listview.get_checked_items( false );\r\n            \r\n            const approved_uts = uts.filter(function(element, index) { return element.ut_status == \"\u0421\u043e\u0433\u043b\u0430\u0441\u043e\u0432\u0430\u043d\" });\r\n            \r\n            if ( approved_uts && approved_uts.length ) {\r\n                let total = approved_uts.length ;\r\n                let processed = 0;\r\n                \r\n                frappe.show_progress(__(\"\u041f\u0440\u043e\u0432\u043e\u0434\u0438\u043c...\"), processed, total);\r\n                \r\n                for (approved_ut of approved_uts) {\r\n                    await reprocces_timesheet( approved_ut );\r\n                    processed++;\r\n                    frappe.show_progress(__(\"\u041f\u0440\u043e\u0432\u043e\u0434\u0438\u043c...\"), processed, total);\r\n                }\r\n                \r\n                frappe.hide_progress();\r\n                frappe.show_alert({\r\n                    message:__('\u0414\u0430\u043d\u043d\u044b\u0435 \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u044b'),\r\n                    indicator:'green'\r\n                }, 5);\r\n            }\r\n        });\r\n    }\r\n}\r\n\r\nasync function reprocces_timesheet( doc ) {\r\n    await frappe.call({  \r\n        method: \"process_journal_entries_for_timesheet\",\r\n\t\tquiet: true,\r\n\t\tsilent: true,\r\n\t\targs: {\r\n\t\t\tdoc: doc,\r\n\t\t},\r\n    });  \r\n}",
+ "view": "List"
+}

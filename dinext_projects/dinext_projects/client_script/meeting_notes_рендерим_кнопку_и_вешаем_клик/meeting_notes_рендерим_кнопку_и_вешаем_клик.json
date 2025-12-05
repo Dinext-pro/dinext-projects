@@ -1,0 +1,15 @@
+{
+ "creation": "2025-08-18 14:00:17.399118",
+ "docstatus": 0,
+ "doctype": "Client Script",
+ "dt": "Project",
+ "enabled": 1,
+ "idx": 0,
+ "modified": "2025-11-25 10:05:33.660926",
+ "modified_by": "iodyshev@dinord.email",
+ "module": "Dinext Projects",
+ "name": "Meeting Notes \u0440\u0435\u043d\u0434\u0435\u0440\u0438\u043c \u043a\u043d\u043e\u043f\u043a\u0443 \u0438 \u0432\u0435\u0448\u0430\u0435\u043c \u043a\u043b\u0438\u043a",
+ "owner": "alitavina@dinord.ru",
+ "script": "frappe.ui.form.on('Project', {\r\n  refresh(frm) {\r\n    if (!frm.doc.name) return;\r\n    frm.add_custom_button(__('\u041f\u0440\u043e\u0442\u043e\u043a\u043e\u043b\u044b \u0432\u0441\u0442\u0440\u0435\u0447'), () => {\r\n      frappe.route_options = { project: frm.doc.name };\r\n      frappe.set_route('List', 'Meeting Notes');\r\n      // \u0438\u043b\u0438: frappe.set_route('List','Meeting Notes',{ project: frm.doc.name });\r\n    }, __('View'));\r\n  }\r\n});",
+ "view": "Form"
+}

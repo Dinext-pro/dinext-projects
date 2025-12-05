@@ -1,0 +1,98 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "prompt",
+ "creation": "2025-08-18 12:50:17.679466",
+ "custom": 1,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "type_of_meeting",
+  "column_break_fjox",
+  "project",
+  "section_break_eiiy",
+  "agenda",
+  "section_break_szzo",
+  "decisions",
+  "section_break_uvhf",
+  "assignments"
+ ],
+ "fields": [
+  {
+   "fieldname": "type_of_meeting",
+   "fieldtype": "Link",
+   "label": "Type of meeting",
+   "options": "Type of meeting"
+  },
+  {
+   "fieldname": "column_break_fjox",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "section_break_eiiy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "agenda",
+   "fieldtype": "Table",
+   "label": "Agenda",
+   "options": "Quality Meeting Agenda"
+  },
+  {
+   "fieldname": "section_break_szzo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "decisions",
+   "fieldtype": "Table",
+   "label": "Decisions",
+   "options": "Decisions"
+  },
+  {
+   "fieldname": "section_break_uvhf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "assignments",
+   "fieldtype": "Table",
+   "label": "Assignments",
+   "options": "Assignments"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-11-25 09:34:57.443900",
+ "modified_by": "iodyshev@dinord.email",
+ "module": "Dinext Projects",
+ "name": "Meeting Notes",
+ "naming_rule": "Set by user",
+ "owner": "alitavina@dinord.ru",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
