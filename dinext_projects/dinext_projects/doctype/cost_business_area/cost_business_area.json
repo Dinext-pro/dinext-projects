@@ -1,0 +1,56 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-28 11:33:45.955442",
+ "custom": 1,
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "valid_from",
+  "business_area",
+  "percent"
+ ],
+ "fields": [
+  {
+   "fieldname": "valid_from",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "\u0414\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441",
+   "reqd": 1
+  },
+  {
+   "fieldname": "business_area",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u0411\u0438\u0437\u043d\u0435\u0441 \u0441\u0444\u0435\u0440\u0430",
+   "link_filters": "[[\"Business Area\",\"enabled\",\"=\",1]]",
+   "options": "Business Area",
+   "reqd": 1
+  },
+  {
+   "default": "100",
+   "fieldname": "percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "%",
+   "precision": "2",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-11-25 09:22:48.688517",
+ "modified_by": "Administrator",
+ "module": "Dinext Projects",
+ "name": "Cost Business Area",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,15 @@
+{
+ "creation": "2025-03-17 08:13:09.729015",
+ "docstatus": 0,
+ "doctype": "Client Script",
+ "dt": "Task",
+ "enabled": 1,
+ "idx": 0,
+ "modified": "2025-11-25 10:06:20.694285",
+ "modified_by": "Administrator",
+ "module": "Dinext Projects",
+ "name": "Task_Virtual_Reroute",
+ "owner": "Administrator",
+ "script": "//Issue - ISS-2024-02909\nfrappe.ui.form.on(\"Task\", {\n    refresh (frm) {\n        // If this task is a virtual task linked to an Issue, redirect to that Issue\n        if (frm.doc.type == \"Issue\" && frm.doc.custom_linked_issue) {\n            //\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u0438\u0441\u0442\u043e\u0440\u0438\u044e \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0430\n            history.replaceState(null, null, frappe.router.make_url( frappe.get_prev_route() ) );\n            //\u041f\u0435\u0440\u0435\u043d\u0430\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f\n            frappe.set_route(\"Form\", \"Issue\", frm.doc.custom_linked_issue);\n        }\n    }\n});",
+ "view": "Form"
+}
