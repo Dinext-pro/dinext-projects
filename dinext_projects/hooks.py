@@ -5,6 +5,26 @@ app_description = "Dinext Projects"
 app_email = "info@dinext.ru"
 app_license = "mit"
 
+fixtures = [
+    {
+        "dt": "Report",
+        "filters": {"name": ("in", [
+                                    "Статус по всем ком.проектам",
+                                    "Мои задачи по датам",
+                                    "Контроль ставок по проектам",
+                                    "Отчет по утилизации",
+                                    "Контроль ставок по T&M проектам_V2",
+                                    "Контроль ставок по T&M проектам",
+                                    "Статистика по ТШ",
+                                    "Отчет по ТШ",
+                                    "Отчет для Подрядчиков"
+                                   ])
+                   },
+    },
+]
+
+                     
+
 # Apps
 # ------------------
 
@@ -241,4 +261,3 @@ app_license = "mit"
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-
