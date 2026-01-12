@@ -1,11 +1,12 @@
-# Для выгрузки отчетов через fixtures - разблокировать строки ниже
-#app_name = "dinext_projects"
-#app_title = "Dinext Projects"
-#app_publisher = "Dinext"
-#app_description = "Dinext Projects"
-#app_email = "info@dinext.ru"
-#app_license = "mit"
 
+app_name = "dinext_projects"
+app_title = "Dinext Projects"
+app_publisher = "Dinext"
+app_description = "Dinext Projects"
+app_email = "info@dinext.ru"
+app_license = "mit"
+
+# Для выгрузки отчетов через fixtures - разблокировать строки ниже
 #fixtures = [
 #    {
 #        "dt": "Report",
