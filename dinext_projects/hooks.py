@@ -1,29 +1,29 @@
-app_name = "dinext_projects"
-app_title = "Dinext Projects"
-app_publisher = "Dinext"
-app_description = "Dinext Projects"
-app_email = "info@dinext.ru"
-app_license = "mit"
+# Для выгрузки отчетов через fixtures - разблокировать строки ниже
+#app_name = "dinext_projects"
+#app_title = "Dinext Projects"
+#app_publisher = "Dinext"
+#app_description = "Dinext Projects"
+#app_email = "info@dinext.ru"
+#app_license = "mit"
 
-fixtures = [
-    {
-        "dt": "Report",
-        "filters": {"name": ("in", [
-                                    "Статус по всем ком.проектам",
-                                    "Мои задачи по датам",
-                                    "Контроль ставок по проектам",
-                                    "Отчет по утилизации",
-                                    "Контроль ставок по T&M проектам_V2",
-                                    "Контроль ставок по T&M проектам",
-                                    "Статистика по ТШ",
-                                    "Отчет по ТШ",
-                                    "Отчет для Подрядчиков"
-                                   ])
-                   },
-    },
-]
-
-                     
+#fixtures = [
+#    {
+#        "dt": "Report",
+#        "filters": {"name": ("in", [
+#                                    "Статус по всем ком.проектам",
+#                                    "Мои задачи по датам",
+#                                    "Контроль ставок по проектам",
+#                                    "Отчет по утилизации",
+#                                    "Контроль ставок по T&M проектам_V2",
+#                                    "Контроль ставок по T&M проектам",
+#                                    "Статистика по ТШ",
+#                                    "Отчет по ТШ",
+#                                    "Отчет для Подрядчиков"
+#                                   ])
+#                   },
+#    },
+#]
+# ------------------
 
 # Apps
 # ------------------
