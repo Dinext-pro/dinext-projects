@@ -6,6 +6,11 @@ app_description = "Dinext Projects"
 app_email = "info@dinext.ru"
 app_license = "mit"
 
+fixtures = [
+    "Risk Mitigation Strategy", 
+    "Risk Priority"
+]
+
 # Для выгрузки отчетов через fixtures - разблокировать строки ниже
 #fixtures = [
 #    {
