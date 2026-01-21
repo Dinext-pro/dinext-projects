@@ -1,4 +1,3 @@
-
 app_name = "dinext_projects"
 app_title = "Dinext Projects"
 app_publisher = "Dinext"
