@@ -154,32 +154,7 @@ DocType можно создать двумя способами:
 3. Используйте Form Builder для визуального проектирования
 
 #### Программно
-Создайте JSON файл в `my_app/my_app/doctype/my_doctype/my_doctype.json`:
-
-```json
-{
-    "name": "My DocType",
-    "module": "My Module",
-    "doctype": "DocType",
-    "fields": [
-        {
-            "fieldname": "title",
-            "fieldtype": "Data",
-            "label": "Title",
-            "reqd": 1
-        }
-    ],
-    "permissions": [
-        {
-            "role": "System Manager",
-            "read": 1,
-            "write": 1,
-            "create": 1,
-            "delete": 1
-        }
-    ]
-}
-```
+Создать новый DocType в системе с использованием инструмента create_document. Предварительно необходимо сгенерировать документацию по самому DocType.
 
 ### 4.2 Controller класс
 

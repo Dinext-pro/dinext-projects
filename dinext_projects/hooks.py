@@ -8,7 +8,8 @@ app_license = "mit"
 
 fixtures = [
     "Risk Mitigation Strategy", 
-    "Risk Priority"
+    "Risk Priority",
+    "Risk Probability"
 ]
 
 # Для выгрузки отчетов через fixtures - разблокировать строки ниже
