@@ -21,13 +21,15 @@ fixtures = [
     {
         "doctype": "Client Script",
         "filters": [
-            ["module", "in", ["Dinext Projects"]]
+            ["module", "in", ["Dinext Projects"]],
+            ["enabled", "=", 1]
         ]
     },
     {
         "doctype": "Server Script",
         "filters": [
-            ["module", "in", ["Dinext Projects"]]
+            ["module", "in", ["Dinext Projects"]],
+            ["disabled", "=", 0]
         ]
     }
 ]
