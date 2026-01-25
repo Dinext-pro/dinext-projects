@@ -150,6 +150,12 @@ scheduler_events = {
 
 **КРИТИЧЕСКОЕ ПРАВИЛО: В созданном DocType НИКОГДА не указываем индикатор "Custom". Поле name никогда не создаем кастомное, если можно использовать стандартное.**
 
+**КРИТИЧЕСКОЕ ПРАВИЛО: JSON файлы для DocType НИКОГДА не создаются вручную.** DocType создаются ТОЛЬКО через MCP-инструмент `mcp_erpnext_create_document` с `doctype="DocType"`. JSON файлы DocType создаются автоматически Frappe при создании через MCP и последующей миграции. Не предлагайте создание JSON файлов как альтернативный подход.
+
+**Требования перед созданием DocType:**
+- Убедитесь, что Developer Mode включен: `bench --site sitename.local set-config developer_mode 1`
+- Если Developer Mode не включен, MCP-инструмент вернет ошибку "Not in Developer Mode!"
+
 ### 4.2 Controller класс
 
 **КРИТИЧЕСКОЕ ПРАВИЛО: Файлы контроллеров DocType НИКОГДА не создаются вручную без явной команды пользователя.**
@@ -158,7 +164,33 @@ Frappe автоматически генерирует базовые контр
 - Пользователь явно запросил создание/редактирование контроллера
 - Необходимо добавить кастомную логику (методы validate, on_update и т.д.)
 
-Если контроллер отсутствует и DocType не работает, это обычно означает, что требуется выполнить миграцию (`bench --site sitename.local migrate`), а не создавать файл вручную.
+**ИСКЛЮЧЕНИЕ: Создание DocType через MCP требует предварительного создания базовых контроллеров.**
+
+Когда DocType создается через MCP (не через UI), возникает проблема "курицы и яйца":
+- DocType создан в базе данных через MCP
+- Миграция (`bench --site sitename.local migrate`) не может выполниться, потому что Python не может импортировать модуль контроллера
+- Ошибка: `ImportError: No module named 'app.module.doctype.doctype_name.doctype_name'`
+
+**Решение:** Перед выполнением миграции создайте минимальные файлы контроллера:
+```python
+# app/module/doctype/doctype_name/__init__.py
+# Copyright (c) 2026, App and contributors
+# For license information, please see license.txt
+
+# app/module/doctype/doctype_name/doctype_name.py
+# Copyright (c) 2026, App and contributors
+# For license information, please see license.txt
+
+# import frappe
+from frappe.model.document import Document
+
+class DocTypeName(Document):
+	pass
+```
+
+После создания базовых контроллеров выполните миграцию, которая завершит настройку DocType.
+
+**Если контроллер отсутствует и DocType не работает после миграции**, это обычно означает, что требуется выполнить миграцию повторно (`bench --site sitename.local migrate`), а не создавать файл вручную.
 
 **Пример контроллера (создается только по явной команде):**
 
@@ -1088,6 +1120,18 @@ bench --site sitename.local export-fixtures
 - НИКОГДА не создавайте файлы фикстур вручную, даже если команда не может быть выполнена автоматически
 - При работе с WSL из Windows: сначала выполните команду `wsl`, затем перейдите в нужную директорию, затем выполните команду bench
 - Если экспорт фикстур невозможен автоматически, предоставьте пользователю команду для выполнения, но не создавайте файл вручную
+
+**Перед экспортом фикстур:**
+- Убедитесь, что DocType добавлен в список `fixtures` в `hooks.py`:
+```python
+fixtures = [
+    "DocType Name 1",
+    "DocType Name 2",
+    # ... другие DocType
+]
+```
+- Команда `bench export-fixtures` экспортирует только те DocType, которые указаны в списке `fixtures` в `hooks.py`
+- Если DocType не добавлен в список, он не будет экспортирован, даже если содержит данные
 
 ---
 

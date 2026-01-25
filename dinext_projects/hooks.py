@@ -9,7 +9,9 @@ fixtures = [
     "Risk Mitigation Strategy", 
     "Risk Priority",
     "Risk Probability",
-    "Risk Level"
+    "Risk Level",
+    "Risk Category",
+    "Risk Impact"
 ]
 
 # Для выгрузки отчетов через fixtures - разблокировать строки ниже
