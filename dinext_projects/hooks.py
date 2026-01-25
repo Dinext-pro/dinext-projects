@@ -11,7 +11,25 @@ fixtures = [
     "Risk Probability",
     "Risk Level",
     "Risk Category",
-    "Risk Impact"
+    "Risk Impact",
+    {
+        "doctype": "Custom Field",
+        "filters": [
+            ["module", "in", ["Dinext Projects"]]
+        ]
+    },
+    {
+        "doctype": "Client Script",
+        "filters": [
+            ["module", "in", ["Dinext Projects"]]
+        ]
+    },
+    {
+        "doctype": "Server Script",
+        "filters": [
+            ["module", "in", ["Dinext Projects"]]
+        ]
+    }
 ]
 
 # Для выгрузки отчетов через fixtures - разблокировать строки ниже
