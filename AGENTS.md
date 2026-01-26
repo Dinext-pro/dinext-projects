@@ -102,10 +102,12 @@ my_custom_app/
 - `app_name`, `app_title`, `app_publisher`, `app_description`, `app_email`, `app_license`
 
 #### Assets (JS/CSS)
-- `app_include_js` - JS для Desk
-- `app_include_css` - CSS для Desk
+- `app_include_js` - JS для Desk (используйте только для библиотек, нужных на всех страницах)
+- `app_include_css` - CSS для Desk (используйте только для стилей, нужных на всех страницах)
 - `web_include_js` - JS для веб-страниц
 - `web_include_css` - CSS для веб-страниц
+
+**Важно:** Для большинства случаев предпочтительна динамическая загрузка через `frappe.require()` (см. раздел 6.4) вместо статической загрузки через эти хуки.
 
 #### События документов
 ```python
@@ -611,7 +613,94 @@ frappe.prompt({
 }, __('Enter Value'));
 ```
 
-### 6.4 Создание страниц
+### 6.4 Динамическая загрузка библиотек
+
+**КРИТИЧЕСКОЕ ПРАВИЛО: По возможности ссылки на JS или CSS-файлы не прописываем статично в хуки, а делаем динамическую загрузку через `frappe.require()`.**
+
+Используйте `frappe.require()` для динамической загрузки JavaScript и CSS библиотек вместо статической загрузки через `app_include_js` или `app_include_css` в `hooks.py`.
+
+**Преимущества динамической загрузки:**
+- Ленивая загрузка: библиотека загружается только когда нужна
+- Лучшая производительность: не загружает библиотеки на всех страницах
+- Гибкость: можно загружать библиотеки условно
+- Стандартный подход Frappe
+
+**Пример загрузки одиночного JS файла:**
+
+```javascript
+// Загрузка ECharts из локального файла
+function loadECharts() {
+    if (window.echarts) return Promise.resolve();
+    return new Promise(function(resolve, reject) {
+        frappe.require(['/assets/dinext_projects/js/echarts.min.js'], function() {
+            if (window.echarts) {
+                resolve();
+            } else {
+                reject(new Error('Failed to load ECharts'));
+            }
+        });
+    });
+}
+
+// Использование
+frappe.ui.form.on('My DocType', {
+    refresh: function(frm) {
+        loadECharts().then(function() {
+            // ECharts загружен и доступен как window.echarts
+            let chart = echarts.init(document.getElementById('chart'));
+            chart.setOption({ /* ... */ });
+        });
+    }
+});
+```
+
+**Пример загрузки нескольких файлов:**
+
+```javascript
+frappe.require([
+    '/assets/dinext_projects/js/library1.js',
+    '/assets/dinext_projects/css/library1.css'
+], function() {
+    // Оба файла загружены
+    initializeLibrary();
+});
+```
+
+**Пример загрузки с использованием async/await:**
+
+```javascript
+async function loadLibrary() {
+    if (window.myLibrary) return;
+    
+    await new Promise((resolve, reject) => {
+        frappe.require(['/assets/dinext_projects/js/my-library.js'], function() {
+            if (window.myLibrary) {
+                resolve();
+            } else {
+                reject(new Error('Library not loaded'));
+            }
+        });
+    });
+}
+
+// Использование
+async function initFeature() {
+    await loadLibrary();
+    window.myLibrary.init();
+}
+```
+
+**Когда использовать статическую загрузку в hooks.py:**
+- Библиотека нужна на всех страницах приложения
+- Библиотека критична для работы приложения
+- Библиотека должна быть доступна глобально с самого начала
+
+**Когда использовать динамическую загрузку:**
+- Библиотека нужна только в определенных формах или страницах
+- Библиотека большая и не всегда используется
+- Библиотека загружается условно в зависимости от данных
+
+### 6.5 Создание страниц
 
 Создайте файл `my_app/my_app/www/my_page.py`:
 
