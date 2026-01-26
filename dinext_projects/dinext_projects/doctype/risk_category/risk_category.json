@@ -18,18 +18,19 @@
    "label": "Enabled"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "description",
    "fieldtype": "Text",
+   "in_filter": 1,
    "in_list_view": 1,
    "in_preview": 1,
-   "in_standard_filter": 1,
    "label": "Description"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-01-25 16:09:49.758309",
+ "modified": "2026-01-26 00:18:20.991964",
  "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "Risk Category",
