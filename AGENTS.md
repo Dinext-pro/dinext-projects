@@ -516,6 +516,8 @@ frappe.ui.form.on('Child Table DocType', {
 });
 ```
 
+**API грида и форм:** При обращении к объектам `grid`, `frm.fields_dict`, `grid_rows` и т.п. сверяйте имена свойств (например, `grid_custom_buttons`, а не `grid_toolbar`) с исходным кодом Frappe (`frappe/public/js/frappe/form/grid.js`, `grid_row.js`), а не только с планами или примерами из других приложений.
+
 ### 6.2 Вызов серверных методов
 
 ```javascript
