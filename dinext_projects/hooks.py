@@ -12,6 +12,20 @@ fixtures = [
     "Risk Level",
     "Risk Category",
     "Risk Impact",
+    "Issue Priority",
+    {
+        "doctype": "Issue Type",
+        "filters": [
+            ["name", "in", ["ЗНО", "ЗНИ", "Инцидент"]]
+        ]
+    },
+    {
+        "doctype": "Task Type",
+        "filters": [
+            ["name", "in", ["Issue", "Sprint", "Stage", "Phase"]]
+        ]
+    },
+    
     {
         "doctype": "Custom Field",
         "filters": [
