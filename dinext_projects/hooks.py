@@ -1,10 +1,38 @@
-
 app_name = "dinext_projects"
 app_title = "Dinext Projects"
 app_publisher = "Dinext"
 app_description = "Dinext Projects"
 app_email = "info@dinext.ru"
 app_license = "mit"
+
+fixtures = [
+    "Risk Mitigation Strategy", 
+    "Risk Priority",
+    "Risk Probability",
+    "Risk Level",
+    "Risk Category",
+    "Risk Impact",
+    {
+        "doctype": "Custom Field",
+        "filters": [
+            ["module", "in", ["Dinext Projects"]]
+        ]
+    },
+    {
+        "doctype": "Client Script",
+        "filters": [
+            ["module", "in", ["Dinext Projects"]],
+            ["enabled", "=", 1]
+        ]
+    },
+    {
+        "doctype": "Server Script",
+        "filters": [
+            ["module", "in", ["Dinext Projects"]],
+            ["disabled", "=", 0]
+        ]
+    }
+]
 
 # Для выгрузки отчетов через fixtures - разблокировать строки ниже
 #fixtures = [
@@ -64,7 +92,7 @@ app_license = "mit"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {"Project" : "public/js/project-risk.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
