@@ -1,0 +1,38 @@
+[
+ {
+  "custom_title": "Phase",
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Task Type",
+  "modified": "2025-03-26 09:10:16.218645",
+  "name": "Phase",
+  "weight": 0.0
+ },
+ {
+  "custom_title": "Sprint",
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Task Type",
+  "modified": "2025-03-26 09:09:55.973212",
+  "name": "Sprint",
+  "weight": 0.0
+ },
+ {
+  "custom_title": "Issue",
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Task Type",
+  "modified": "2025-03-26 09:09:45.364785",
+  "name": "Issue",
+  "weight": 0.0
+ },
+ {
+  "custom_title": "Stage",
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Task Type",
+  "modified": "2025-03-26 09:10:05.512108",
+  "name": "Stage",
+  "weight": 0.0
+ }
+]
