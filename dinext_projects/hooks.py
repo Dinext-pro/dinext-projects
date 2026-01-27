@@ -14,6 +14,32 @@ fixtures = [
     "Risk Impact",
     "Issue Priority",
     {
+        "doctype": "Company",
+        "filters": [
+            ["name", "in", ["IT Consulting"]],
+        ]
+    },
+    {
+        "doctype": "Account",
+        "filters": [
+            ["company", "in", ["IT Consulting"]],
+            ["disabled", "=", 0]
+        ]
+    },
+    {
+        "doctype": "Accounting Dimension",
+        "filters": [
+            ["disabled", "=", 0]
+        ]
+    },
+    {
+        "doctype": "Accounting Dimension Filter",
+        "filters": [
+            ["company", "in", ["IT Consulting"]],
+            ["disabled", "=", 0]
+        ]
+    },
+    {
         "doctype": "Issue Type",
         "filters": [
             ["name", "in", ["ЗНО", "ЗНИ", "Инцидент"]]
