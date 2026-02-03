@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 import frappe
 from frappe import local
-from dinord_erpnext_customization.dinord_erpnext_customization.permissions import set_user_light
+from dinext_projects.dinext_projects.permissions import set_user_light
 
 @frappe.whitelist()
 def get_transitions(
