@@ -15,6 +15,8 @@ fixtures = [
     "Issue Priority",
     "Project Payment Scheme",
     "Project Type",
+    "Type Of Leave",
+    "Territory",
     {
         "doctype": "Accounting Dimension",
         "filters": [
