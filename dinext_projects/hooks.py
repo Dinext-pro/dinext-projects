@@ -14,28 +14,8 @@ fixtures = [
     "Risk Impact",
     "Issue Priority",
     {
-        "doctype": "Company",
-        "filters": [
-            ["name", "in", ["IT Consulting"]],
-        ]
-    },
-    {
-        "doctype": "Account",
-        "filters": [
-            ["company", "in", ["IT Consulting"]],
-            ["disabled", "=", 0]
-        ]
-    },
-    {
         "doctype": "Accounting Dimension",
         "filters": [
-            ["disabled", "=", 0]
-        ]
-    },
-    {
-        "doctype": "Accounting Dimension Filter",
-        "filters": [
-            ["company", "in", ["IT Consulting"]],
             ["disabled", "=", 0]
         ]
     },
@@ -51,7 +31,6 @@ fixtures = [
             ["name", "in", ["Issue", "Sprint", "Stage", "Phase"]]
         ]
     },
-    
     {
         "doctype": "Custom Field",
         "filters": [
@@ -70,6 +49,13 @@ fixtures = [
         "filters": [
             ["module", "in", ["Dinext Projects"]],
             ["disabled", "=", 0]
+        ]
+    },
+    {
+        "doctype": "Workspace",
+        "filters": [
+            ["module", "in", ["Dinext Projects"]],
+            ["public", "=", 1]            
         ]
     }
 ]
