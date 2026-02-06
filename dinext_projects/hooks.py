@@ -4,6 +4,8 @@ app_publisher = "Dinext"
 app_description = "Dinext Projects"
 app_email = "info@dinext.ru"
 app_license = "mit"
+app_logo_url  = "public/images/dinext.png"
+app_icon = "public/images/DINEXT_FAVICON.ico"
 
 fixtures = [
     "Risk Mitigation Strategy", 
