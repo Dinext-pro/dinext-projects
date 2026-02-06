@@ -8,8 +8,8 @@ app_logo_url  = "/assets/dinext_projects/images/DI_SQ_NBG.png"
 app_icon = "/assets/dinext_projects/images/DINEXT_FAVICON.ico"
 
 website_context = {
-	"favicon": "assets/dinext_projects/images/DINEXT_FAVICON.ico",
-	"splash_image": "assets/dinext_projects/images/DI_SQ_NBG.png",
+	"favicon": "/assets/dinext_projects/images/DINEXT_FAVICON.ico",
+	"splash_image": "/assets/dinext_projects/images/DI_SQ_NBG.png",
 }
 
 fixtures = [
@@ -23,6 +23,7 @@ fixtures = [
     "Project Payment Scheme",
     "Project Type",
     "Type Of Leave",
+    "Navbar Settings",
     {
         "doctype": "Accounting Dimension",
         "filters": [
