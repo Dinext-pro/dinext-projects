@@ -4,8 +4,13 @@ app_publisher = "Dinext"
 app_description = "Dinext Projects"
 app_email = "info@dinext.ru"
 app_license = "mit"
-app_logo_url  = "/assets/dinext_projects/images/dinext.png"
+app_logo_url  = "/assets/dinext_projects/images/DI_SQ_NBG.png"
 app_icon = "/assets/dinext_projects/images/DINEXT_FAVICON.ico"
+
+website_context = {
+	"favicon": "assets/dinext_projects/images/DINEXT_FAVICON.ico",
+	"splash_image": "assets/dinext_projects/images/DI_SQ_NBG.png",
+}
 
 fixtures = [
     "Risk Mitigation Strategy", 
