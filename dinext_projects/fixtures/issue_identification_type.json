@@ -1,0 +1,9 @@
+[
+ {
+  "description": "Номер в системе Service Desk клиента",
+  "docstatus": 0,
+  "doctype": "Issue Identification Type",
+  "modified": "2026-02-07 22:41:47.177169",
+  "name": "Номер Service Desk"
+ }
+]
