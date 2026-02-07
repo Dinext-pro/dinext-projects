@@ -64,13 +64,6 @@ fixtures = [
         ]
     },
     {
-        "doctype": "Workspace",
-        "filters": [
-            ["module", "in", ["Dinext Projects"]],
-            ["public", "=", 1]            
-        ]
-    },
-    {
         "doctype": "Web Page",
         "filters": [
             ["module", "in", ["Dinext Projects"]],       
