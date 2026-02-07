@@ -33,6 +33,8 @@ frappe.ui.misc.about = function () {
 						${frappe.utils.icon("clipboard")}
 					</button>
 				</div>
+
+				<div id='about-app-versions'>${__("Loading versions...")}</div>
 			</div>`
 	);
 
