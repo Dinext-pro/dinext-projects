@@ -25,6 +25,7 @@ fixtures = [
     "Type Of Leave",
     "Navbar Settings",
     "Website Settings",
+    "Issue Identification Type",
     {
         "doctype": "Accounting Dimension",
         "filters": [
