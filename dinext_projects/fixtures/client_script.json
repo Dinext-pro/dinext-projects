@@ -2,6 +2,17 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
+  "dt": "Issue",
+  "enabled": 1,
+  "modified": "2026-02-07 23:09:07.905307",
+  "module": "Dinext Projects",
+  "name": "Issue_Description_@_Email",
+  "script": "// Тикет --- https://erp.dinord.ru/app/issue/ISS-2024-02522\r\nconst MAX_DESCRIPTION_LENGTH = 30000;\r\n\r\nfrappe.ui.form.on('Issue', {\r\n\tonload(frm) {\r\n\t\t// your code here\r\n\t\tif (!frm.doc.description && !frm.is_new() && frappe.model.can_write(\"Issue\") \r\n\t\t    && frappe.perm.get_field_display_status(frm.get_docfield(\"description\"), frm.doc, frm.perm, false) === 'Write'\r\n\t\t    /**&& !frm.doc.subject.includes('SOP~ABAP_Critical') \r\n            && !frm.doc.subject.includes('REP~ABAP_Critical')/**/) {\r\n            \r\n            comms = frm.get_docinfo().communications;\r\n            \r\n            if ( comms ) {\r\n                frm.set_value('description', comms[comms.length-1].content.substring(0,MAX_DESCRIPTION_LENGTH) );\r\n                \r\n                frappe.show_alert({\r\n                    message:__('В описание запроса перенесены данные из первого вложенного письма.'),\r\n                    indicator:'blue'\r\n                }, 5);\r\n            }\r\n            \r\n\t\t    /*frappe.call({\r\n                method: 'frappe.client.get_list',\r\n                args: {\r\n                    doctype: 'Communication',\r\n                    filters: {\r\n                        reference_doctype: 'Issue',\r\n                        reference_name: frm.doc.name\r\n                    },\r\n                    fields: ['content'],\r\n                    limit: 1,\r\n                    order_by: 'creation asc' \r\n                },\r\n                callback: function(r) {\r\n                    if (r.message && r.message.length > 0) {\r\n                        console.debug(r.message[0].content);\r\n                        frm.set_value('description', r.message[0].content.substring(0,MAX_DESCRIPTION_LENGTH) );\r\n                        frappe.show_alert({\r\n                            message:__('В описание запроса перенесены данные из первого вложенного письма.'),\r\n                            indicator:'blue'\r\n                        }, 5);\r\n                    }\r\n                }\r\n\t\t     });/**/\r\n\t\t}\r\n\t}\r\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
   "dt": "Application For Leave",
   "enabled": 1,
   "modified": "2026-02-03 11:23:45.406030",
