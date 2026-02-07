@@ -9,6 +9,18 @@
     "action": null,
     "condition": null,
     "hidden": 0,
+    "is_standard": 0,
+    "item_label": "Documentation",
+    "item_type": "Route",
+    "parent": "Navbar Settings",
+    "parentfield": "help_dropdown",
+    "parenttype": "Navbar Settings",
+    "route": "https://docs.dinext.ru"
+   },
+   {
+    "action": null,
+    "condition": null,
+    "hidden": 1,
     "is_standard": 1,
     "item_label": "Documentation",
     "item_type": "Route",
@@ -78,7 +90,7 @@
     "route": "https://frappe.io/support"
    }
   ],
-  "modified": "2026-02-06 22:07:18.133086",
+  "modified": "2026-02-07 12:22:06.005242",
   "name": "Navbar Settings",
   "settings_dropdown": [
    {

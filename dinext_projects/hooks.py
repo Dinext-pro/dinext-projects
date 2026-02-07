@@ -24,6 +24,7 @@ fixtures = [
     "Project Type",
     "Type Of Leave",
     "Navbar Settings",
+    "Website Settings",
     {
         "doctype": "Accounting Dimension",
         "filters": [
@@ -112,7 +113,7 @@ fixtures = [
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/dinext_projects/css/dinext_projects.css"
-# app_include_js = "/assets/dinext_projects/js/dinext_projects.js"
+app_include_js = "/assets/dinext_projects/js/dinext-desk.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/dinext_projects/css/dinext_projects.css"
@@ -129,7 +130,7 @@ fixtures = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Project" : "public/js/project-risk.js"}
+doctype_js = {"Project" : "/assets/dinext_projects/js/project-risk.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
