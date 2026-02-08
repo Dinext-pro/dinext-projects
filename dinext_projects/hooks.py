@@ -26,6 +26,7 @@ fixtures = [
     "Navbar Settings",
     "Website Settings",
     "Issue Identification Type",
+    "Role Profile",
     {
         "doctype": "Accounting Dimension",
         "filters": [
@@ -68,6 +69,25 @@ fixtures = [
         "doctype": "Web Page",
         "filters": [
             ["module", "in", ["Dinext Projects"]],       
+        ]
+    },
+    {
+        "doctype": "Role",
+        "filters": [
+            ["name", "like", "%Dinext%"],
+            ["disabled", "=", 0]
+        ]
+    },
+    {
+        "doctype": "Custom DocPerm",
+        "filters": [
+            ["role", "like", "%Dinext%"]
+        ]
+    },
+    {
+        "doctype": "Module Profile",
+        "filters": [
+            ["name", "like", "%Dinext%"]
         ]
     }
 ]
