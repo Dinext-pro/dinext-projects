@@ -27,6 +27,7 @@ fixtures = [
     "Website Settings",
     "Issue Identification Type",
     "Role Profile",
+    "Holiday List",
     {
         "doctype": "Accounting Dimension",
         "filters": [
@@ -88,6 +89,12 @@ fixtures = [
         "doctype": "Module Profile",
         "filters": [
             ["name", "like", "%Dinext%"]
+        ]
+    },    
+    {
+        "doctype": "Working Hours On Date",
+        "filters": [
+            ["name", "in", "Сокращенные рабочие дни РФ"]
         ]
     }
 ]
