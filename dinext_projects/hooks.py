@@ -32,6 +32,7 @@ fixtures = [
     "Workflow Action Master",
     "Calendar View",
     "Custom HTML Block",
+    "Kanban Board",
     {
         "doctype": "Accounting Dimension",
         "filters": [
