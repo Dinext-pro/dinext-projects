@@ -30,6 +30,8 @@ fixtures = [
     "Holiday List",
     "Workflow State",
     "Workflow Action Master",
+    "Calendar View",
+    "Custom HTML Block",
     {
         "doctype": "Accounting Dimension",
         "filters": [
