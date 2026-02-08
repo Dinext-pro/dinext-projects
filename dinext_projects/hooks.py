@@ -96,6 +96,12 @@ fixtures = [
         "filters": [
             ["name", "in", "Сокращенные рабочие дни РФ"]
         ]
+    },    
+    {
+        "doctype": "Timesheet Template",
+        "filters": [
+            ["name", "in", "Внутренняя команда РФ"]
+        ]
     }
 ]
 
