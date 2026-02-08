@@ -28,6 +28,8 @@ fixtures = [
     "Issue Identification Type",
     "Role Profile",
     "Holiday List",
+    "Workflow State",
+    "Workflow Action Master",
     {
         "doctype": "Accounting Dimension",
         "filters": [
@@ -101,6 +103,13 @@ fixtures = [
         "doctype": "Timesheet Template",
         "filters": [
             ["name", "in", "Внутренняя команда РФ"]
+        ]
+    },    
+    {
+        "doctype": "Workflow",
+        "filters": [
+            ["document_type", "in", ["Application For Leave", "User Timesheet Position", "Project", "Expense Claim", "Purchase Invoice", "Sales Invoice"]],
+            ["is_active", "=", 1]            
         ]
     }
 ]
