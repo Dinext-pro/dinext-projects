@@ -4,13 +4,6 @@ app_publisher = "Dinext"
 app_description = "Dinext Projects"
 app_email = "info@dinext.ru"
 app_license = "mit"
-app_logo_url  = "/assets/dinext_projects/images/DI_SQ_NBG.png"
-app_icon = "/assets/dinext_projects/images/DINEXT_FAVICON.ico"
-
-website_context = {
-	"favicon": "/assets/dinext_projects/images/DINEXT_FAVICON.ico",
-	"splash_image": "/assets/dinext_projects/images/DI_SQ_NBG.png",
-}
 
 fixtures = [
     "Risk Mitigation Strategy", 
@@ -22,9 +15,7 @@ fixtures = [
     "Issue Priority",
     "Project Payment Scheme",
     "Project Type",
-    "Type Of Leave",
-    "Navbar Settings",
-    "Website Settings",
+    "Type Of Leave",    
     "Issue Identification Type",
     "Role Profile",
     "Holiday List",
@@ -114,7 +105,13 @@ fixtures = [
             ["document_type", "in", ["Application For Leave", "User Timesheet Position", "Project", "Expense Claim", "Purchase Invoice", "Sales Invoice"]],
             ["is_active", "=", 1]            
         ]
-    }
+    },    
+    {
+        "doctype": "Role Permission for Page and Report",
+        "filters": [
+            ["roles.role", "like", "%Dinext%"]
+        ]
+    }    
 ]
 
 # Для выгрузки отчетов через fixtures - разблокировать строки ниже
@@ -158,7 +155,7 @@ fixtures = [
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/dinext_projects/css/dinext_projects.css"
-app_include_js = "/assets/dinext_projects/js/dinext-desk.js"
+# app_include_js = "/assets/dinext_projects/js/dinext-desk.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/dinext_projects/css/dinext_projects.css"
