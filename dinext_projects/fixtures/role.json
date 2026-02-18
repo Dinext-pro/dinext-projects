@@ -6,32 +6,6 @@
   "doctype": "Role",
   "home_page": null,
   "is_custom": 0,
-  "modified": "2023-08-22 00:49:44.955207",
-  "name": "Dinext_Int_Team",
-  "restrict_to_domain": null,
-  "role_name": "Dinext_Int_Team",
-  "two_factor_auth": 0
- },
- {
-  "desk_access": 1,
-  "disabled": 0,
-  "docstatus": 0,
-  "doctype": "Role",
-  "home_page": null,
-  "is_custom": 0,
-  "modified": "2023-08-22 01:11:56.739052",
-  "name": "Dinext_User_Admin",
-  "restrict_to_domain": null,
-  "role_name": "Dinext_User_Admin",
-  "two_factor_auth": 0
- },
- {
-  "desk_access": 1,
-  "disabled": 0,
-  "docstatus": 0,
-  "doctype": "Role",
-  "home_page": null,
-  "is_custom": 0,
   "modified": "2022-11-02 13:38:11.076064",
   "name": "Dinext_Support_Consultant",
   "restrict_to_domain": null,
@@ -270,6 +244,32 @@
   "name": "Dinext_MDM_Group",
   "restrict_to_domain": null,
   "role_name": "Dinext_MDM_Group",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-02-13 23:16:49.568390",
+  "name": "Dinext_Int_Team",
+  "restrict_to_domain": null,
+  "role_name": "Dinext_Int_Team",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-02-15 22:26:44.585003",
+  "name": "Dinext_User_Admin",
+  "restrict_to_domain": null,
+  "role_name": "Dinext_User_Admin",
   "two_factor_auth": 0
  }
 ]
