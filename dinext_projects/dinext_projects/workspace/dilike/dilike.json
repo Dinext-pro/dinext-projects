@@ -22,7 +22,7 @@
  "is_hidden": 0,
  "label": "DiLike",
  "links": [],
- "modified": "2026-02-07 14:00:24.958382",
+ "modified": "2026-02-19 18:20:21.934774",
  "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "DiLike",
@@ -50,7 +50,11 @@
    "quick_list_filter": "[[\"Task\",\"project\",\"=\",\"PROJ-2025-00005\",false]]"
   }
  ],
- "roles": [],
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ],
  "sequence_id": 44.0,
  "shortcuts": [],
  "title": "DiLike"
