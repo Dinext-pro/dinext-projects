@@ -170,9 +170,9 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2025-02-11 16:03:55.172003",
-  "name": "Остановить Воркфлоу",
-  "workflow_action_name": "Остановить Воркфлоу"
+  "modified": "2025-02-11 16:04:03.842400",
+  "name": "Редактировать",
+  "workflow_action_name": "Редактировать"
  },
  {
   "docstatus": 0,
@@ -184,9 +184,9 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2025-02-11 16:04:03.842400",
-  "name": "Редактировать",
-  "workflow_action_name": "Редактировать"
+  "modified": "2025-02-11 16:03:55.172003",
+  "name": "Остановить Воркфлоу",
+  "workflow_action_name": "Остановить Воркфлоу"
  },
  {
   "docstatus": 0,
