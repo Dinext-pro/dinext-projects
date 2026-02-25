@@ -6,12 +6,6 @@ app_email = "info@dinext.ru"
 app_license = "mit"
 
 fixtures = [
-    "Risk Mitigation Strategy", 
-    "Risk Priority",
-    "Risk Probability",
-    "Risk Level",
-    "Risk Category",
-    "Risk Impact",
     "Issue Priority",
     "Project Payment Scheme",
     "Project Type",
@@ -172,7 +166,7 @@ fixtures = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Project" : "/assets/dinext_projects/js/project-risk.js"}
+# doctype_js = {"Project" : "/assets/dinext_projects/js/project-risk.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
