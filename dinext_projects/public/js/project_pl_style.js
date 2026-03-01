@@ -12,6 +12,9 @@ function applyPLStyle() {
                 display: inline-flex;
                 width: 100%;
             }
+            & .budget-controls .pl-forecast-dropdown-wrapper {
+                margin-left: auto;
+            }
             & .budget-controls .frappe-control {
                 flex: 0 1 150px;
             }
