@@ -7,6 +7,52 @@ frappe.ui.form.on("Project", {
     }
 });
 
+/**
+ * Реестр подпунктов меню "Рассчитать прогноз" над таблицей P&L.
+ * Другие приложения могут добавлять пункты так:
+ *   frappe.provide("dinext_projects.project_pl_forecast_menu");
+ *   dinext_projects.project_pl_forecast_menu = dinext_projects.project_pl_forecast_menu || [];
+ *   dinext_projects.project_pl_forecast_menu.push({ label: __("Мой прогноз"), action: function(frm) { ... } });
+ * Кнопка меню отображается только если добавлен хотя бы один подпункт.
+ */
+frappe.provide("dinext_projects.project_pl_forecast_menu");
+if (!Array.isArray(dinext_projects.project_pl_forecast_menu)) {
+    dinext_projects.project_pl_forecast_menu = [];
+}
+
+function add_pl_forecast_dropdown(frm, controls) {
+    const raw = dinext_projects.project_pl_forecast_menu;
+    const menu_array = Array.isArray(raw) ? raw : [];
+    const items = menu_array.filter(
+        (x) => x && typeof x.label === "string" && typeof x.action === "function"
+    );
+    if (items.length === 0) return;
+
+    const $wrapper = $('<div class="pl-forecast-dropdown-wrapper dropdown"></div>');
+    const $btn = $(`
+        <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            ${__("Рассчитать прогноз")}
+        </button>
+    `);
+    const $menu = $('<ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>');
+
+    items.forEach((item) => {
+        const $li = $('<li role="presentation"></li>');
+        const $a = $(`<a class="dropdown-item" href="#" role="menuitem">${item.label}</a>`);
+        $a.on("click", function(e) {
+            e.preventDefault();
+            item.action(frm);
+            $wrapper.find(".dropdown-menu").removeClass("show");
+            $btn.removeClass("show");
+        });
+        $li.append($a);
+        $menu.append($li);
+    });
+
+    $wrapper.append($btn).append($menu);
+    controls.append($wrapper);
+}
+
 function addBudgetViewOptionsControl(frm, controls) {
     frm.budget_view_options = frm.budget_view_options || __("Прогноз и факт");
     const control = frappe.ui.form.make_control({
@@ -67,6 +113,7 @@ function render_budget_table(frm) {
     frm.bg_hide_empty = frm.bg_hide_empty || true;
     
     addBudgetViewOptionsControl(frm, controls);
+    add_pl_forecast_dropdown(frm, controls);
 
     controls.find('#bg-save_plan').on('click', function() {
         frappe.confirm(
