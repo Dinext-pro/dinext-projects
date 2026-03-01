@@ -166,7 +166,15 @@ fixtures = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"Project" : "/assets/dinext_projects/js/project-risk.js"}
+# doctype_js = {"Project": "public/js/project_pl_entry.js"}
+doctype_js = {"Project": 
+    [
+        "public/js/project_pl_style.js",
+        "public/js/project_pl.js",
+        "public/js/project_pl_calc.js",
+        "public/js/project_pl_dashboard.js"
+    ]
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
