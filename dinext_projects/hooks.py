@@ -19,12 +19,6 @@ fixtures = [
     "Custom HTML Block",
     "Kanban Board",
     {
-        "doctype": "Accounting Dimension",
-        "filters": [
-            ["disabled", "=", 0]
-        ]
-    },
-    {
         "doctype": "Issue Type",
         "filters": [
             ["name", "in", ["ЗНО", "ЗНИ", "Инцидент"]]
@@ -167,14 +161,6 @@ fixtures = [
 
 # include js in doctype views
 # doctype_js = {"Project": "public/js/project_pl_entry.js"}
-doctype_js = {"Project": 
-    [
-        "public/js/project_pl_style.js",
-        "public/js/project_pl.js",
-        "public/js/project_pl_calc.js",
-        "public/js/project_pl_dashboard.js"
-    ]
-}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
