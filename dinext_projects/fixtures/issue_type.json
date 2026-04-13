@@ -1,0 +1,23 @@
+[
+ {
+  "description": "Инцидент, нештатная ситуация",
+  "docstatus": 0,
+  "doctype": "Issue Type",
+  "modified": "2026-01-27 23:39:47.015505",
+  "name": "Инцидент"
+ },
+ {
+  "description": "Запрос на изменение",
+  "docstatus": 0,
+  "doctype": "Issue Type",
+  "modified": "2026-01-27 23:39:34.732412",
+  "name": "ЗНИ"
+ },
+ {
+  "description": "Запрос на обслуживание",
+  "docstatus": 0,
+  "doctype": "Issue Type",
+  "modified": "2026-01-27 23:39:26.199512",
+  "name": "ЗНО"
+ }
+]

@@ -1,0 +1,41 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2024-10-01 14:44:30.538043",
+ "custom": 0,
+ "issingle": 1,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "setting_table"
+ ],
+ "fields": [
+  {
+   "fieldname": "setting_table",
+   "fieldtype": "Table",
+   "label": "Setting Table",
+   "options": "Setting Table"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "module": "Dinext Projects",
+ "name": "Projects Email Mapping",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "states": []
+}

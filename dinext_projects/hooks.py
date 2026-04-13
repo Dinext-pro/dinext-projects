@@ -6,12 +6,30 @@ app_email = "info@dinext.ru"
 app_license = "mit"
 
 fixtures = [
-    "Risk Mitigation Strategy", 
-    "Risk Priority",
-    "Risk Probability",
-    "Risk Level",
-    "Risk Category",
-    "Risk Impact",
+    "Issue Priority",
+    "Project Payment Scheme",
+    "Project Type",
+    "Type Of Leave",    
+    "Issue Identification Type",
+    "Role Profile",
+    "Holiday List",
+    "Workflow State",
+    "Workflow Action Master",
+    "Calendar View",
+    "Custom HTML Block",
+    "Kanban Board",
+    {
+        "doctype": "Issue Type",
+        "filters": [
+            ["name", "in", ["ЗНО", "ЗНИ", "Инцидент"]]
+        ]
+    },
+    {
+        "doctype": "Task Type",
+        "filters": [
+            ["name", "in", ["Issue", "Sprint", "Stage", "Phase"]]
+        ]
+    },
     {
         "doctype": "Custom Field",
         "filters": [
@@ -31,7 +49,57 @@ fixtures = [
             ["module", "in", ["Dinext Projects"]],
             ["disabled", "=", 0]
         ]
-    }
+    },
+    {
+        "doctype": "Web Page",
+        "filters": [
+            ["module", "in", ["Dinext Projects"]],       
+        ]
+    },
+    {
+        "doctype": "Role",
+        "filters": [
+            ["name", "like", "%Dinext%"],
+            ["disabled", "=", 0]
+        ]
+    },
+    {
+        "doctype": "Custom DocPerm",
+        "filters": [
+            ["role", "like", "%Dinext%"]
+        ]
+    },
+    {
+        "doctype": "Module Profile",
+        "filters": [
+            ["name", "like", "%Dinext%"]
+        ]
+    },    
+    {
+        "doctype": "Working Hours On Date",
+        "filters": [
+            ["name", "in", "Сокращенные рабочие дни РФ"]
+        ]
+    },    
+    {
+        "doctype": "Timesheet Template",
+        "filters": [
+            ["name", "in", "Внутренняя команда РФ"]
+        ]
+    },    
+    {
+        "doctype": "Workflow",
+        "filters": [
+            ["document_type", "in", ["Application For Leave", "User Timesheet Position", "Project", "Expense Claim", "Purchase Invoice", "Sales Invoice"]],
+            ["is_active", "=", 1]            
+        ]
+    }#,    
+    #{
+    #   "doctype": "Role Permission for Page and Report",
+    #    "filters": [
+    #        ["roles.role", "like", "%Dinext%"]
+    #    ]
+    #}    
 ]
 
 # Для выгрузки отчетов через fixtures - разблокировать строки ниже
@@ -75,7 +143,7 @@ fixtures = [
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/dinext_projects/css/dinext_projects.css"
-# app_include_js = "/assets/dinext_projects/js/dinext_projects.js"
+# app_include_js = "/assets/dinext_projects/js/dinext-desk.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/dinext_projects/css/dinext_projects.css"
@@ -92,7 +160,7 @@ fixtures = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Project" : "public/js/project-risk.js"}
+# doctype_js = {"Project": "public/js/project_pl_entry.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
