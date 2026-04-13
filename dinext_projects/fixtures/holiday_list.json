@@ -1,6 +1,46 @@
 [
  {
   "color": null,
+  "country": null,
+  "docstatus": 0,
+  "doctype": "Holiday List",
+  "from_date": "2013-01-01",
+  "holiday_list_name": "_Test Holiday List",
+  "holidays": [
+   {
+    "description": "New Year",
+    "holiday_date": "2013-01-01",
+    "parent": "_Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 0
+   },
+   {
+    "description": "Republic Day",
+    "holiday_date": "2013-01-26",
+    "parent": "_Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 0
+   },
+   {
+    "description": "Test Holiday",
+    "holiday_date": "2013-02-01",
+    "parent": "_Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 0
+   }
+  ],
+  "modified": "2026-04-12 22:19:14.714955",
+  "name": "_Test Holiday List",
+  "subdivision": null,
+  "to_date": "2013-12-31",
+  "total_holidays": 3,
+  "weekly_off": ""
+ },
+ {
+  "color": null,
   "country": "RU",
   "docstatus": 0,
   "doctype": "Holiday List",
@@ -1070,5 +1110,437 @@
   "to_date": "2026-12-31",
   "total_holidays": 132,
   "weekly_off": "Saturday"
+ },
+ {
+  "color": null,
+  "country": null,
+  "docstatus": 0,
+  "doctype": "Holiday List",
+  "from_date": "2026-01-01",
+  "holiday_list_name": "Salary Slip Test Holiday List",
+  "holidays": [
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-01-04",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-01-11",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-01-18",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-01-25",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-02-01",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-02-08",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-02-15",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-02-22",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-03-01",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-03-08",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-03-15",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-03-22",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-03-29",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-04-05",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-04-12",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-04-19",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-04-26",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-05-03",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-05-10",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-05-17",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-05-24",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-05-31",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-06-07",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-06-14",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-06-21",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-06-28",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-07-05",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-07-12",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-07-19",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-07-26",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-08-02",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-08-09",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-08-16",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-08-23",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-08-30",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-09-06",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-09-13",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-09-20",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-09-27",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-10-04",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-10-11",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-10-18",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-10-25",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-11-01",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-11-08",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-11-15",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-11-22",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-11-29",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-12-06",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-12-13",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-12-20",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   },
+   {
+    "description": "Sunday",
+    "holiday_date": "2026-12-27",
+    "parent": "Salary Slip Test Holiday List",
+    "parentfield": "holidays",
+    "parenttype": "Holiday List",
+    "weekly_off": 1
+   }
+  ],
+  "modified": "2026-04-13 02:53:59.726382",
+  "name": "Salary Slip Test Holiday List",
+  "subdivision": null,
+  "to_date": "2026-12-31",
+  "total_holidays": 52,
+  "weekly_off": "Sunday"
  }
 ]

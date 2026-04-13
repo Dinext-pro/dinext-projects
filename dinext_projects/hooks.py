@@ -93,13 +93,13 @@ fixtures = [
             ["document_type", "in", ["Application For Leave", "User Timesheet Position", "Project", "Expense Claim", "Purchase Invoice", "Sales Invoice"]],
             ["is_active", "=", 1]            
         ]
-    },    
-    {
-        "doctype": "Role Permission for Page and Report",
-        "filters": [
-            ["roles.role", "like", "%Dinext%"]
-        ]
-    }    
+    }#,    
+    #{
+    #   "doctype": "Role Permission for Page and Report",
+    #    "filters": [
+    #        ["roles.role", "like", "%Dinext%"]
+    #    ]
+    #}    
 ]
 
 # Для выгрузки отчетов через fixtures - разблокировать строки ниже

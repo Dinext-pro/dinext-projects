@@ -3,7 +3,7 @@
   "docstatus": 0,
   "doctype": "Working Hours On Date",
   "hod_from_date": "2025-01-01",
-  "hod_to_date": "2025-12-31",
+  "hod_to_date": "2026-12-31",
   "hod_working_hours_table": [
    {
     "parent": "Сокращенные рабочие дни РФ",
@@ -62,7 +62,7 @@
     "wht_hours": 7.0
    }
   ],
-  "modified": "2026-02-08 17:22:02.720285",
+  "modified": "2026-03-19 12:14:38.948257",
   "name": "Сокращенные рабочие дни РФ"
  }
 ]
