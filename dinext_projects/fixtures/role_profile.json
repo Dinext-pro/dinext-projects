@@ -1,0 +1,167 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2025-04-21 20:35:35.588697",
+  "name": "Финансы",
+  "role_profile": "Финансы",
+  "roles": [
+   {
+    "parent": "Финансы",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_Financier"
+   },
+   {
+    "parent": "Финансы",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_User"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2025-04-21 20:34:41.355788",
+  "name": "Sales-Менеджер",
+  "role_profile": "Sales-Менеджер",
+  "roles": [
+   {
+    "parent": "Sales-Менеджер",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_Int_Team"
+   },
+   {
+    "parent": "Sales-Менеджер",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_Project_Manager"
+   },
+   {
+    "parent": "Sales-Менеджер",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_User"
+   },
+   {
+    "parent": "Sales-Менеджер",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_UTP_Appoval"
+   },
+   {
+    "parent": "Sales-Менеджер",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_Worker"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2025-04-23 09:53:08.452095",
+  "name": "Менеджер Проекта",
+  "role_profile": "Менеджер Проекта",
+  "roles": [
+   {
+    "parent": "Менеджер Проекта",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_Int_Team"
+   },
+   {
+    "parent": "Менеджер Проекта",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_Project_Manager"
+   },
+   {
+    "parent": "Менеджер Проекта",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_Support_Consultant"
+   },
+   {
+    "parent": "Менеджер Проекта",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_Worker"
+   },
+   {
+    "parent": "Менеджер Проекта",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_UTP_Appoval"
+   },
+   {
+    "parent": "Менеджер Проекта",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_User"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2025-04-21 20:30:45.853656",
+  "name": "Внутренний Консультант",
+  "role_profile": "Внутренний Консультант",
+  "roles": [
+   {
+    "parent": "Внутренний Консультант",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_Int_Team"
+   },
+   {
+    "parent": "Внутренний Консультант",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_Support_Consultant"
+   },
+   {
+    "parent": "Внутренний Консультант",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_User"
+   },
+   {
+    "parent": "Внутренний Консультант",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_Worker"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2025-04-21 20:31:21.998275",
+  "name": "Внешний Консультант",
+  "role_profile": "Внешний Консультант",
+  "roles": [
+   {
+    "parent": "Внешний Консультант",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_Support_Consultant"
+   },
+   {
+    "parent": "Внешний Консультант",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_User"
+   },
+   {
+    "parent": "Внешний Консультант",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Dinext_Worker"
+   }
+  ]
+ }
+]

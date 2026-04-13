@@ -1,0 +1,31 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "creation": "2025-04-21 20:56:21.975877",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "ToDo",
+ "enabled": 0,
+ "event": "Method",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<p>\u0421\u043e\u0437\u0434\u0430\u043d\u0430 \u0437\u0430\u0434\u0430\u0447\u0430 \u043d\u0430 \u0441\u043e\u0433\u043b\u0430\u0441\u043e\u0432\u0430\u043d\u0438\u0435 \u0434\u043b\u044f \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430:<br>\n{{ \n    frappe.utils.get_link_to_form( \n        frappe.get_doc('Workflow Task', doc.reference_name).doc, \n        frappe.get_doc('Workflow Task', doc.reference_name).wt_docname, \n        frappe.get_doc('Workflow Task', doc.reference_name).wt_docname ) \n}}\n</p>\n",
+ "message_type": "Markdown",
+ "method": "workflow_approval_notification",
+ "modified": "2026-02-19 18:13:53.629947",
+ "modified_by": "iodyshev@dinord.email",
+ "module": "Dinext Projects",
+ "name": "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f \u0441\u043e\u0433\u043b\u0430\u0441\u043e\u0432\u0430\u043d\u0438\u0435",
+ "owner": "iodyshev@dinord.email",
+ "recipients": [
+  {
+   "receiver_by_document_field": "allocated_to"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "sender": "Notifications",
+ "sender_email": "erpnext@dinord.ru",
+ "subject": "\"\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f \u0441\u043e\u0433\u043b\u0430\u0441\u043e\u0432\u0430\u043d\u0438\u0435 {{ frappe.get_doc('Workflow Task', doc.reference_name).doc }}\""
+}
