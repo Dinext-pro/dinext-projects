@@ -1,5 +1,6 @@
 {
  "aggregate_function_based_on": "",
+ "background_color": "",
  "color": "#EC864B",
  "creation": "2023-04-24 22:16:30.032975",
  "docstatus": 0,
@@ -12,8 +13,8 @@
  "is_public": 1,
  "is_standard": 1,
  "label": "\u0417\u0430\u0434\u0430\u0447\u0438 \u0431\u0435\u0437 \u043e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0445",
- "modified": "2026-02-06 00:08:14.459970",
- "modified_by": "ikhmel@dinord.ru",
+ "modified": "2026-04-26 18:05:21.750888",
+ "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "\u0417\u0430\u0434\u0430\u0447\u0438 \u0431\u0435\u0437 \u043e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0445",
  "owner": "ikhmel@dinord.ru",
