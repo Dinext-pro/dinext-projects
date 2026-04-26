@@ -70,12 +70,6 @@ fixtures = [
         ]
     },
     {
-        "doctype": "Module Profile",
-        "filters": [
-            ["name", "like", "%Dinext%"]
-        ]
-    },    
-    {
         "doctype": "Working Hours On Date",
         "filters": [
             ["name", "in", "Сокращенные рабочие дни РФ"]
@@ -93,13 +87,30 @@ fixtures = [
             ["document_type", "in", ["Application For Leave", "User Timesheet Position", "Project", "Expense Claim", "Purchase Invoice", "Sales Invoice"]],
             ["is_active", "=", 1]            
         ]
-    }#,    
-    #{
-    #   "doctype": "Role Permission for Page and Report",
-    #    "filters": [
-    #        ["roles.role", "like", "%Dinext%"]
-    #    ]
-    #}    
+    },    
+    {
+        "doctype": "DocType Permission",
+        "filters": [
+            ["ref_doctype", "in", 
+                [
+                    "ToDo",
+                    "Sales Invoice",
+                    "Purchase Invoice",
+                    "Timesheet Template",
+                    "User Timesheet",
+                    "User Timesheet Position",
+                    "Worker",
+                    "Task",
+                    "Issue",
+                    "User Delegate",
+                    "Meeting Notes",
+                    "GL Entry",
+                    "Application For Leave"
+                ]
+            ],
+            ["docstatus", "!=", 2]            
+        ]
+    }
 ]
 
 # Для выгрузки отчетов через fixtures - разблокировать строки ниже
