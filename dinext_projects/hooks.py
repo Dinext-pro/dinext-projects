@@ -37,6 +37,12 @@ fixtures = [
         ]
     },
     {
+        "doctype": "Property Setter",
+        "filters": [
+            ["module", "in", ["Dinext Projects"]]
+        ]
+    },
+    {
         "doctype": "Client Script",
         "filters": [
             ["module", "in", ["Dinext Projects"]],

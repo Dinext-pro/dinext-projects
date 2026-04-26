@@ -2,7 +2,6 @@
  "actions": [],
  "allow_rename": 1,
  "creation": "2025-03-13 12:25:15.838696",
- "custom": 1,
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -40,7 +39,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-25 09:27:37.697358",
+ "modified": "2026-04-26 21:05:25.621164",
  "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "Working Hours On Date",
