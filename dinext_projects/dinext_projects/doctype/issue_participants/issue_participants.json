@@ -24,11 +24,13 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Type",
+   "link_filters": "[[\"DocType\",\"name\",\"in\",[\"User\",\"Contact\"]]]",
    "options": "DocType"
   },
   {
    "fieldname": "participant",
    "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
    "label": "Participant",
    "options": "type"
   }
@@ -37,7 +39,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-07 21:18:04.752545",
+ "modified": "2026-04-26 23:34:33.844793",
  "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "Issue Participants",
