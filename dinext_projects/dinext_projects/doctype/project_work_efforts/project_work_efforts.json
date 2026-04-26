@@ -2,7 +2,6 @@
  "actions": [],
  "allow_rename": 1,
  "creation": "2025-03-21 09:29:33.543251",
- "custom": 1,
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -44,8 +43,8 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-25 09:27:36.874676",
- "modified_by": "iodyshev@dinord.email",
+ "modified": "2026-04-26 21:03:54.493161",
+ "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "Project Work Efforts",
  "owner": "iodyshev@dinord.email",

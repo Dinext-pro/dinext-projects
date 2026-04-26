@@ -3,7 +3,6 @@
  "allow_rename": 1,
  "autoname": "prompt",
  "creation": "2025-08-18 12:50:17.679466",
- "custom": 1,
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -68,8 +67,8 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-25 09:34:57.443900",
- "modified_by": "iodyshev@dinord.email",
+ "modified": "2026-04-26 20:59:29.542109",
+ "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "Meeting Notes",
  "naming_rule": "Set by user",

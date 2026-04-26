@@ -3,7 +3,6 @@
  "allow_rename": 1,
  "autoname": "format:{alfrom_date} - {alto_date} -{lauser}",
  "creation": "2025-01-09 09:26:07.371569",
- "custom": 1,
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -140,8 +139,8 @@
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2025-11-25 09:27:54.730027",
- "modified_by": "iodyshev@dinord.email",
+ "modified": "2026-04-26 21:00:57.673542",
+ "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "Application For Leave",
  "naming_rule": "Expression",

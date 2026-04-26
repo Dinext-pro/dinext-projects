@@ -3,7 +3,6 @@
  "allow_rename": 1,
  "autoname": "prompt",
  "creation": "2025-08-18 12:43:08.017499",
- "custom": 1,
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -19,8 +18,8 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-25 09:35:06.941186",
- "modified_by": "iodyshev@dinord.email",
+ "modified": "2026-04-26 21:00:47.267711",
+ "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "Type of meeting",
  "naming_rule": "Set by user",

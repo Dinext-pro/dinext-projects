@@ -3,7 +3,6 @@
  "allow_rename": 1,
  "autoname": "WRKR-.YYYY.-.#####",
  "creation": "2024-12-14 13:15:26.237226",
- "custom": 1,
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -139,8 +138,8 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-25 09:30:31.852582",
- "modified_by": "iodyshev@dinord.email",
+ "modified": "2026-04-26 20:29:15.060772",
+ "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "Worker",
  "naming_rule": "Expression (old style)",
