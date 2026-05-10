@@ -608,5 +608,27 @@
   "name": "Issue_List_Settings V2",
   "script": "frappe.listview_settings['Issue'] = {\n    //colwidths: { subject: 6 },\n    // format how a field value is shown\n    formatters: {\n        priority(val, df, doc) {\n            if ( val == \"Высокий\" ) {\n                return \"<div class='indicator red'>\" + val.bold() + \"</div>\";\n            } else if ( val == \"Средний\" ) {\n                return \"<div class='indicator yellow'>\" + val + \"</div>\";\n            }\n            return val;\n        }\n    },\n    onload(listview) {\n        // triggers once before the list is loaded\n    },\n    refresh: function() {\n    }\n}",
   "view": "List"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Task",
+  "enabled": 1,
+  "modified": "2026-05-11 02:00:52.651587",
+  "module": "Dinext Projects",
+  "name": "Task_Virtual_Reroute",
+  "script": "//Issue - ISS-2024-02909\nfrappe.ui.form.on(\"Task\", {\n    refresh (frm) {\n        // If this task is a virtual task linked to an Issue, redirect to that Issue\n        if (frm.doc.type == \"Issue\" && frm.doc.custom_linked_issue) {\n            //Очистить историю браузера\n            history.replaceState(null, null, frappe.router.make_url( frappe.get_prev_route() ) );\n            //Перенаправляем пользователя\n            frappe.set_route(\"Form\", \"Issue\", frm.doc.custom_linked_issue);\n        }\n    }\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Task",
+  "enabled": 1,
+  "modified": "2026-05-11 02:21:01.255864",
+  "module": "Dinext Projects",
+  "name": "Task_List_Virtual_Reroute",
+  "script": "frappe.listview_settings['Task'] = {\n    add_fields: ['custom_linked_issue'],\n    get_form_link: function(doc) {\n        if (doc.type == \"Issue\" && doc.custom_linked_issue) {\n            return frappe.router.make_url([\"issue\",doc.custom_linked_issue]);\n        }\n        return frappe.router.make_url([\"task\", doc.name]);\n    }\n};",
+  "view": "List"
  }
 ]
