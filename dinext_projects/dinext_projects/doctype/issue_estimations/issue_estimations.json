@@ -9,8 +9,6 @@
  "field_order": [
   "category",
   "grade",
-  "type",
-  "executor",
   "status"
  ],
  "fields": [
@@ -22,25 +20,14 @@
   },
   {
    "fieldname": "grade",
-   "fieldtype": "Int",
+   "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Grade"
   },
   {
-   "fieldname": "type",
-   "fieldtype": "Link",
-   "label": "Type",
-   "options": "DocType"
-  },
-  {
-   "fieldname": "executor",
-   "fieldtype": "Dynamic Link",
-   "label": "Executor",
-   "options": "type"
-  },
-  {
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Status",
    "options": "\u0412 \u043e\u0446\u0435\u043d\u043a\u0435 / \u043d\u0430 \u0434\u043e\u0440\u0430\u0431\u043e\u0442\u043a\u0435\n\u041d\u0430 \u0441\u043e\u0433\u043b\u0430\u0441\u043e\u0432\u0430\u043d\u0438\u0438\n\u0421\u043e\u0433\u043b\u0430\u0441\u043e\u0432\u0430\u043d\u043e"
   }
@@ -49,7 +36,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-07 21:17:41.181248",
+ "modified": "2026-04-26 23:40:37.027677",
  "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "Issue Estimations",

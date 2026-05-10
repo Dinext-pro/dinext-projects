@@ -1,9 +1,9 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:ttsubject",
  "creation": "2024-12-14 12:59:52.635841",
- "custom": 1,
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -125,7 +125,7 @@
    "link_fieldname": "wtimesheet_template"
   }
  ],
- "modified": "2025-11-25 09:28:21.323596",
+ "modified": "2026-04-26 20:29:45.682585",
  "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "Timesheet Template",
