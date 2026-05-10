@@ -3,7 +3,6 @@
  "allow_rename": 1,
  "autoname": "field:payment_scheme",
  "creation": "2025-03-27 19:32:54.853247",
- "custom": 1,
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -28,8 +27,8 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-25 09:27:36.390204",
- "modified_by": "iodyshev@dinord.email",
+ "modified": "2026-04-26 19:06:07.765088",
+ "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "Project Payment Scheme",
  "naming_rule": "By fieldname",
@@ -44,6 +43,7 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "select": 1,
    "share": 1,
    "write": 1
   }

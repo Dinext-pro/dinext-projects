@@ -6,18 +6,54 @@ app_email = "info@dinext.ru"
 app_license = "mit"
 
 fixtures = [
-    "Issue Priority",
     "Project Payment Scheme",
-    "Project Type",
     "Type Of Leave",    
-    "Issue Identification Type",
-    "Role Profile",
-    "Holiday List",
+    "Issue Identification Type",    
     "Workflow State",
-    "Workflow Action Master",
-    "Calendar View",
-    "Custom HTML Block",
-    "Kanban Board",
+    "Workflow Action Master",    
+    {
+        "doctype": "Role Profile",
+        "filters": [
+            ["name", "in", 
+            [
+                "Финансы", 
+                "Менеджер Проекта", 
+                "Внутренний специалист", 
+                "Внешний специалист", 
+                "Sales-Менеджер"
+            ]]
+        ]
+    },
+    {
+        "doctype": "Project Type",
+        "filters": [
+            ["name", "in", ["Внепроектные работы", "Коммерческий", "Внутренний", "Presale"]]
+        ]
+    },
+    {
+        "doctype": "Issue Priority",
+        "filters": [
+            ["name", "in", ["Низкий", "Средний", "Высокий"]]
+        ]
+    },
+    {
+        "doctype": "Custom HTML Block",
+        "filters": [
+            ["name", "in", ["My Kanban", "Idea Picture", "DiLike Picture", "My Calendar", "Leaderboard"]]
+        ]
+    },
+    {
+        "doctype": "Calendar View",
+        "filters": [
+            ["name", "in", ["AFL"]]
+        ]
+    },
+    {
+        "doctype": "Kanban Board",
+        "filters": [
+            ["name", "in", ["Все задачи"]]
+        ]
+    },
     {
         "doctype": "Issue Type",
         "filters": [
@@ -32,6 +68,12 @@ fixtures = [
     },
     {
         "doctype": "Custom Field",
+        "filters": [
+            ["module", "in", ["Dinext Projects"]]
+        ]
+    },
+    {
+        "doctype": "Property Setter",
         "filters": [
             ["module", "in", ["Dinext Projects"]]
         ]
@@ -70,12 +112,6 @@ fixtures = [
         ]
     },
     {
-        "doctype": "Module Profile",
-        "filters": [
-            ["name", "like", "%Dinext%"]
-        ]
-    },    
-    {
         "doctype": "Working Hours On Date",
         "filters": [
             ["name", "in", "Сокращенные рабочие дни РФ"]
@@ -93,14 +129,33 @@ fixtures = [
             ["document_type", "in", ["Application For Leave", "User Timesheet Position", "Project", "Expense Claim", "Purchase Invoice", "Sales Invoice"]],
             ["is_active", "=", 1]            
         ]
-    }#,    
-    #{
-    #   "doctype": "Role Permission for Page and Report",
-    #    "filters": [
-    #        ["roles.role", "like", "%Dinext%"]
-    #    ]
-    #}    
+    },    
+    {
+        "doctype": "DocType Permission",
+        "filters": [
+            ["ref_doctype", "in", 
+                [
+                    "ToDo",
+                    "Sales Invoice",
+                    "Purchase Invoice",
+                    "Timesheet Template",
+                    "User Timesheet",
+                    "User Timesheet Position",
+                    "Worker",
+                    "Task",
+                    "Issue",
+                    "User Delegate",
+                    "Meeting Notes",
+                    "GL Entry",
+                    "Application For Leave"
+                ]
+            ],
+            ["docstatus", "!=", 2]            
+        ]
+    }
 ]
+''' '''
+
 
 # Для выгрузки отчетов через fixtures - разблокировать строки ниже
 #fixtures = [
@@ -200,7 +255,7 @@ fixtures = [
 # ------------
 
 # before_install = "dinext_projects.install.before_install"
-# after_install = "dinext_projects.install.after_install"
+after_install = "dinext_projects.install.after_install"
 
 # Uninstallation
 # ------------

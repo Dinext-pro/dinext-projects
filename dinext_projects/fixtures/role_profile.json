@@ -107,30 +107,30 @@
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2025-04-21 20:30:45.853656",
-  "name": "Внутренний Консультант",
-  "role_profile": "Внутренний Консультант",
+  "modified": "2026-05-11 01:00:24.488913",
+  "name": "Внутренний специалист",
+  "role_profile": "Внутренний специалист",
   "roles": [
    {
-    "parent": "Внутренний Консультант",
+    "parent": "Внутренний специалист",
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Dinext_Int_Team"
    },
    {
-    "parent": "Внутренний Консультант",
+    "parent": "Внутренний специалист",
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Dinext_Support_Consultant"
    },
    {
-    "parent": "Внутренний Консультант",
+    "parent": "Внутренний специалист",
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Dinext_User"
    },
    {
-    "parent": "Внутренний Консультант",
+    "parent": "Внутренний специалист",
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Dinext_Worker"
@@ -140,24 +140,24 @@
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2025-04-21 20:31:21.998275",
-  "name": "Внешний Консультант",
-  "role_profile": "Внешний Консультант",
+  "modified": "2026-05-11 01:04:25.972473",
+  "name": "Внешний специалист",
+  "role_profile": "Внешний специалист",
   "roles": [
    {
-    "parent": "Внешний Консультант",
+    "parent": "Внешний специалист",
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Dinext_Support_Consultant"
    },
    {
-    "parent": "Внешний Консультант",
+    "parent": "Внешний специалист",
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Dinext_User"
    },
    {
-    "parent": "Внешний Консультант",
+    "parent": "Внешний специалист",
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Dinext_Worker"

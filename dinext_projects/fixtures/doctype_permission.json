@@ -1,0 +1,747 @@
+[
+ {
+  "amended_from": null,
+  "conditions": [
+   {
+    "parent": "ToDo_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Owner's Docs",
+    "role": "Dinext_Worker",
+    "script": "conditions = \"assigned_by = %s\" % frappe.db.escape(user)"
+   },
+   {
+    "parent": "ToDo_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "System Manager",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "ToDo_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_User",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "ToDo_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Sales_Manager",
+    "script": "conditions = \"true\""
+   }
+  ],
+  "description": "Пользователь с базовой ролью имеет доступ на чтение назначенных ему ToDo (необходимо для корректной работы связанного клиентского скрипта для User Timesheet)",
+  "docstatus": 1,
+  "doctype": "DocType Permission",
+  "modified": "2025-04-15 16:52:29.066181",
+  "name": "ToDo_Permissions",
+  "ref_doctype": "ToDo",
+  "testing": 0,
+  "title": "ToDo_Permissions"
+ },
+ {
+  "amended_from": null,
+  "conditions": [
+   {
+    "parent": "UTP_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_UT_Full_Access",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "UTP_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_UTP_Appoval",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    `tabUser Timesheet Position`.status != 'Редактирование'\r\n    AND project IN (\r\n        SELECT parent\r\n        FROM `tabProject Team Details` ptd\r\n        WHERE ptd.allow_approval = TRUE\r\n        AND ptd.pt_participant = '{current_user_name}'\r\n        AND EXISTS (\r\n            SELECT 1\r\n            FROM `tabUser Timesheet` tut\r\n            WHERE tut.name = user_timesheet\r\n            AND tut.ts_valid_from <= ptd.pt_valid_for\r\n            AND tut.ts_valid_for >= ptd.pt_valid_from\r\n        )\r\n    )\r\n\"\"\"\r\n"
+   },
+   {
+    "parent": "UTP_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Team_Lead",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    user_timesheet IN (\r\n        SELECT ut.name\r\n        FROM `tabUser Timesheet` ut\r\n        WHERE ut.timesheet_from IN (\r\n            SELECT w.wuser\r\n            FROM tabWorker w\r\n            WHERE w.wuser_group IN (\r\n                SELECT tl.parent\r\n                FROM `tabTeamleads Table` tl\r\n                WHERE tl.teamlead = '{current_user_name}'\r\n                  AND tl.date <= ut.ts_valid_for  # Последняя актуальная запись до конца периода\r\n                  AND NOT EXISTS (\r\n                      SELECT 1\r\n                      FROM `tabTeamleads Table` tl_newer\r\n                      WHERE tl_newer.parent = tl.parent\r\n                        AND tl_newer.date > tl.date\r\n                        AND tl_newer.date <= ut.ts_valid_for\r\n                  )\r\n            )\r\n        )\r\n    )\r\n\"\"\"\r\n"
+   },
+   {
+    "parent": "UTP_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Owner's Docs",
+    "role": "Dinext_Worker",
+    "script": "conditions = \"user = %s\" % frappe.db.escape(user)"
+   },
+   {
+    "parent": "UTP_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Financier",
+    "script": "conditions = \"\"\"\r\n`tabUser Timesheet Position`.user_timesheet IN (\r\n    SELECT `name` \r\n    FROM `tabUser Timesheet` \r\n    WHERE `ut_status` = 'Согласован'\r\n)\r\n\"\"\""
+   },
+   {
+    "parent": "UTP_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Project_Manager",
+    "script": "conditions = \"\"\"\r\n`tabUser Timesheet Position`.user_timesheet IN (\r\n    SELECT `name` \r\n    FROM `tabUser Timesheet` \r\n    WHERE `ut_status` = 'Согласован'\r\n)\r\n\"\"\""
+   },
+   {
+    "parent": "UTP_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Management",
+    "script": "conditions = \"\"\"\r\n`tabUser Timesheet Position`.user_timesheet IN (\r\n    SELECT `name` \r\n    FROM `tabUser Timesheet` \r\n    WHERE `ut_status` = 'Согласован'\r\n)\r\n\"\"\""
+   }
+  ],
+  "description": "1) Пользователь с базовой ролью видит только созданные им UTP\n2) System Manager (можно поменять на любую другую роль супер-пользователя) видит все UTP\n3) Пользователь с базовой ролью видит те UTP, в проектах которых он является участником согласования (allow_approval = TRUE), с учетом периода включения в проектную команду.\n4) Тимлид видит все UTP пользователей своей функциональной группы",
+  "docstatus": 0,
+  "doctype": "DocType Permission",
+  "modified": "2025-12-16 09:19:56.509144",
+  "name": "UTP_Permissions-1",
+  "ref_doctype": "User Timesheet Position",
+  "testing": 1,
+  "title": "UTP_Permissions-1"
+ },
+ {
+  "amended_from": null,
+  "conditions": [
+   {
+    "parent": "UT_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Worker",
+    "script": "conditions = \"timesheet_from  = %s\" % frappe.db.escape(user)"
+   },
+   {
+    "parent": "UT_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_UT_Full_Access",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "UT_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Team_Lead",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    timesheet_from IN (\r\n        SELECT w.wuser\r\n        FROM tabWorker w\r\n        WHERE w.wuser_group IN (\r\n            SELECT tl.parent\r\n            FROM `tabTeamleads Table` tl\r\n            WHERE tl.teamlead = '{current_user_name}'\r\n              AND tl.date <= `tabUser Timesheet`.ts_valid_for  # Последняя актуальная запись до конца периода\r\n              AND NOT EXISTS (\r\n                  SELECT 1\r\n                  FROM `tabTeamleads Table` tl_newer\r\n                  WHERE tl_newer.parent = tl.parent\r\n                    AND tl_newer.date > tl.date\r\n                    AND tl_newer.date <= `tabUser Timesheet`.ts_valid_for\r\n              )\r\n        )\r\n    )\r\n\"\"\"\r\n"
+   },
+   {
+    "parent": "UT_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_UTP_Appoval",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    `tabUser Timesheet`.ut_status NOT IN ('На доработке', 'Черновик')\r\n    AND EXISTS (\r\n        SELECT 1\r\n        FROM `tabProject Team Details` ptd\r\n        WHERE (\r\n            -- Прямая связь: timesheet_from = pt_participant\r\n            ptd.pt_participant = `tabUser Timesheet`.timesheet_from\r\n            OR EXISTS (\r\n                -- Косвенная связь: timesheet_from = user в tabUser Group Member, parent = pt_participant\r\n                SELECT 1\r\n                FROM `tabUser Group Member` ugm\r\n                WHERE ugm.user = `tabUser Timesheet`.timesheet_from\r\n                  AND ugm.parent = ptd.pt_participant\r\n            )\r\n          )\r\n          AND ptd.allow_approval = FALSE\r\n          AND ptd.parent IN (\r\n              SELECT parent\r\n              FROM `tabProject Team Details`\r\n              WHERE pt_participant = '{current_user_name}'\r\n                AND allow_approval = TRUE\r\n          )\r\n          AND `tabUser Timesheet`.ts_valid_from <= ptd.pt_valid_for\r\n          AND `tabUser Timesheet`.ts_valid_for >= ptd.pt_valid_from\r\n    )\r\n\"\"\""
+   },
+   {
+    "parent": "UT_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "System Manager",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "UT_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Project_Manager",
+    "script": "conditions = \"ut_status = 'Согласован'\""
+   },
+   {
+    "parent": "UT_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Management",
+    "script": "conditions = \"ut_status = 'Согласован'\""
+   },
+   {
+    "parent": "UT_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Financier",
+    "script": "conditions = \"ut_status = 'Согласован'\""
+   }
+  ],
+  "description": "1) Пользователь с базовой ролью видит только свои UT\n2) Z_Dinord_UT_Full_Access (можно поменять на любую другую роль супер-пользователя) видит все UT\n3) Тимлид видит все UT пользователей своей функциональной группы\n4) РП видит все UT пользователей своей команды, но ТОЛЬКО свои UTP (см. настройки UTP)",
+  "docstatus": 0,
+  "doctype": "DocType Permission",
+  "modified": "2025-12-16 09:20:09.975258",
+  "name": "UT_Permissions-1",
+  "ref_doctype": "User Timesheet",
+  "testing": 1,
+  "title": "UT_Permissions-1"
+ },
+ {
+  "amended_from": null,
+  "conditions": [
+   {
+    "parent": "Timesheet_Template_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Worker",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    name IN (\r\n    SELECT wtimesheet_template\r\n    FROM tabWorker\r\n    WHERE wuser = '{current_user_name}'\r\n    )\r\n\"\"\""
+   },
+   {
+    "parent": "Timesheet_Template_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "System Manager",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "Timesheet_Template_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_UTP_Appoval",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "Timesheet_Template_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Financier",
+    "script": "conditions = \"true\""
+   }
+  ],
+  "description": "Пользователь с базовой ролью имеет доступ на чтение шаблона ТШ, который записан в его связанной карточке Worker (необходимо для корректной работы связанного клиентского скрипта для User Timesheet)",
+  "docstatus": 0,
+  "doctype": "DocType Permission",
+  "modified": "2025-12-16 09:20:30.713648",
+  "name": "Timesheet_Template_Permissions-1",
+  "ref_doctype": "Timesheet Template",
+  "testing": 1,
+  "title": "Timesheet_Template_Permissions-1"
+ },
+ {
+  "amended_from": null,
+  "conditions": [
+   {
+    "parent": "Worker_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Owner's Docs",
+    "role": "Dinext_Worker",
+    "script": "conditions = \"wuser   = %s\" % frappe.db.escape(user)"
+   },
+   {
+    "parent": "Worker_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "System Manager",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "Worker_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_UTP_Appoval",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "Worker_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Financier",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "Worker_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Management",
+    "script": "conditions = \"true\""
+   }
+  ],
+  "description": "Пользователь с базовой ролью имеет доступ на чтение своей карточки Worker (необходимо для корректной работы связанного клиентского скрипта для User Timesheet)\n\n",
+  "docstatus": 0,
+  "doctype": "DocType Permission",
+  "modified": "2025-12-16 09:19:18.554826",
+  "name": "Worker_Permissions-1",
+  "ref_doctype": "Worker",
+  "testing": 1,
+  "title": "Worker_Permissions-1"
+ },
+ {
+  "amended_from": null,
+  "conditions": [
+   {
+    "parent": "Task_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_User",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    `tabTask`.project IN (\r\n        SELECT parent\r\n        FROM `tabProject Team Details`\r\n        WHERE pt_participant = '{current_user_name}'\r\n    )\r\n\"\"\""
+   },
+   {
+    "parent": "Task_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Team_Lead",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    `tabTask`.name IN (\r\n        SELECT td.reference_name\r\n        FROM `tabToDo` td\r\n        WHERE td.reference_type = 'Issue'\r\n        AND td.status = 'Open'\r\n        AND td.allocated_to IN (\r\n            SELECT ugm.user\r\n            FROM `tabUser Group Member` ugm\r\n            JOIN `tabUser Group` ug ON ug.name = ugm.parent\r\n            WHERE ug.name IN (\r\n                SELECT tl.parent\r\n                FROM `tabTeamleads Table` tl\r\n                WHERE tl.teamlead = '{current_user_name}'\r\n                  AND tl.date <= CURDATE()\r\n                  AND NOT EXISTS (\r\n                      SELECT 1\r\n                      FROM `tabTeamleads Table` tl_newer\r\n                      WHERE tl_newer.parent = tl.parent\r\n                        AND tl_newer.date > tl.date\r\n                        AND tl_newer.date <= CURDATE()\r\n                  )\r\n            )\r\n        )\r\n    )\r\n\"\"\""
+   },
+   {
+    "parent": "Task_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "System Manager",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "Task_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Project_Manager",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "Task_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Support_Consultant",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    `tabTask`.project IN (\r\n        SELECT parent\r\n        FROM `tabProject Team Details`\r\n        WHERE pt_participant = '{current_user_name}'\r\n    )\r\n\"\"\""
+   },
+   {
+    "parent": "Task_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Management",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "Task_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "All",
+    "script": "current_user_name = frappe.session.user\n\nconditions = f\"\"\"\n    `tabTask`.project = 'S-DI-ERPN2' \n    AND `tabTask`.owner = '{current_user_name}'\n\"\"\""
+   }
+  ],
+  "description": "1) Пользователь с базовой ролью видит только Task тех проектов, где он включен на уровне Проектной команды в Текущем периоде\n2) Тимлид видит все Task участников своей функциональной группы\n3) Системный Менеджер и Project_Director видят всё ",
+  "docstatus": 0,
+  "doctype": "DocType Permission",
+  "modified": "2025-12-16 09:18:57.266062",
+  "name": "Task_Permissions",
+  "ref_doctype": "Task",
+  "testing": 1,
+  "title": "Task_Permissions"
+ },
+ {
+  "amended_from": null,
+  "conditions": [
+   {
+    "parent": "Issue_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_User",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    `tabIssue`.project IN (\r\n        SELECT parent\r\n        FROM `tabProject Team Details`\r\n        WHERE pt_participant = '{current_user_name}'\r\n    )\r\n\"\"\""
+   },
+   {
+    "parent": "Issue_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Team_Lead",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    `tabIssue`.name IN (\r\n        SELECT td.reference_name\r\n        FROM `tabToDo` td\r\n        WHERE td.reference_type = 'Issue'\r\n        AND td.status = 'Open'\r\n        AND td.allocated_to IN (\r\n            SELECT ugm.user\r\n            FROM `tabUser Group Member` ugm\r\n            JOIN `tabUser Group` ug ON ug.name = ugm.parent\r\n            WHERE ug.custom_teamlead = '{current_user_name}'\r\n        )\r\n    )\r\n\"\"\""
+   },
+   {
+    "parent": "Issue_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "System Manager",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "Issue_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Project_Manager",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "Issue_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "All",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    `tabIssue`.project = 'S-DI-ERPN2' \r\n    AND `tabIssue`.owner = '{current_user_name}'\r\n\"\"\"\r\n"
+   },
+   {
+    "parent": "Issue_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Customer",
+    "script": "conditions = \"true\""
+   }
+  ],
+  "description": "1) Пользователь с базовой ролью видит только Issue тех проектов, где он включен на уровне Проектной команды в Текущем периоде\n2) Тимлид видит все Issue участников своей функциональной группы\n3) Системный Менеджер и Project_Director видят всё\n4) Доступ к Запросам проекта поддержки Некста - у всех",
+  "docstatus": 0,
+  "doctype": "DocType Permission",
+  "modified": "2025-11-11 11:55:45.480848",
+  "name": "Issue_Permissions",
+  "ref_doctype": "Issue",
+  "testing": 1,
+  "title": "Issue_Permissions"
+ },
+ {
+  "amended_from": null,
+  "conditions": [
+   {
+    "parent": "AFL_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Owner's Docs",
+    "role": "Dinext_Worker",
+    "script": "conditions = \"lauser = %s\" % frappe.db.escape(user)"
+   },
+   {
+    "parent": "AFL_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_UT_Full_Access",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "AFL_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Team_Lead",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    lauser IN (\r\n        SELECT wuser\r\n        FROM tabWorker\r\n        WHERE wuser_group IN (\r\n            SELECT tl.parent\r\n            FROM `tabTeamleads Table` tl\r\n            WHERE tl.teamlead = '{current_user_name}'\r\n              AND tl.date <= `tabApplication For Leave`.alfrom_date\r\n              AND NOT EXISTS (\r\n                  SELECT 1\r\n                  FROM `tabTeamleads Table` tl_newer\r\n                  WHERE tl_newer.parent = tl.parent\r\n                    AND tl_newer.date > tl.date\r\n                    AND tl_newer.date <= `tabApplication For Leave`.alfrom_date\r\n              )\r\n        )\r\n    )\r\n\"\"\""
+   },
+   {
+    "parent": "AFL_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_UTP_Appoval",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    `tabApplication For Leave`.name IN (\r\n        SELECT up.parent\r\n        FROM `tabUser Projects` up\r\n        WHERE up.project IN (\r\n            SELECT ptd.parent\r\n            FROM `tabProject Team Details` ptd\r\n            WHERE ptd.allow_approval = TRUE\r\n            AND ptd.pt_participant = '{current_user_name}'\r\n            AND ptd.pt_valid_from <= `tabApplication For Leave`.alfrom_date\r\n            AND ptd.pt_valid_for >= `tabApplication For Leave`.alto_date\r\n        )\r\n    )\r\n\"\"\""
+   },
+   {
+    "parent": "AFL_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Financier",
+    "script": "conditions = \"status = 'Согласовано'\""
+   },
+   {
+    "parent": "AFL_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Project_Manager",
+    "script": "conditions = \"status = 'Согласовано'\""
+   },
+   {
+    "parent": "AFL_Permissions-1",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Sales_Manager",
+    "script": "conditions = \"status = 'Согласовано'\""
+   }
+  ],
+  "description": "1) Пользователь с базовой ролью видит только созданные им AFL\n2) System Manager (можно поменять на любую другую роль супер-пользователя) видит все AFL\n3) Пользователь с базовой ролью видит те AFL, в проектах которых он является участником согласования (allow_approval = TRUE), с учетом периода включения в проектную команду\n4) Тимлид видит все AFL пользователей своей функциональной группы",
+  "docstatus": 0,
+  "doctype": "DocType Permission",
+  "modified": "2025-07-14 07:36:43.934529",
+  "name": "AFL_Permissions-1",
+  "ref_doctype": "Application For Leave",
+  "testing": 1,
+  "title": "AFL_Permissions-1"
+ },
+ {
+  "amended_from": null,
+  "conditions": [
+   {
+    "parent": "PI_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "System Manager",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "PI_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Projects_Director",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "PI_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Project_Manager",
+    "script": "current_user = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    `tabPurchase Invoice`.project IN (\r\n        SELECT `tabProject Team Details`.parent \r\n        FROM `tabProject Team Details`\r\n        WHERE `tabProject Team Details`.pt_participant = '{current_user}'\r\n    )\r\n\"\"\""
+   },
+   {
+    "parent": "PI_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Financier",
+    "script": "conditions = \"`tabPurchase Invoice`.docstatus = 1\""
+   },
+   {
+    "parent": "PI_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Projects_Admin",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "PI_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Management",
+    "script": "conditions = \"true\""
+   }
+  ],
+  "description": "1) Администратор и Z_Dinord_Projects_Director видят все;\n2) РП и Сейлы видят только те, в Проектную команду которых включены;\n3) Финансисты видят все согласованные",
+  "docstatus": 0,
+  "doctype": "DocType Permission",
+  "modified": "2026-02-12 11:39:14.692406",
+  "name": "PI_Permissions",
+  "ref_doctype": "Purchase Invoice",
+  "testing": 1,
+  "title": "PI_Permissions"
+ },
+ {
+  "amended_from": null,
+  "conditions": [
+   {
+    "parent": "SI_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "System Manager",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "SI_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Projects_Admin",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "SI_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Project_Manager",
+    "script": "current_user = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    `tabSales Invoice`.project IN (\r\n        SELECT `tabProject Team Details`.parent \r\n        FROM `tabProject Team Details`\r\n        WHERE `tabProject Team Details`.pt_participant = '{current_user}'\r\n    )\r\n\"\"\""
+   },
+   {
+    "parent": "SI_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Financier",
+    "script": "conditions = \"`tabSales Invoice`.docstatus = 1\""
+   },
+   {
+    "parent": "SI_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Management",
+    "script": "conditions = \"true\""
+   }
+  ],
+  "description": "1) Администратор и Z_Dinord_Projects_Admin видят все;\n2) РП и Сейлы видят только те, в Проектную команду которых включены;\n3) Финансисты видят все согласованные",
+  "docstatus": 0,
+  "doctype": "DocType Permission",
+  "modified": "2026-02-12 11:39:37.633564",
+  "name": "SI_Permissions",
+  "ref_doctype": "Sales Invoice",
+  "testing": 1,
+  "title": "SI_Permissions"
+ },
+ {
+  "amended_from": null,
+  "conditions": [
+   {
+    "parent": "GL Entry Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "System Manager",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "GL Entry Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Projects_Admin",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "GL Entry Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Project_Manager",
+    "script": "current_user = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    `tabGL Entry`.project IN (\r\n        SELECT `tabProject Team Details`.parent \r\n        FROM `tabProject Team Details`\r\n        WHERE `tabProject Team Details`.pt_participant = '{current_user}'\r\n    )\r\n\"\"\""
+   },
+   {
+    "parent": "GL Entry Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Financier",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "GL Entry Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Management",
+    "script": "conditions = \"true\""
+   }
+  ],
+  "description": "1) Администратор, Финансисты и Z_Dinord_Projects_Admin видят все;\n2) РП видят только те, в Проектную команду которых включены;",
+  "docstatus": 0,
+  "doctype": "DocType Permission",
+  "modified": "2025-08-07 15:45:38.343488",
+  "name": "GL Entry Permissions",
+  "ref_doctype": "GL Entry",
+  "testing": 1,
+  "title": "GL Entry Permissions"
+ },
+ {
+  "amended_from": null,
+  "conditions": [
+   {
+    "parent": "Meeting Notes_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_User",
+    "script": "current_user_name = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n    `tabMeeting Notes`.project IN (\r\n        SELECT parent\r\n        FROM `tabProject Team Details`\r\n        WHERE pt_participant = '{current_user_name}'\r\n    )\r\n\"\"\""
+   },
+   {
+    "parent": "Meeting Notes_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "System Manager",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "Meeting Notes_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Projects_Director",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "Meeting Notes_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Projects_Admin",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "Meeting Notes_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "Dinext_Project_Manager",
+    "script": "conditions = \"true\""
+   }
+  ],
+  "description": null,
+  "docstatus": 0,
+  "doctype": "DocType Permission",
+  "modified": "2025-08-18 14:20:33.592668",
+  "name": "Meeting Notes_Permissions",
+  "ref_doctype": "Meeting Notes",
+  "testing": 1,
+  "title": "Meeting Notes_Permissions"
+ },
+ {
+  "amended_from": null,
+  "conditions": [
+   {
+    "parent": "User Delegate_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Full Access",
+    "role": "System Manager",
+    "script": "conditions = \"true\""
+   },
+   {
+    "parent": "User Delegate_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_User",
+    "script": "current_user = frappe.session.user\r\n\r\nconditions = f\"\"\" delegator = '{current_user}'\r\n\"\"\""
+   },
+   {
+    "parent": "User Delegate_Permissions",
+    "parentfield": "conditions",
+    "parenttype": "DocType Permission",
+    "perm_level": "Custom Query",
+    "role": "Dinext_Team_Lead",
+    "script": "current_user = frappe.session.user\r\n\r\nconditions = f\"\"\"\r\n`tabUser Delegate`.delegator IN (\r\n    SELECT DISTINCT ugm.user\r\n    FROM `tabUser Group Member` ugm\r\n    JOIN `tabUser Group` ug ON ug.name = ugm.parent\r\n    WHERE ug.name IN (\r\n        SELECT tl.parent\r\n        FROM `tabTeamleads Table` tl\r\n        WHERE tl.teamlead = '{current_user}'\r\n            AND tl.date <= CURDATE()\r\n            AND NOT EXISTS (\r\n                SELECT 1\r\n                FROM `tabTeamleads Table` tl_newer\r\n                WHERE tl_newer.parent = tl.parent\r\n                    AND tl_newer.date <= CURDATE()\r\n                    AND tl_newer.date > tl.date\r\n            )\r\n    )\r\n)\r\n\"\"\""
+   }
+  ],
+  "description": "1) Пользователь с базовой ролью видит только свои\n2) Тимлид видит и может редактировать все UD участников своей функциональной группы\n3) Системный Менеджер может всё",
+  "docstatus": 0,
+  "doctype": "DocType Permission",
+  "modified": "2025-09-10 10:20:31.054723",
+  "name": "User Delegate_Permissions",
+  "ref_doctype": "User Delegate",
+  "testing": 1,
+  "title": "User Delegate_Permissions"
+ }
+]
