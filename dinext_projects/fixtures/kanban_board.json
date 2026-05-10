@@ -1,0 +1,102 @@
+[
+ {
+  "columns": [
+   {
+    "column_name": "Open",
+    "indicator": "Cyan",
+    "order": "",
+    "parent": "Все задачи",
+    "parentfield": "columns",
+    "parenttype": "Kanban Board",
+    "status": "Active"
+   },
+   {
+    "column_name": "Working",
+    "indicator": "Blue",
+    "order": "[]",
+    "parent": "Все задачи",
+    "parentfield": "columns",
+    "parenttype": "Kanban Board",
+    "status": "Active"
+   },
+   {
+    "column_name": "Overdue",
+    "indicator": "Red",
+    "order": "[]",
+    "parent": "Все задачи",
+    "parentfield": "columns",
+    "parenttype": "Kanban Board",
+    "status": "Active"
+   },
+   {
+    "column_name": "Pending Review",
+    "indicator": "Light Blue",
+    "order": "[]",
+    "parent": "Все задачи",
+    "parentfield": "columns",
+    "parenttype": "Kanban Board",
+    "status": "Active"
+   },
+   {
+    "column_name": "Completed",
+    "indicator": "Green",
+    "order": "[]",
+    "parent": "Все задачи",
+    "parentfield": "columns",
+    "parenttype": "Kanban Board",
+    "status": "Active"
+   },
+   {
+    "column_name": "Cancelled",
+    "indicator": "Gray",
+    "order": "[]",
+    "parent": "Все задачи",
+    "parentfield": "columns",
+    "parenttype": "Kanban Board",
+    "status": "Active"
+   }
+  ],
+  "custom_highlight_table": [
+   {
+    "color": "red",
+    "parent": "Все задачи",
+    "parentfield": "custom_highlight_table",
+    "parenttype": "Kanban Board",
+    "tag": "Urgent"
+   },
+   {
+    "color": "orange",
+    "parent": "Все задачи",
+    "parentfield": "custom_highlight_table",
+    "parenttype": "Kanban Board",
+    "tag": "High"
+   },
+   {
+    "color": "yellow",
+    "parent": "Все задачи",
+    "parentfield": "custom_highlight_table",
+    "parenttype": "Kanban Board",
+    "tag": "Medium"
+   },
+   {
+    "color": "gray",
+    "parent": "Все задачи",
+    "parentfield": "custom_highlight_table",
+    "parenttype": "Kanban Board",
+    "tag": "Low"
+   }
+  ],
+  "custom_highlighted_field": "priority",
+  "docstatus": 0,
+  "doctype": "Kanban Board",
+  "field_name": "status",
+  "fields": "[\"exp_end_date\",\"priority\",\"project\",\"type\"]",
+  "filters": null,
+  "kanban_board_name": "Все задачи",
+  "modified": "2026-05-11 00:01:49.802198",
+  "name": "Все задачи",
+  "private": 0,
+  "reference_doctype": "Task",
+  "show_labels": 1
+ }
+]
