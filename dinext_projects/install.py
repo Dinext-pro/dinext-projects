@@ -19,6 +19,7 @@ def after_install():
 
 
 def clear_standard_project_type_and_issue_priority():
+	# ERPNext ProjectType.on_trash blocks "External"; skip trash hooks during cleanup.
 	for name in _STANDARD_PROJECT_TYPES:
 		frappe.delete_doc(
 			"Project Type",
@@ -26,6 +27,7 @@ def clear_standard_project_type_and_issue_priority():
 			force=True,
 			ignore_permissions=True,
 			ignore_missing=True,
+			ignore_on_trash=True,
 		)
 
 	for name in _issue_priority_erpnext_names():
@@ -35,6 +37,7 @@ def clear_standard_project_type_and_issue_priority():
 			force=True,
 			ignore_permissions=True,
 			ignore_missing=True,
+			ignore_on_trash=True,
 		)
 
 
