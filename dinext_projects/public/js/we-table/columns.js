@@ -1,4 +1,5 @@
-// === columns.js: get_columns_definition ===
+// we-table/columns.js — get_columns_definition + role add/delete handlers
+// ISS-2025-01239
 
 function get_columns_definition(frm, periodType, unit) {
     let columns = [];
@@ -18,7 +19,7 @@ function get_columns_definition(frm, periodType, unit) {
             let taskId = data?.value;
             let missingRoles = frm._missingPlanMap?.[taskId];
 
-            // Оборачиваем в div с data-task-id --- нужно для поиска что сворачиваем в expandParents
+            // Оборачиваем в div с data-task-id для поиска при expandParents
             let html = `<div data-task-id="${taskId}"`;
 
             if (missingRoles && missingRoles.length > 0) {
@@ -55,7 +56,9 @@ function get_columns_definition(frm, periodType, unit) {
 
                 role_data.forEach(r => {
                     let isMissing = missingRoles.includes(r.role);
-                    let tooltipAttr = isMissing ? ` data-tooltip="${__("Не определены трудозатраты для роли: {0}", [r.role])}"` : '';
+                    let tooltipAttr = isMissing
+                        ? ` data-tooltip="${__("Не определены трудозатраты для роли: {0}", [r.role])}"`
+                        : '';
 
                     roleLines += `<div class='we-role ${isMissing ? "miss-plan" : ""}' ${tooltipAttr}>`;
                     roleLines += r.role ? __(r.role) : "-";
@@ -78,6 +81,7 @@ function get_columns_definition(frm, periodType, unit) {
                             </span>
                         </button>`;
                     }
+
                     roleLines += `</div>`;
                 });
 
@@ -183,7 +187,7 @@ function get_columns_definition(frm, periodType, unit) {
                     html += `</div>`;
                 }
 
-                // Если нет ни одной строки (нет ролей и нет назначений), добавляем пустую строку для кликабельности
+                // Если нет ни одной строки, добавляем пустую для кликабельности
                 if (role_data.length === 0 && remainingRoles.length === 0) {
                     html += `<div class="assignment-row" data-task="${task_id}"></div>`;
                 }
@@ -195,12 +199,14 @@ function get_columns_definition(frm, periodType, unit) {
     }
 
     /*
-    Вместо вложенных columns формируем одну колонку, внутри которой вручную выводим три значения.
-    Для редактирования (если период текущий или будущий) мы делаем значение "факт/прогноз" кликабельным.
-    */
+     * Вместо вложенных columns формируем одну колонку, внутри которой вручную выводим три значения.
+     * Для редактирования (если период текущий или будущий) делаем значение "факт/прогноз" кликабельным.
+     */
     let periods = get_display_periods(frm, periodType);
     periods.forEach(function(period) {
+        // Если период в прошлом – отображаем "факт", иначе "прогноз"
         let subcolumn_label = period.is_past ? __("Факт") : __("Прогноз");
+
         columns.push({
             name: `<div style="text-align:center;">
                     ${period.year} ${period.month}<br/>
@@ -298,7 +304,9 @@ function get_columns_definition(frm, periodType, unit) {
                             if (plan == 0) planClasses += " zero";
 
                             let rolePeriods = taskPeriodsMap[roleName];
-                            let isMissingPeriod = rolePeriods ? rolePeriods.some(p => p.year == period.year && p.month == period.month) : false;
+                            let isMissingPeriod = rolePeriods
+                                ? rolePeriods.some(p => p.year == period.year && p.month == period.month)
+                                : false;
                             if (isMissingPeriod) planClasses += " missing-plan-highlight";
 
                             lines += `<div class="${planClasses}" data-role="${roleName}"><span>${plan}</span></div>`;
@@ -317,8 +325,8 @@ function get_columns_definition(frm, periodType, unit) {
                     role_data.forEach(function(r) {
                         let roleName = r.role || '';
                         let actual = period.is_past
-                                     ? (r[`fact_${period.year}_${period.month}`] || 0)
-                                     : (r[`forecast_${period.year}_${period.month}`] || 0);
+                            ? (r[`fact_${period.year}_${period.month}`] || 0)
+                            : (r[`forecast_${period.year}_${period.month}`] || 0);
 
                         let actualClasses = "we-role-value";
                         if (actual == 0) actualClasses += " zero";
@@ -353,8 +361,8 @@ function get_columns_definition(frm, periodType, unit) {
                         role_data.forEach(function(r) {
                             let plan = r[`plan_${period.year}_${period.month}`] || 0;
                             let actual = period.is_past
-                                         ? (r[`fact_${period.year}_${period.month}`] || 0)
-                                         : (r[`forecast_${period.year}_${period.month}`] || 0);
+                                ? (r[`fact_${period.year}_${period.month}`] || 0)
+                                : (r[`forecast_${period.year}_${period.month}`] || 0);
                             let delta = plan ? (((actual - plan) / plan) * 100).toFixed(1) : 0;
 
                             let deltaClasses = "we-role-value";
@@ -422,7 +430,11 @@ function get_columns_definition(frm, periodType, unit) {
                             total_forecast += f;
                         }
                     });
-                    let delta = total_plan ? (((total_forecast - total_plan) / total_plan) * 100).toFixed(1) : 0;
+
+                    let delta = total_plan
+                        ? (((total_forecast - total_plan) / total_plan) * 100).toFixed(1)
+                        : 0;
+
                     lines += `<div class="work-efforts-group"
                             data-task="${data.value}"
                             data-role="${r.role || ''}">
@@ -441,3 +453,187 @@ function get_columns_definition(frm, periodType, unit) {
 
     return columns;
 }
+
+window.get_columns_definition = get_columns_definition;
+
+// Обработчик выбора новой роли из выпадающего списка
+$(document).on('change', '.new-role-select', function(e) {
+    let newRole = $(this).val();
+    if (!newRole) return;
+
+    let task = $(this).data('task');
+
+    let aggregatedTasks = cur_frm.aggregatedTasks || {};
+
+    let taskData = null;
+    if (Array.isArray(aggregatedTasks)) {
+        taskData = aggregatedTasks.find(t => t && t.value === task);
+    } else {
+        taskData = aggregatedTasks[task];
+    }
+
+    if (taskData) {
+        let role_data = taskData.role_data || [];
+        let exists = role_data.some(r => r && r.role === newRole);
+
+        if (!exists) {
+            frappe.db.get_list("Project Work Efforts", {
+                filters: {
+                    pwe_project: cur_frm.doc.name,
+                    pwe_task: task,
+                    pwe_project_role: newRole
+                },
+                fields: ["name"],
+                limit: 1
+            }).then(result => {
+                if (result && result.length > 0) {
+                    return Promise.resolve(result[0]);
+                } else {
+                    let new_doc = {
+                        doctype: "Project Work Efforts",
+                        pwe_project: cur_frm.doc.name,
+                        pwe_task: task,
+                        pwe_project_role: newRole
+                    };
+                    return frappe.db.insert(new_doc);
+                }
+            }).then(() => {
+                if (!taskData.role_data) {
+                    taskData.role_data = [];
+                }
+                taskData.role_data.push({ role: newRole });
+
+                // Очистка кэша назначений
+                clear_assignments_cache();
+
+                if (cur_frm._tasksByParent) {
+                    cur_frm._tasksByParent = null;
+                }
+                clearTaskIndexCacheFor(cur_frm.aggregatedTasks);
+
+                buildWorkloadPeriodsMap(cur_frm).then(() => {
+                    if (cur_frm.show_assignments) {
+                        load_all_assignments_if_needed(cur_frm).then(() => {
+                            updateTable(cur_frm, "month", "hours");
+                        });
+                    } else {
+                        updateTable(cur_frm, "month", "hours");
+                    }
+                });
+
+                frappe.show_alert({
+                    message: __('Роль {0} добавлена', [newRole]),
+                    indicator: 'green'
+                }, 3);
+            }).catch(err => {
+                console.error("Ошибка при создании Project Work Efforts:", err);
+                frappe.msgprint(__("Ошибка при добавлении роли"));
+            });
+        } else {
+            updateTable(cur_frm, "month", "hours");
+        }
+    }
+});
+
+// Обработчик удаления роли
+$(document).on('click', '.delete-role-btn', function(e) {
+    e.stopPropagation();
+    let btn = $(this);
+    let task = btn.data("task");
+    let role = btn.data("role");
+
+    frappe.confirm(
+        __("Вы действительно хотите удалить роль {0} для задачи {1}?", [role, task]),
+        () => {
+            console.log(`=== УДАЛЕНИЕ РОЛИ ===`);
+            console.log(`Задача: ${task}, Роль: "${role}"`);
+
+            frappe.db.get_list("Project Work Efforts", {
+                filters: {
+                    pwe_project: cur_frm.doc.name,
+                    pwe_task: task,
+                    pwe_project_role: role
+                },
+                fields: ["name", "pwe_project_role"],
+                limit: 10
+            }).then(result => {
+                console.log(`Найдено PWE для роли "${role}":`, result);
+
+                if (result && result.length > 0) {
+                    let deletePromises = result.map(doc => {
+                        console.log(`Удаляем PWE: ${doc.name}, роль: ${doc.pwe_project_role}`);
+                        return frappe.call({
+                            method: 'frappe.client.delete',
+                            args: {
+                                doctype: "Project Work Efforts",
+                                name: doc.name
+                            }
+                        });
+                    });
+                    return Promise.all(deletePromises);
+                } else {
+                    console.warn(`PWE для роли "${role}" не найден!`);
+
+                    return frappe.db.get_list("Project Work Efforts", {
+                        filters: {
+                            pwe_project: cur_frm.doc.name,
+                            pwe_task: task
+                        },
+                        fields: ["name", "pwe_project_role"],
+                        limit: 100
+                    }).then(allDocs => {
+                        console.log(`Все PWE для задачи ${task}:`, allDocs);
+                        return Promise.resolve();
+                    });
+                }
+            }).then(() => {
+                console.log(`=== ОБНОВЛЕНИЕ ЛОКАЛЬНЫХ ДАННЫХ ===`);
+
+                let aggregatedTasks = cur_frm.aggregatedTasks || [];
+                let taskData = null;
+
+                if (Array.isArray(aggregatedTasks)) {
+                    taskData = aggregatedTasks.find(t => t && t.value === task);
+                } else {
+                    taskData = aggregatedTasks[task];
+                }
+
+                if (taskData && taskData.role_data) {
+                    console.log(`Роли до удаления:`, taskData.role_data.map(r => r.role));
+                    taskData.role_data = taskData.role_data.filter(r => r.role !== role);
+                    console.log(`Роли после удаления:`, taskData.role_data.map(r => r.role));
+                } else {
+                    console.warn(`taskData или role_data не найдены!`);
+                }
+
+                // Очистка кэша назначений
+                clear_assignments_cache();
+
+                if (cur_frm._tasksByParent) {
+                    cur_frm._tasksByParent = null;
+                }
+                clearTaskIndexCacheFor(cur_frm.aggregatedTasks);
+
+                console.log(`=== ОБНОВЛЕНИЕ ТАБЛИЦЫ ===`);
+
+                buildWorkloadPeriodsMap(cur_frm).then(() => {
+                    if (cur_frm.show_assignments) {
+                        load_all_assignments_if_needed(cur_frm).then(() => {
+                            updateTable(cur_frm, "month", "hours");
+                        });
+                    } else {
+                        updateTable(cur_frm, "month", "hours");
+                    }
+                });
+
+                frappe.show_alert({
+                    message: __('Роль удалена'),
+                    indicator: 'green'
+                }, 3);
+            }).catch(err => {
+                console.error("Ошибка при удалении роли:", err);
+                frappe.msgprint(__("Ошибка при удалении роли"));
+            });
+        }
+    );
+});
