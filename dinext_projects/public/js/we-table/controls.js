@@ -1,4 +1,45 @@
-// === controls.js: addViewOptionsControl, get_project_roles, get_display_periods, render_legend ===
+// we-table/controls.js — view controls, period helpers, legend
+// ISS-2025-01239
+
+function get_project_roles(frm) {
+    let roles = [];
+    if (frm.doc.custom_ts_details) {
+        roles = frm.doc.custom_ts_details.map((x) => x.pt_role);
+    }
+    roles.push("");
+    return Array.from(new Set(roles));
+}
+
+function get_display_periods(frm, periodType) {
+    if (frm.we_periods && frm.we_periods[periodType]) return frm.we_periods[periodType];
+    if (!frm.we_periods) frm.we_periods = {};
+    frm.view_options = frm.view_options || __("Прогноз и факт");
+
+    let periods = [];
+    let month_start = frappe.datetime.month_start();
+    let start_date = frm.doc.expected_start_date ? frm.doc.expected_start_date : month_start;
+    let start = frappe.datetime.str_to_obj(start_date);
+    let end_date = frm.doc.expected_end_date
+        ? frm.doc.expected_end_date
+        : frappe.datetime.add_months(start, 12);
+    let end = frappe.datetime.str_to_obj(end_date);
+
+    if (periodType === "month") {
+        let current = start;
+        while (frappe.datetime.obj_to_str(current) <= frappe.datetime.obj_to_str(end)) {
+            let year = current.getFullYear();
+            let i = current.getMonth();
+            let is_past = (frm.view_options == __("Прогноз и факт"))
+                ? frappe.datetime.obj_to_str(current) < month_start
+                : (frm.view_options == __("Только факт"));
+            periods.push({ year: year, month: i + 1, is_past: is_past });
+            current = frappe.datetime.str_to_obj(frappe.datetime.add_months(current, 1));
+        }
+    }
+
+    frm.we_periods[periodType] = periods;
+    return periods;
+}
 
 function addViewOptionsControl(frm, controls) {
     frm.view_options = frm.view_options || __("Прогноз и факт");
@@ -29,44 +70,6 @@ function addViewOptionsControl(frm, controls) {
         render_input: true
     });
 }
-
-function get_project_roles(frm) {
-    let roles = [];
-    if (frm.doc.custom_ts_details) {
-        roles = frm.doc.custom_ts_details.map((x) => x.pt_role);
-    }
-    roles.push("");
-    return Array.from(new Set(roles));
-}
-window.get_project_roles = get_project_roles;
-
-function get_display_periods(frm, periodType) {
-    if (frm.we_periods && frm.we_periods[periodType]) return frm.we_periods[periodType];
-    if (!frm.we_periods) frm.we_periods = {};
-    frm.view_options = frm.view_options || __("Прогноз и факт");
-    let periods = [];
-    let month_start = frappe.datetime.month_start();
-    let start_date = frm.doc.expected_start_date ? frm.doc.expected_start_date : month_start;
-    let start = frappe.datetime.str_to_obj(start_date);
-    let end_date = frm.doc.expected_end_date ? frm.doc.expected_end_date : frappe.datetime.add_months(start, 12);
-    let end = frappe.datetime.str_to_obj(end_date);
-
-    if (periodType === "month") {
-        let current = start;
-        while (frappe.datetime.obj_to_str(current) <= frappe.datetime.obj_to_str(end)) {
-            let year = current.getFullYear();
-            let i = current.getMonth();
-            let is_past = (frm.view_options == __("Прогноз и факт"))
-                ? frappe.datetime.obj_to_str(current) < month_start
-                : (frm.view_options == __("Только факт"));
-            periods.push({ year: year, month: i + 1, is_past: is_past });
-            current = frappe.datetime.str_to_obj(frappe.datetime.add_months(current, 1));
-        }
-    }
-    frm.we_periods[periodType] = periods;
-    return periods;
-}
-window.get_display_periods = get_display_periods;
 
 function render_legend(container) {
     let legend_html = `
@@ -128,9 +131,15 @@ function render_legend(container) {
                     </div>
                     <span>${__("Блокировка")}</span>
                 </div>
+
             </div>
 
         </div>
     `;
     container.html(legend_html);
 }
+
+window.get_project_roles = get_project_roles;
+window.get_display_periods = get_display_periods;
+window.addViewOptionsControl = addViewOptionsControl;
+window.render_legend = render_legend;
