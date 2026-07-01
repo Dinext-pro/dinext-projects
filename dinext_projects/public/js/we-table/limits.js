@@ -1,6 +1,7 @@
-// === limits.js: recalculatePeriodLimits, setCellStyles ===
+// we-table/limits.js — recalculatePeriodLimits, setCellStyles
+// ISS-2025-01239
 
-// Расчёт лимитов по периодам ISS-2025-01239
+// === Расчёт лимитов по периодам ISS-2025-01239 ===
 function recalculatePeriodLimits(frm, periodType, callback) {
     let periodPositions = [];
     let periods = get_display_periods(frm, periodType);
@@ -57,6 +58,10 @@ function recalculatePeriodLimits(frm, periodType, callback) {
 }
 
 function setCellStyles() {
+    // debugger;
     const tasksHeaderCell = document.querySelector(".work-efforts-table .dt-cell--header-0");
     $(".work-efforts-table .datatable .dt-scrollable").addClass("dt-fit-height");
 }
+
+window.recalculatePeriodLimits = recalculatePeriodLimits;
+window.setCellStyles = setCellStyles;
