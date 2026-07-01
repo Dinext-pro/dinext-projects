@@ -1,6 +1,10 @@
 // we-table/controls.js — view controls, period helpers, legend
 // ISS-2025-01239
 
+/**
+ * @param {WorkEffortsForm} frm
+ * @returns {string[]}
+ */
 function get_project_roles(frm) {
     let roles = [];
     if (frm.doc.custom_ts_details) {
@@ -10,6 +14,11 @@ function get_project_roles(frm) {
     return Array.from(new Set(roles));
 }
 
+/**
+ * @param {WorkEffortsForm} frm
+ * @param {string} periodType
+ * @returns {DisplayPeriod[]}
+ */
 function get_display_periods(frm, periodType) {
     if (frm.we_periods && frm.we_periods[periodType]) return frm.we_periods[periodType];
     if (!frm.we_periods) frm.we_periods = {};
@@ -41,6 +50,10 @@ function get_display_periods(frm, periodType) {
     return periods;
 }
 
+/**
+ * @param {WorkEffortsForm} frm
+ * @param {JQuery} controls
+ */
 function addViewOptionsControl(frm, controls) {
     frm.view_options = frm.view_options || __("Прогноз и факт");
     const control = frappe.ui.form.make_control({
@@ -60,8 +73,8 @@ function addViewOptionsControl(frm, controls) {
                 if (this.value != this.last_value) {
                     frm.we_periods = {};
                     frm.view_options = this.value;
-                    updateTable(frm, "month", "hours");
-                    render_work_efforts_chart(frm);
+                    dinext_projects.work_efforts.updateTable(frm, "month", "hours");
+                    dinext_projects.work_efforts.render_work_efforts_chart(frm);
                 }
             }
         },
@@ -71,6 +84,7 @@ function addViewOptionsControl(frm, controls) {
     });
 }
 
+/** @param {JQuery} container */
 function render_legend(container) {
     let legend_html = `
         <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; padding: 8px 12px; background: var(--fg-color); border: 1px solid var(--border-color); border-radius: 4px;">
@@ -139,7 +153,9 @@ function render_legend(container) {
     container.html(legend_html);
 }
 
-window.get_project_roles = get_project_roles;
-window.get_display_periods = get_display_periods;
-window.addViewOptionsControl = addViewOptionsControl;
-window.render_legend = render_legend;
+Object.assign(dinext_projects.work_efforts, {
+    get_project_roles,
+    get_display_periods,
+    addViewOptionsControl,
+    render_legend,
+});

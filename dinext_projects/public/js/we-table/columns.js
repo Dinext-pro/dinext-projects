@@ -1,9 +1,16 @@
 // we-table/columns.js — get_columns_definition + role add/delete handlers
 // ISS-2025-01239
 
+/**
+ * Определение колонок StickyDataTable для Work Efforts.
+ * @param {WorkEffortsForm} frm
+ * @param {string} periodType
+ * @param {string} unit
+ * @returns {object[]}
+ */
 function get_columns_definition(frm, periodType, unit) {
     let columns = [];
-    let allRoles = get_project_roles(frm);
+    let allRoles = dinext_projects.work_efforts.get_project_roles(frm);
 
     // 1. Колонка "Задачи"
     columns.push({
@@ -123,7 +130,7 @@ function get_columns_definition(frm, periodType, unit) {
                 let role_data = data.role_data || [];
 
                 // Получаем назначения из кэша
-                let assignments = get_task_assignments(task_id);
+                let assignments = dinext_projects.work_efforts.get_task_assignments(task_id);
 
                 function normalize(str) {
                     return str ? str.trim() : "";
@@ -202,7 +209,7 @@ function get_columns_definition(frm, periodType, unit) {
      * Вместо вложенных columns формируем одну колонку, внутри которой вручную выводим три значения.
      * Для редактирования (если период текущий или будущий) делаем значение "факт/прогноз" кликабельным.
      */
-    let periods = get_display_periods(frm, periodType);
+    let periods = dinext_projects.work_efforts.get_display_periods(frm, periodType);
     periods.forEach(function(period) {
         // Если период в прошлом – отображаем "факт", иначе "прогноз"
         let subcolumn_label = period.is_past ? __("Факт") : __("Прогноз");
@@ -236,15 +243,15 @@ function get_columns_definition(frm, periodType, unit) {
                     let taskPeriodsMap = frm._missingPlanPeriodsMap?.[taskId] || {};
 
                     // Проверяем сроки для плана
-                    let inPlanDates = isPeriodInTaskDates(period, data.custom_planned_start_date, data.custom_planned_end_date);
+                    let inPlanDates = dinext_projects.work_efforts.isPeriodInTaskDates(period, data.custom_planned_start_date, data.custom_planned_end_date);
 
                     // Вычисляем даты для факта (с fallback на прогнозные)
                     let factStartDate = data.act_start_date || data.exp_start_date;
                     let factEndDate = data.act_end_date || data.exp_end_date;
-                    let inFactDates = isPeriodInTaskDates(period, factStartDate, factEndDate);
+                    let inFactDates = dinext_projects.work_efforts.isPeriodInTaskDates(period, factStartDate, factEndDate);
 
                     // Вычисляем даты для прогноза
-                    let inForecastDates = isPeriodInTaskDates(period, data.exp_start_date, data.exp_end_date);
+                    let inForecastDates = dinext_projects.work_efforts.isPeriodInTaskDates(period, data.exp_start_date, data.exp_end_date);
 
                     // Проверяем конфликт: факт в прошлом + прогноз в будущем
                     let today = new Date();
@@ -331,7 +338,7 @@ function get_columns_definition(frm, periodType, unit) {
                         let actualClasses = "we-role-value";
                         if (actual == 0) actualClasses += " zero";
 
-                        let hasWorkload = hasWorkloadInPeriod(frm, taskId, roleName, period);
+                        let hasWorkload = dinext_projects.work_efforts.hasWorkloadInPeriod(frm, taskId, roleName, period);
                         if (hasWorkload) actualClasses += " has-workload";
 
                         // Статус лимита — только для фактических колонок
@@ -454,7 +461,7 @@ function get_columns_definition(frm, periodType, unit) {
     return columns;
 }
 
-window.get_columns_definition = get_columns_definition;
+Object.assign(dinext_projects.work_efforts, { get_columns_definition });
 
 // Обработчик выбора новой роли из выпадающего списка
 $(document).on('change', '.new-role-select', function(e) {
@@ -504,20 +511,20 @@ $(document).on('change', '.new-role-select', function(e) {
                 taskData.role_data.push({ role: newRole });
 
                 // Очистка кэша назначений
-                clear_assignments_cache();
+                dinext_projects.work_efforts.clear_assignments_cache();
 
                 if (cur_frm._tasksByParent) {
                     cur_frm._tasksByParent = null;
                 }
-                clearTaskIndexCacheFor(cur_frm.aggregatedTasks);
+                dinext_projects.work_efforts.clearTaskIndexCacheFor(cur_frm.aggregatedTasks);
 
-                buildWorkloadPeriodsMap(cur_frm).then(() => {
+                dinext_projects.work_efforts.buildWorkloadPeriodsMap(cur_frm).then(() => {
                     if (cur_frm.show_assignments) {
-                        load_all_assignments_if_needed(cur_frm).then(() => {
-                            updateTable(cur_frm, "month", "hours");
+                        dinext_projects.work_efforts.load_all_assignments_if_needed(cur_frm).then(() => {
+                            dinext_projects.work_efforts.updateTable(cur_frm, "month", "hours");
                         });
                     } else {
-                        updateTable(cur_frm, "month", "hours");
+                        dinext_projects.work_efforts.updateTable(cur_frm, "month", "hours");
                     }
                 });
 
@@ -530,7 +537,7 @@ $(document).on('change', '.new-role-select', function(e) {
                 frappe.msgprint(__("Ошибка при добавлении роли"));
             });
         } else {
-            updateTable(cur_frm, "month", "hours");
+            dinext_projects.work_efforts.updateTable(cur_frm, "month", "hours");
         }
     }
 });
@@ -545,9 +552,6 @@ $(document).on('click', '.delete-role-btn', function(e) {
     frappe.confirm(
         __("Вы действительно хотите удалить роль {0} для задачи {1}?", [role, task]),
         () => {
-            console.log(`=== УДАЛЕНИЕ РОЛИ ===`);
-            console.log(`Задача: ${task}, Роль: "${role}"`);
-
             frappe.db.get_list("Project Work Efforts", {
                 filters: {
                     pwe_project: cur_frm.doc.name,
@@ -557,11 +561,8 @@ $(document).on('click', '.delete-role-btn', function(e) {
                 fields: ["name", "pwe_project_role"],
                 limit: 10
             }).then(result => {
-                console.log(`Найдено PWE для роли "${role}":`, result);
-
                 if (result && result.length > 0) {
                     let deletePromises = result.map(doc => {
-                        console.log(`Удаляем PWE: ${doc.name}, роль: ${doc.pwe_project_role}`);
                         return frappe.call({
                             method: 'frappe.client.delete',
                             args: {
@@ -581,14 +582,9 @@ $(document).on('click', '.delete-role-btn', function(e) {
                         },
                         fields: ["name", "pwe_project_role"],
                         limit: 100
-                    }).then(allDocs => {
-                        console.log(`Все PWE для задачи ${task}:`, allDocs);
-                        return Promise.resolve();
-                    });
+                    }).then(() => Promise.resolve());
                 }
             }).then(() => {
-                console.log(`=== ОБНОВЛЕНИЕ ЛОКАЛЬНЫХ ДАННЫХ ===`);
-
                 let aggregatedTasks = cur_frm.aggregatedTasks || [];
                 let taskData = null;
 
@@ -599,30 +595,26 @@ $(document).on('click', '.delete-role-btn', function(e) {
                 }
 
                 if (taskData && taskData.role_data) {
-                    console.log(`Роли до удаления:`, taskData.role_data.map(r => r.role));
                     taskData.role_data = taskData.role_data.filter(r => r.role !== role);
-                    console.log(`Роли после удаления:`, taskData.role_data.map(r => r.role));
                 } else {
                     console.warn(`taskData или role_data не найдены!`);
                 }
 
                 // Очистка кэша назначений
-                clear_assignments_cache();
+                dinext_projects.work_efforts.clear_assignments_cache();
 
                 if (cur_frm._tasksByParent) {
                     cur_frm._tasksByParent = null;
                 }
-                clearTaskIndexCacheFor(cur_frm.aggregatedTasks);
+                dinext_projects.work_efforts.clearTaskIndexCacheFor(cur_frm.aggregatedTasks);
 
-                console.log(`=== ОБНОВЛЕНИЕ ТАБЛИЦЫ ===`);
-
-                buildWorkloadPeriodsMap(cur_frm).then(() => {
+                dinext_projects.work_efforts.buildWorkloadPeriodsMap(cur_frm).then(() => {
                     if (cur_frm.show_assignments) {
-                        load_all_assignments_if_needed(cur_frm).then(() => {
-                            updateTable(cur_frm, "month", "hours");
+                        dinext_projects.work_efforts.load_all_assignments_if_needed(cur_frm).then(() => {
+                            dinext_projects.work_efforts.updateTable(cur_frm, "month", "hours");
                         });
                     } else {
-                        updateTable(cur_frm, "month", "hours");
+                        dinext_projects.work_efforts.updateTable(cur_frm, "month", "hours");
                     }
                 });
 

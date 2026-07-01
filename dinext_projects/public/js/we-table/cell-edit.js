@@ -1,7 +1,13 @@
 // we-table/cell-edit.js — updateForecastValue, save_forecast_as_plan, edit event handlers
 // ISS-2025-01239
 
-/* Функция расчёта суммы прогнозных трудозатрат у дочерних задач */
+/**
+ * @param {string} taskId
+ * @param {string} role
+ * @param {DisplayPeriod} period
+ * @param {Record<string, ConsolidatedTaskEntry>} aggregatedTasks
+ * @returns {number}
+ */
 function get_child_forecast_sum(taskId, role, period, aggregatedTasks) {
     let sum = 0;
     Object.values(aggregatedTasks).forEach(child => {
@@ -46,7 +52,13 @@ function get_parent_forecast_limit(taskId, role, period, aggregatedTasks) {
     return null;
 }
 
-/* Функция обновления прогнозного значения */
+/**
+ * @param {string} task
+ * @param {string} role
+ * @param {number | string} year
+ * @param {number | string} month
+ * @param {number} new_value
+ */
 function updateForecastValue(task, role, year, month, new_value) {
     frappe.db.get_list("Project Work Efforts", {
         filters: {
@@ -90,7 +102,7 @@ function updateForecastValue(task, role, year, month, new_value) {
         }, 5);
 
         // Очистка кэша назначений
-        clear_assignments_cache();
+        dinext_projects.work_efforts.clear_assignments_cache();
 
         let aggregatedTasks = cur_frm.aggregatedTasks || [];
         let taskData = null;
@@ -113,20 +125,24 @@ function updateForecastValue(task, role, year, month, new_value) {
             }
         }
 
-        clearTaskIndexCacheFor(cur_frm.aggregatedTasks);
-        buildWorkloadPeriodsMap(cur_frm).then(() => {
-            updateTable(cur_frm, "month", "hours");
+        dinext_projects.work_efforts.clearTaskIndexCacheFor(cur_frm.aggregatedTasks);
+        dinext_projects.work_efforts.buildWorkloadPeriodsMap(cur_frm).then(() => {
+            dinext_projects.work_efforts.updateTable(cur_frm, "month", "hours");
         });
 
-        render_work_efforts_chart(cur_frm, false);
+        dinext_projects.work_efforts.render_work_efforts_chart(cur_frm, false);
     }).catch(err => {
         frappe.msgprint(__("Ошибка при обновлении прогноза"));
         console.error(err);
     });
 }
 
+/**
+ * Сохранение отмеченных plan-значений через work_efforts_api.save_forecast_as_plan.
+ * @param {WorkEffortsForm} frm
+ */
 function save_forecast_as_plan(frm) {
-    let periods = get_display_periods(frm, "month");
+    let periods = dinext_projects.work_efforts.get_display_periods(frm, "month");
     let checkedRows = frm.work_efforts_dt.rowmanager.getCheckedRows();
 
     let data = [];
@@ -191,21 +207,21 @@ function save_forecast_as_plan(frm) {
                 frappe.show_alert(__("Данные успешно сохранены как план"), 5);
 
                 // Очистка кэша назначений
-                clear_assignments_cache();
+                dinext_projects.work_efforts.clear_assignments_cache();
 
                 // Сбрасываем кэш загрузки
                 frm.last_loaded_time = null;
                 frm.last_loaded_project = null;
 
                 // Очищаем кэш данных
-                clearTaskIndexCacheFor(frm.aggregatedTasks);
+                dinext_projects.work_efforts.clearTaskIndexCacheFor(frm.aggregatedTasks);
 
                 // Очистка подсветки
                 frm._missingPlanMap = {};
                 frm._missingPlanPeriodsMap = {};
 
                 // Загружаем данные заново
-                load_work_efforts_data(frm, "month", "hours", true);
+                dinext_projects.work_efforts.load_work_efforts_data(frm, "month", "hours", true);
 
                 if (typeof load_and_render_project_dashboard === 'function') {
                     load_and_render_project_dashboard(frm);
@@ -215,8 +231,10 @@ function save_forecast_as_plan(frm) {
     });
 }
 
-window.updateForecastValue = updateForecastValue;
-window.save_forecast_as_plan = save_forecast_as_plan;
+Object.assign(dinext_projects.work_efforts, {
+    updateForecastValue,
+    save_forecast_as_plan,
+});
 
 // При клике по значению "факт/прогноз" (старая структура)
 $(document).on('click', '.we-group-actual .editable-forecast', function(e) {
@@ -283,7 +301,7 @@ $(document).on('blur', '.we-edit-input', function(e) {
     }
 
     $input.parent().text(new_value || 0);
-    updateForecastValue(task, role, year, month, new_value);
+    dinext_projects.work_efforts.updateForecastValue(task, role, year, month, new_value);
 });
 
 // При двойном клике по значению "факт" (старая структура)
@@ -298,7 +316,7 @@ $(document).on('dblclick', '.we-group-actual:not(.zero):has(.readonly-fact)', fu
     let utps = [];
 
     if (typeof task === 'undefined' || typeof role === 'undefined') {
-        let periods = get_display_periods(cur_frm, "month");
+        let periods = dinext_projects.work_efforts.get_display_periods(cur_frm, "month");
         let period = periods.find(period => period.year == year && period.month == month);
 
         if (period.is_past) {
@@ -317,7 +335,7 @@ $(document).on('dblclick', '.we-group-actual:not(.zero):has(.readonly-fact)', fu
 
         if (roleEntry) {
             if (typeof year === 'undefined' || typeof month === 'undefined') {
-                let periods = get_display_periods(cur_frm, "month");
+                let periods = dinext_projects.work_efforts.get_display_periods(cur_frm, "month");
                 periods.forEach(period => {
                     if (period.is_past) {
                         let factUTPs = `fact_utps_${period.year}_${period.month}`;
@@ -373,13 +391,13 @@ $(document).on('click', '.assignment-row', function(e) {
 
     if (typeof start_pwa_dialog === 'function') {
         start_pwa_dialog(function(pwas) {
-            clear_assignments_cache();
+            dinext_projects.work_efforts.clear_assignments_cache();
 
-            load_all_assignments_if_needed(cur_frm).then(() => {
-                updateTable(cur_frm, "month", "hours");
+            dinext_projects.work_efforts.load_all_assignments_if_needed(cur_frm).then(() => {
+                dinext_projects.work_efforts.updateTable(cur_frm, "month", "hours");
 
                 setTimeout(() => {
-                    check_plan_load_for_percentage_assignments(cur_frm);
+                    dinext_projects.work_efforts.check_plan_load_for_percentage_assignments(cur_frm);
                 }, 300);
             });
 
@@ -418,7 +436,7 @@ $(document).on('dblclick', '.we-role-value:not(.zero):has(.readonly-fact)', func
     let utps = [];
 
     if (typeof task === 'undefined' || typeof role === 'undefined') {
-        let periods = get_display_periods(cur_frm, "month");
+        let periods = dinext_projects.work_efforts.get_display_periods(cur_frm, "month");
         let period = periods.find(p => p.year == year && p.month == month);
         if (period && period.is_past) {
             Object.values(cur_frm.aggregatedTasks).forEach(t => {
