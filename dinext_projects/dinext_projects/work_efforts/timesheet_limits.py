@@ -15,7 +15,6 @@ from dinext_projects.dinext_projects.work_efforts.models import (
     HoursData,
     LimitStatus,
     PlanData,
-    TimesheetLimitResult,
     TimesheetLimitsFormInput,
     TimesheetLimitsResponse,
     TimesheetPositionInput,
