@@ -217,7 +217,6 @@ fixtures = [
 # include js in doctype views
 doctype_js = {
     "Project": [
-        "public/js/we-namespace.js",
         "public/js/we-calc.js",
         "public/js/we-checks.js",
         "public/js/we-styles.js",
@@ -229,12 +228,6 @@ doctype_js = {
         "public/js/we-table/cell-edit.js",
         "public/js/we-table/limits.js",
         "public/js/we-table/render.js",
-        "public/js/we-table.js",
-    ]
-}
-doctype_css = {
-    "Project": [
-        "public/css/we-table.css",
     ]
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}

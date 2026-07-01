@@ -11,12 +11,24 @@ import json
 
 import frappe
 
+from dinext_projects.dinext_projects.work_efforts.models import (
+    HoursData,
+    LimitStatus,
+    PlanData,
+    TimesheetLimitResult,
+    TimesheetLimitsFormInput,
+    TimesheetLimitsResponse,
+    TimesheetPositionInput,
+)
 
-def run_calculate_timesheet_limits(form_dict) -> list:
-    positions = json.loads(form_dict.positions)
-    timesheet_name = form_dict.timesheet_name
 
-    cache: dict = {
+def run_calculate_timesheet_limits(
+    form_dict: TimesheetLimitsFormInput,
+) -> TimesheetLimitsResponse:
+    positions: list[TimesheetPositionInput] = json.loads(form_dict["positions"])
+    timesheet_name = form_dict.get("timesheet_name")
+
+    cache: dict[str, dict] = {
         "has_children": {},
         "all_children": {},
         "plan_data": {},
@@ -40,11 +52,11 @@ def run_calculate_timesheet_limits(form_dict) -> list:
         cache["has_children"][cache_key] = bool(children)
         return cache["has_children"][cache_key]
 
-    def get_all_children(project: str, task: str) -> list:
+    def get_all_children(project: str, task: str) -> list[str]:
         cache_key = project + task
         if cache_key in cache["all_children"]:
             return cache["all_children"][cache_key]
-        result: list = []
+        result: list[str] = []
         direct = frappe.db.get_all(
             "Task",
             filters={"parent_task": task, "project": project},
@@ -62,7 +74,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
             cache["task_linked_issues"][task_name] = bool(linked_issue)
         return cache["task_linked_issues"][task_name]
 
-    def find_root_task_with_linked_issue(project: str, task: str):
+    def find_root_task_with_linked_issue(project: str, task: str) -> str | None:
         cache_key = project + task
         if cache_key in cache["root_task_with_issue"]:
             return cache["root_task_with_issue"][cache_key]
@@ -75,7 +87,13 @@ def run_calculate_timesheet_limits(form_dict) -> list:
         cache["root_task_with_issue"][cache_key] = None
         return None
 
-    def find_task_with_plan(project: str, task: str, role: str, year=None, month=None):
+    def find_task_with_plan(
+        project: str,
+        task: str,
+        role: str,
+        year: int | None = None,
+        month: int | None = None,
+    ) -> PlanData | None:
         requirement = cache["project_settings"].get(project, "Опционально")
         root_task_with_issue = None
         can_go_above_root_issue = False
@@ -97,7 +115,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
             )
             pwe_names = [p["name"] for p in all_pwe]
 
-            periods: list = []
+            periods: list[dict] = []
             if pwe_names:
                 periods = frappe.db.get_all(
                     "Project Work Efforts Amount",
@@ -116,7 +134,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
 
             if total_planned > 0:
                 subj = frappe.db.get_value("Task", task, "subject") or task
-                plan_data = {
+                plan_data: PlanData = {
                     "task_name": task,
                     "planned_hours": total_planned,
                     "subject": subj,
@@ -125,7 +143,9 @@ def run_calculate_timesheet_limits(form_dict) -> list:
                 return plan_data
             return None
 
-        def get_plan_for_task(t: str, visited=None):
+        def get_plan_for_task(
+            t: str, visited: set[str] | None = None
+        ) -> tuple[float, PlanData | None]:
             if visited is None:
                 visited = set()
             if t in visited:
@@ -158,7 +178,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
                 )
                 if planned > 0:
                     subj = frappe.db.get_value("Task", t, "subject") or t
-                    plan_data = {
+                    plan_data: PlanData = {
                         "task_name": t,
                         "planned_hours": planned,
                         "subject": subj,
@@ -181,7 +201,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
                         total_plan += child_plan
                         found_any = True
                 if found_any:
-                    plan_data = {
+                    plan_data: PlanData = {
                         "task_name": t,
                         "planned_hours": total_plan,
                         "subject": frappe.db.get_value("Task", t, "subject") or t,
@@ -202,7 +222,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
                 parent_plan = parent_result[0]
                 parent_data = parent_result[1]
                 if parent_plan > 0 and parent_data:
-                    plan_data = {
+                    plan_data: PlanData = {
                         "task_name": parent_data["task_name"],
                         "planned_hours": parent_plan,
                         "subject": parent_data["subject"],
@@ -222,7 +242,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
             return plan_data
         return None
 
-    def get_project_limits(project: str) -> dict:
+    def get_project_limits(project: str) -> dict[str, float | None]:
         if project in cache["limits"]:
             return cache["limits"][project]
 
@@ -232,7 +252,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
             fields=["type", "limit"],
         )
 
-        def parse(typ: str):
+        def parse(typ: str) -> float | None:
             for r in rows:
                 if r.type.strip().lower() == typ:
                     if isinstance(r.limit, (int, float)):
@@ -251,14 +271,14 @@ def run_calculate_timesheet_limits(form_dict) -> list:
 
     def aggregate_hours(
         plan_task: str,
-        tasks: list,
+        tasks: list[str],
         role: str,
-        timesheet_name: str,
-        timesheet_status,
-        local_positions: list,
-        year=None,
-        month=None,
-    ) -> dict:
+        timesheet_name: str | None,
+        timesheet_status: str | None,
+        local_positions: list[TimesheetPositionInput],
+        year: int | None = None,
+        month: int | None = None,
+    ) -> HoursData:
         ck = plan_task + role
         if year is not None:
             ck += f"_{year}_{month}"
@@ -266,8 +286,8 @@ def run_calculate_timesheet_limits(form_dict) -> list:
             return cache["total_hours"][ck]
 
         if year is not None and month is not None:
-            total: dict = {"total": 0}
-            users: set = set()
+            total: HoursData = {"total": 0}
+            users: set[str] = set()
             for pos in local_positions:
                 pos_task = pos.get("document_name")
                 pos_role = pos.get("project_role", "")
@@ -287,7 +307,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
             cache["total_hours"][ck] = total
             return total
 
-        filters: dict = {"document_name": ["in", tasks], "project_role": role}
+        filters: dict[str, object] = {"document_name": ["in", tasks], "project_role": role}
         if timesheet_name:
             filters["user_timesheet"] = ["!=", timesheet_name]
 
@@ -297,8 +317,8 @@ def run_calculate_timesheet_limits(form_dict) -> list:
             fields=["all_hours", "status", "document_name", "custom_username"],
         )
 
-        total = {}
-        users = set()
+        total: HoursData = {}
+        users: set[str] = set()
         for r in db_rows:
             hrs = frappe.utils.flt(r.all_hours or 0.0)
             total["total"] = total.get("total", 0.0) + hrs
@@ -320,10 +340,10 @@ def run_calculate_timesheet_limits(form_dict) -> list:
         cache["total_hours"][ck] = total
         return total
 
-    def get_project_roles(project: str) -> set:
+    def get_project_roles(project: str) -> set[str]:
         if project in cache["roles"]:
             return cache["roles"][project]
-        roles: set = set()
+        roles: set[str] = set()
         project_roles = frappe.db.get_all(
             "Project Team Details",
             filters={"parent": project},
@@ -334,7 +354,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
         cache["roles"][project] = roles
         return roles
 
-    def is_plan_required(position: dict) -> bool:
+    def is_plan_required(position: TimesheetPositionInput) -> bool:
         project = position.get("project")
         task_name = position.get("document_name")
         if not project or not task_name:
@@ -353,7 +373,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
             return find_root_task_with_linked_issue(project, task_name) is not None
         return False
 
-    results: list = []
+    results: TimesheetLimitsResponse = []
 
     for pos in positions or []:
         utp = pos.get("name")
@@ -369,7 +389,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
 
         plan_required = is_plan_required(pos)
 
-        project_roles: list = []
+        project_roles: list[str] = []
         if role:
             project_roles.append(role)
         else:
@@ -379,7 +399,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
             plan = find_task_with_plan(proj, doc, project_role, year, month)
 
             used_parent = False
-            task_for_fact = [doc]
+            task_for_fact: list[str] = [doc]
             task_for_plan = doc
 
             if plan:
@@ -408,7 +428,7 @@ def run_calculate_timesheet_limits(form_dict) -> list:
                 pct = int((total_hours.get("total", 0) / planned) * 100)
 
             limits = get_project_limits(proj or "")
-            limit_status = "no-plan"
+            limit_status: LimitStatus = "no-plan"
             limit = 0
 
             if plan_required and planned == 0:

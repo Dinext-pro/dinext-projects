@@ -1,5 +1,8 @@
 // Оптимизированный модуль для подсчёта сумм трудозатрат
 // https://erp.dinord.ru/app/issue/ISS-2025-02915
+// ISS-2025-01239: первый файл в doctype_js Project (Work Efforts)
+
+frappe.provide("dinext_projects.work_efforts");
 
 // Предположение: идентификатор задачи — task.value (как в вашем коде)
 // aggregatedTasksIn — объект { key: taskObj } или массив taskObj
