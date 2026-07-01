@@ -25,7 +25,6 @@ function perform_overload_check(frm) {
                     return;
                 }
                 
-                // Сохраняем данные о перегрузках в frm для подсветки аватаров
                 frm._overloadMap = {};
                 
                 overloads.forEach(overload => {
@@ -70,7 +69,6 @@ function perform_overload_check(frm) {
 function show_overload_details_dialog(overloads, frm) {
     if (!overloads || overloads.length === 0) return;
     
-    // Создаем карту перегрузок: task -> { role: overloadData }
     let overloadMap = {};
     overloads.forEach(overload => {
         if (!overloadMap[overload.task]) {
@@ -293,7 +291,6 @@ function show_overload_details_dialog(overloads, frm) {
             cellHeight: 30
         });
         
-        // Скрываем чекбоксы для строк без перегрузки
         setTimeout(() => {
             container.find('.dt-row').each(function() {
                 let rowIndex = $(this).data('row-index');
@@ -362,7 +359,6 @@ function update_forecast_from_assignments(frm, selectedRows, dialog) {
                 
                 if (dialog) dialog.hide();
                 
-                // Очищаем кэши
                 clear_assignments_cache();
                 clearTaskIndexCacheFor(frm.aggregatedTasks);
                 frm.last_loaded_time = null;
@@ -370,9 +366,7 @@ function update_forecast_from_assignments(frm, selectedRows, dialog) {
                 frm._overloadMap = {};
                 frm._missingPlanMap = {};
                 
-                // Перезагружаем таблицу
                 load_work_efforts_data(frm, "month", "hours", true);
-                
             } else if (r.message && r.message.error) {
                 frappe.msgprint(__("Ошибка при обновлении: {0}", [r.message.error]));
             } else {
@@ -385,3 +379,8 @@ function update_forecast_from_assignments(frm, selectedRows, dialog) {
         }
     });
 }
+
+window.perform_overload_check = perform_overload_check;
+window.show_overload_details_dialog = show_overload_details_dialog;
+window.escape_html = escape_html;
+window.update_forecast_from_assignments = update_forecast_from_assignments;
