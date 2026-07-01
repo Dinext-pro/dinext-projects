@@ -144,6 +144,11 @@
         width: 100%;
     }
     
+    /* Стили для колонки назначений */
+    & .work-efforts-table .dt-cell__content--col-3 {
+        /* Колонка ролей */
+    }
+    
     & .work-efforts-table .dt-cell[data-column-id="assignments"] .dt-cell__content {
         font-size: 11px;
     }
@@ -258,11 +263,13 @@
         align-items: center;
     }
     
+    /* Подсветка нулевого плана при наличии загрузки - только цвет текста */
     & .we-group-plan.missing-plan-highlight span {
         color: var(--alert-text-warning) !important;
         font-weight: 700 !important;
     }
     
+    /* ПРИОРИТЕТ ОШИБКИ НАД СРОКАМИ ЗАДАЧИ */
     & .we-group-plan.in-task-dates.missing-plan-highlight span {
         color: var(--alert-text-warning) !important;
         font-weight: 700 !important;
@@ -293,6 +300,7 @@
         50% { opacity: 0.5; }
     }
     
+    /* Стили для тултипов */
     .custom-workload-tooltip {
         font-family: inherit;
         max-width: 300px;
@@ -300,6 +308,9 @@
         word-wrap: break-word;
         line-height: 1.4;
     }
+    
+    
+    /* ========== НОВАЯ СТРУКТУРА С КОЛОНКАМИ ========== */
     
     & .we-columns-container {
         display: flex !important;
@@ -344,6 +355,7 @@
         border: 0px;
     }
     
+    /* ФОН ДЛЯ КОЛОНОК */
     & .we-plan-column.in-plan-dates {
         background-color: var(--we-period-plan-bg) !important;
     }
@@ -356,6 +368,9 @@
         background-color: var(--we-period-forecast-bg) !important;
     }
     
+    
+    /* ========== СТАТУСЫ ЛИМИТОВ ДЛЯ ФАКТА (обводка как зоны графика) ========== */
+
     & .we-role-value.limit-normal {
         box-shadow: inset 0 0 0 1px var(--we-limit-normal-color) !important;
     }
@@ -390,6 +405,7 @@
         background-color: var(--fg-color) !important;
     }
 
+    /* Приоритет: загрузка точками не перетирает обводку */
     & .we-role-value.has-workload {
         background-image: radial-gradient(circle, #bec5cc 1px, transparent 1px) !important;
         background-size: 4px 4px !important;
@@ -400,6 +416,7 @@
         background-size: 4px 4px !important;
     }
     
+    /* Подсветка ошибки */
     & .we-role-value.missing-plan-highlight span {
         color: var(--alert-text-warning) !important;
         font-weight: 700 !important;
@@ -420,6 +437,7 @@
         letter-spacing: 0.02em;
         color: var(--text-color);
     }
+    /* Нулевые значения — приглушенный цвет */
     & .we-role-value.zero span,
     & .we-columns-container .we-role-value.zero span {
         color: #b0b8c0;
