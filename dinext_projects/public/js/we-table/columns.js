@@ -1,5 +1,4 @@
-// columns.js — get_columns_definition
-// Part of dinext_projects.work_efforts namespace (we-table/)
+// === columns.js: get_columns_definition ===
 
 function get_columns_definition(frm, periodType, unit) {
     let columns = [];
@@ -79,7 +78,6 @@ function get_columns_definition(frm, periodType, unit) {
                             </span>
                         </button>`;
                     }
-
                     roleLines += `</div>`;
                 });
 
@@ -88,7 +86,7 @@ function get_columns_definition(frm, periodType, unit) {
                 let availableRoles = allRoles.filter(r => r && !existingRoles.includes(r));
                 if (availableRoles.length > 0) {
                     roleLines += `<div>
-                        <select class="new-role-select btn btn-default" data-task="${data.value}"> 
+                        <select class="new-role-select btn btn-default" data-task="${data.value}">
                             <option value="">${__("Добавить роль")}</option>`;
                     availableRoles.forEach(role => {
                         roleLines += `<option value="${role}">${__(role)}</option>`;
@@ -120,6 +118,7 @@ function get_columns_definition(frm, periodType, unit) {
                 let task_id = data.value;
                 let role_data = data.role_data || [];
 
+                // Получаем назначения из кэша
                 let assignments = get_task_assignments(task_id);
 
                 function normalize(str) {
@@ -184,6 +183,7 @@ function get_columns_definition(frm, periodType, unit) {
                     html += `</div>`;
                 }
 
+                // Если нет ни одной строки (нет ролей и нет назначений), добавляем пустую строку для кликабельности
                 if (role_data.length === 0 && remainingRoles.length === 0) {
                     html += `<div class="assignment-row" data-task="${task_id}"></div>`;
                 }
@@ -198,11 +198,9 @@ function get_columns_definition(frm, periodType, unit) {
     Вместо вложенных columns формируем одну колонку, внутри которой вручную выводим три значения.
     Для редактирования (если период текущий или будущий) мы делаем значение "факт/прогноз" кликабельным.
     */
-
     let periods = get_display_periods(frm, periodType);
     periods.forEach(function(period) {
         let subcolumn_label = period.is_past ? __("Факт") : __("Прогноз");
-
         columns.push({
             name: `<div style="text-align:center;">
                     ${period.year} ${period.month}<br/>
@@ -228,6 +226,7 @@ function get_columns_definition(frm, periodType, unit) {
                     let role_data = data.role_data || [];
                     role_data = role_data.sort((a, b) => (a.role.localeCompare(b.role)));
 
+                    // Получаем информацию о проблемных периодах
                     let taskPeriodsMap = frm._missingPlanPeriodsMap?.[taskId] || {};
 
                     // Проверяем сроки для плана
@@ -372,6 +371,7 @@ function get_columns_definition(frm, periodType, unit) {
                     }
 
                     lines += `</div>`; // конец we-columns-container
+
                 } else if (value) {
                     lines = value;
                 }
@@ -423,8 +423,7 @@ function get_columns_definition(frm, periodType, unit) {
                         }
                     });
                     let delta = total_plan ? (((total_forecast - total_plan) / total_plan) * 100).toFixed(1) : 0;
-
-                    lines += `<div class="work-efforts-group" 
+                    lines += `<div class="work-efforts-group"
                             data-task="${data.value}"
                             data-role="${r.role || ''}">
                             ${cur_frm.hide_plan ? "" : `<div class="we-group-plan"><span>${total_plan.toFixed(1)}</span></div>`}
@@ -442,4 +441,3 @@ function get_columns_definition(frm, periodType, unit) {
 
     return columns;
 }
-dinext_projects.work_efforts.get_columns_definition = get_columns_definition;

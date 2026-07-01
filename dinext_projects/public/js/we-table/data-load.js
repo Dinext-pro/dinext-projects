@@ -1,121 +1,10 @@
-// === data-load.js: load_work_efforts_data, rollup_fact_data, calc_we_column_total, cache ===
+// we-table/data-load.js — load_work_efforts_data, rollup_fact_data
+// ISS-2025-01239
 
 let _sum_we_cache = {};
-let _columnTotalCache = {};
-
-function calc_we_column_total_optimized(frm, roles, period, calc_plan = true, calc_fact = false) {
-    const cacheKey = `total_${period.year}_${period.month}_${calc_plan}_${calc_fact}`;
-
-    if (_columnTotalCache[cacheKey] !== undefined) {
-        return _columnTotalCache[cacheKey];
-    }
-
-    let plan = 0;
-    let actual = 0;
-
-    if (!frm.aggregatedTasks) {
-        return { plan: 0, actual: 0 };
-    }
-
-    const tasks = Object.values(frm.aggregatedTasks);
-    const filteredRoles = roles.filter(r => r && r.trim());
-
-    if (!frm._tasksByParent) {
-        frm._tasksByParent = {};
-        tasks.forEach(task => {
-            const parent = task.parent_task || '';
-            if (!frm._tasksByParent[parent]) {
-                frm._tasksByParent[parent] = [];
-            }
-            frm._tasksByParent[parent].push(task);
-        });
-    }
-
-    const getChildSum = (() => {
-        const childSumCache = {};
-
-        return function(taskId, role, periodKey, valueType = "forecast") {
-            const cacheKey = `child_${taskId}_${role}_${periodKey}_${valueType}`;
-
-            if (childSumCache[cacheKey] !== undefined) {
-                return childSumCache[cacheKey];
-            }
-
-            let sum = 0;
-            const children = frm._tasksByParent[taskId] || [];
-
-            for (let i = 0; i < children.length; i++) {
-                const child = children[i];
-                const roleEntry = child.role_data?.find(r => r.role === role);
-
-                if (roleEntry) {
-                    const key = `${valueType}_${periodKey}`;
-                    const value = parseFloat(roleEntry[key]) || 0;
-
-                    if (value > 0) {
-                        sum += value;
-                    } else {
-                        sum += getChildSum(child.value, role, periodKey, valueType);
-                    }
-                }
-            }
-
-            childSumCache[cacheKey] = sum;
-            return sum;
-        };
-    })();
-
-    const periodKey = `${period.year}_${period.month}`;
-    const valueKey = (period.is_past || calc_fact) ? "fact" : "forecast";
-
-    for (const role of filteredRoles) {
-        let rolePlan = 0;
-        let roleActual = 0;
-
-        const rootTasks = tasks.filter(t => !t.parent_task);
-
-        for (const root of rootTasks) {
-            const roleEntry = root.role_data?.find(r => r.role === role);
-
-            if (calc_plan) {
-                let planSum = roleEntry ? parseFloat(roleEntry[`plan_${periodKey}`]) || 0 : 0;
-                if (!planSum) {
-                    planSum = getChildSum(root.value, role, periodKey, "plan");
-                }
-                rolePlan += planSum;
-            }
-
-            let actualSum = roleEntry ? parseFloat(roleEntry[`${valueKey}_${periodKey}`]) || 0 : 0;
-            if (!actualSum) {
-                actualSum = getChildSum(root.value, role, periodKey, valueKey);
-            }
-            roleActual += actualSum;
-        }
-
-        plan += rolePlan;
-        actual += roleActual;
-    }
-
-    const result = { plan, actual };
-    _columnTotalCache[cacheKey] = result;
-
-    return result;
-}
-
-function calc_we_column_total(frm, roles, period, calc_plan = true, calc_fact = false) {
-    return calc_we_column_total_optimized(frm, roles, period, calc_plan, calc_fact);
-}
-
-function clearTaskIndexCacheFor(tasks) {
-    _sum_we_cache = {};
-    _columnTotalCache = {};
-    if (cur_frm) {
-        cur_frm._tasksByParent = null;
-    }
-}
 
 function load_work_efforts_data(frm, periodType, unit, updateRows) {
-    // ОЧИСТКА КЭША ПРИ ЗАГРУЗКЕ НОВЫХ ДАННЫХ
+    // Очистка кэша назначений при загрузке новых данных
     clear_assignments_cache();
 
     if (frm.last_loaded_project == frm.doc.name && (new Date() - frm.last_loaded_time) < 300000) {
@@ -174,12 +63,15 @@ function load_work_efforts_data(frm, periodType, unit, updateRows) {
                         frm.work_efforts_dt.unfreeze();
 
                         setCellStyles();
+
                         if (typeof render_labour_percentage_chart === 'function') {
                             render_labour_percentage_chart(frm);
                         }
+
                         if (typeof render_work_efforts_chart === 'function') {
                             render_work_efforts_chart(frm);
                         }
+
                         syncPlTaskDimensionFromWe(frm);
 
                         console.timeEnd("load_work_efforts_data_optimized");
@@ -201,6 +93,8 @@ function load_work_efforts_data(frm, periodType, unit, updateRows) {
     });
 }
 
+// Свёртка (rollup) фактических данных:
+// для каждой задачи суммируются fact_* из дочерних задач с той же ролью.
 function rollup_fact_data(aggregatedTasks) {
     let tasksArray = Object.values(aggregatedTasks).sort((a, b) => b.indent - a.indent);
     tasksArray.forEach(child => {
@@ -232,3 +126,6 @@ function rollup_fact_data(aggregatedTasks) {
         }
     });
 }
+
+window.load_work_efforts_data = load_work_efforts_data;
+window.rollup_fact_data = rollup_fact_data;
