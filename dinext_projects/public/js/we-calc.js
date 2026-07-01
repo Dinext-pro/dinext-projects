@@ -1,6 +1,7 @@
 // Оптимизированный модуль для подсчёта сумм трудозатрат
 // https://erp.dinord.ru/app/issue/ISS-2025-02915
-// ISS-2025-01239: первый файл в doctype_js Project (Work Efforts)
+// ISS-2025-01239: первый файл в doctype_js Project (Work Efforts).
+// Публичный API модуля — dinext_projects.work_efforts.* (см. Object.assign в конце каждого файла).
 
 frappe.provide("dinext_projects.work_efforts");
 
@@ -8,13 +9,20 @@ frappe.provide("dinext_projects.work_efforts");
 // aggregatedTasksIn — объект { key: taskObj } или массив taskObj
 const _taskIndexCache = new WeakMap();
 
-// Утилита: очистить кеш для конкретного aggregatedTasksIn (вызовите, если данные в массиве изменились)
+/**
+ * Очистить кеш агрегатора для конкретного aggregatedTasksIn.
+ * @param {Record<string, ConsolidatedTaskEntry> | ConsolidatedTaskEntry[] | null | undefined} aggregatedTasksIn
+ */
 function clearTaskIndexCacheFor(aggregatedTasksIn) {
     if (aggregatedTasksIn && _taskIndexCache.has(aggregatedTasksIn)) {
         _taskIndexCache.delete(aggregatedTasksIn);
     }
 }
 
+/**
+ * @param {Record<string, ConsolidatedTaskEntry> | ConsolidatedTaskEntry[] | null | undefined} aggregatedTasksIn
+ * @returns {object | null}
+ */
 function makeAggregator(aggregatedTasksIn) {
     if (!aggregatedTasksIn) return null;
     let agr = _taskIndexCache.get( aggregatedTasksIn );
@@ -132,10 +140,18 @@ function makeAggregator(aggregatedTasksIn) {
     return aggr;
 }
 
-// Новая версия calc_we_column_total, использующая агрегатор
+/**
+ * Сумма plan/actual по колонке периода (оптимизированный агрегатор).
+ * @param {WorkEffortsForm} frm
+ * @param {string[]} roles
+ * @param {DisplayPeriod} period
+ * @param {boolean} [calc_plan]
+ * @param {boolean} [calc_fact]
+ * @returns {ColumnTotal}
+ */
 function calc_we_column_total_optimized(frm, roles, period, calc_plan = true, calc_fact = false) {
     // Построим агрегатор (рекомендуется вызывать подготовку один раз и переиспользовать объект)
-    let aggregator = makeAggregator(frm.aggregatedTasks);
+    let aggregator = dinext_projects.work_efforts.makeAggregator(frm.aggregatedTasks);
 
     const year = period.year;
     const month = period.month;
@@ -182,6 +198,8 @@ function calc_we_column_total_optimized(frm, roles, period, calc_plan = true, ca
     return { plan: totalPlan, actual: totalActual };
 }
 
-window.clearTaskIndexCacheFor = clearTaskIndexCacheFor;
-window.makeAggregator = makeAggregator;
-window.calc_we_column_total_optimized = calc_we_column_total_optimized;
+Object.assign(dinext_projects.work_efforts, {
+    clearTaskIndexCacheFor,
+    makeAggregator,
+    calc_we_column_total_optimized,
+});

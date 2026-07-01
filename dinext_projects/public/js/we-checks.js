@@ -4,8 +4,9 @@ let allAssignmentsLoaded = false;
 let isLoadingAssignments = false;
 
 /**
- * Загрузка ВСЕХ назначений проекта (один запрос)
- * Вызывается только при необходимости
+ * Загрузка всех назначений проекта (один запрос).
+ * @param {WorkEffortsForm} frm
+ * @returns {Promise<void>}
  */
 function load_all_assignments_if_needed(frm) {
     if (allAssignmentsLoaded) {
@@ -79,18 +80,15 @@ function load_all_assignments_if_needed(frm) {
 }
 
 /**
- * Получение назначений для конкретной задачи (использует общий кэш)
+ * @param {string} task_id
+ * @returns {WorkloadAssignment[]}
  */
 function get_task_assignments(task_id) {
     return assignmentsCache[task_id] || [];
 }
 
-/**
- * Проверка наличия плановых трудозатрат для задач с загрузкой в % от трудоемкости
- */
+/** @param {WorkEffortsForm} frm */
 function check_plan_load_for_percentage_assignments(frm) {
-    console.log("Запуск проверки плановых трудозатрат");
-
     if (!frm.aggregatedTasks || Object.keys(frm.aggregatedTasks).length === 0) {
         frappe.msgprint(__("Сначала дождитесь загрузки данных таблицы трудозатрат"));
         return;
@@ -106,11 +104,11 @@ function check_plan_load_for_percentage_assignments(frm) {
         $('#toggle_plan').text(__("Скрыть план"));
     }
 
-    load_detailed_assignments(frm).then(() => {
+    dinext_projects.work_efforts.load_detailed_assignments(frm).then(() => {
         let task_ids = Object.keys(frm.aggregatedTasks);
         let missingPlanMap = {};
         let missingPlanPeriodsMap = {};
-        let periods = get_display_periods(frm, "month");
+        let periods = dinext_projects.work_efforts.get_display_periods(frm, "month");
 
         for (let task_id of task_ids) {
             let task_data = frm.aggregatedTasks[task_id];
@@ -210,16 +208,12 @@ function check_plan_load_for_percentage_assignments(frm) {
         frm._missingPlanMap = missingPlanMap;
         frm._missingPlanPeriodsMap = missingPlanPeriodsMap;
 
-        console.log("Найдено проблемных задач:", Object.keys(missingPlanMap).length);
-        console.log("Периоды с нулевым планом при наличии загрузки:", missingPlanPeriodsMap);
-
-        updateTable(frm, "month", "hours");
+        dinext_projects.work_efforts.updateTable(frm, "month", "hours");
 
         setTimeout(() => {
             let rows = frm.work_efforts_dt.datamanager.getRows();
-            console.log("expandParents: rows length =", rows?.length);
             if (rows && rows.length) {
-                expandParents(frm, missingPlanMap);
+                dinext_projects.work_efforts.expandParents(frm, missingPlanMap);
             }
         }, 300);
 
@@ -239,7 +233,8 @@ function check_plan_load_for_percentage_assignments(frm) {
 }
 
 /**
- * Загрузка детальных назначений с датами
+ * @param {WorkEffortsForm} frm
+ * @returns {Promise<void>}
  */
 function load_detailed_assignments(frm) {
     if (frm._detailedAssignmentsLoaded) {
@@ -299,16 +294,14 @@ function clear_assignments_cache() {
         cur_frm._detailedAssignmentsLoaded = false;
         cur_frm._workloadPeriodsMap = null;
     }
-
-    console.log("Кэш назначений очищен");
 }
 
-// Раскрывает родительские задачи для проблемных дочерних
-// Замечание 1. Раскрывать нужно ТОЛЬКО те узлы, которые мы подсвечиваем
+/**
+ * @param {WorkEffortsForm} frm
+ * @param {Record<string, string[]>} missingPlanMap
+ */
 function expandParents(frm, missingPlanMap) {
     if (!frm.work_efforts_dt || !frm.work_efforts_dt.rowmanager) return;
-
-    console.log("expandParents: проблемных задач =", Object.keys(missingPlanMap).length);
 
     let tableData = frm.work_efforts_dt.datamanager.data;
 
@@ -405,7 +398,7 @@ function updateTooltipPosition(target) {
 function showCustomTooltip(target, text) {
     if (!target) return;
 
-    initCustomTooltip();
+    dinext_projects.work_efforts.initCustomTooltip();
     currentTooltipTarget = target;
     $customTooltip.text(text).show();
     updateTooltipPosition(target);
@@ -413,7 +406,7 @@ function showCustomTooltip(target, text) {
     if (tooltipTimeout) clearTimeout(tooltipTimeout);
     tooltipTimeout = setTimeout(() => {
         if (currentTooltipTarget === target) {
-            hideCustomTooltip();
+            dinext_projects.work_efforts.hideCustomTooltip();
         }
     }, 3000);
 }
@@ -440,10 +433,10 @@ $(document).on('mouseenter', '[data-tooltip]', function(e) {
 
     let text = $(this).attr('data-tooltip');
     if (text) {
-        showCustomTooltip(this, text);
+        dinext_projects.work_efforts.showCustomTooltip(this, text);
     }
 }).on('mouseleave', '[data-tooltip]', function() {
-    hideCustomTooltip();
+    dinext_projects.work_efforts.hideCustomTooltip();
 
     if ($(this).tooltip) {
         $(this).tooltip('enable');
@@ -459,7 +452,10 @@ $(window).on('scroll', function() {
 // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
 
 /**
- * Проверяет, попадает ли период в сроки задачи
+ * @param {DisplayPeriod} period
+ * @param {string | null | undefined} startDate
+ * @param {string | null | undefined} endDate
+ * @returns {boolean}
  */
 function isPeriodInTaskDates(period, startDate, endDate) {
     if (!startDate && !endDate) return false;
@@ -480,7 +476,11 @@ function isPeriodInTaskDates(period, startDate, endDate) {
 }
 
 /**
- * Проверяет, есть ли загрузка у задачи в указанном периоде
+ * @param {WorkEffortsForm} frm
+ * @param {string} taskId
+ * @param {string} role
+ * @param {DisplayPeriod} period
+ * @returns {boolean}
  */
 function hasWorkloadInPeriod(frm, taskId, role, period) {
     let workloadPeriods = frm._workloadPeriodsMap?.[taskId]?.[role];
@@ -491,16 +491,17 @@ function hasWorkloadInPeriod(frm, taskId, role, period) {
 }
 
 /**
- * Построение карты периодов с загрузкой для всех задач
+ * @param {WorkEffortsForm} frm
+ * @returns {Promise<void>}
  */
 function buildWorkloadPeriodsMap(frm) {
-    return load_all_assignments_if_needed(frm).then(() => {
+    return dinext_projects.work_efforts.load_all_assignments_if_needed(frm).then(() => {
         let workloadMap = {};
-        let periods = get_display_periods(frm, "month");
+        let periods = dinext_projects.work_efforts.get_display_periods(frm, "month");
         let task_ids = Object.keys(frm.aggregatedTasks);
 
         for (let task_id of task_ids) {
-            let assignments = get_task_assignments(task_id);
+            let assignments = dinext_projects.work_efforts.get_task_assignments(task_id);
             if (!assignments || assignments.length === 0) continue;
 
             workloadMap[task_id] = {};
@@ -554,19 +555,20 @@ function buildWorkloadPeriodsMap(frm) {
         }
 
         frm._workloadPeriodsMap = workloadMap;
-        console.log("Карта периодов с загрузкой построена:", workloadMap);
     });
 }
 
-window.load_all_assignments_if_needed = load_all_assignments_if_needed;
-window.get_task_assignments = get_task_assignments;
-window.check_plan_load_for_percentage_assignments = check_plan_load_for_percentage_assignments;
-window.load_detailed_assignments = load_detailed_assignments;
-window.clear_assignments_cache = clear_assignments_cache;
-window.expandParents = expandParents;
-window.initCustomTooltip = initCustomTooltip;
-window.showCustomTooltip = showCustomTooltip;
-window.hideCustomTooltip = hideCustomTooltip;
-window.isPeriodInTaskDates = isPeriodInTaskDates;
-window.hasWorkloadInPeriod = hasWorkloadInPeriod;
-window.buildWorkloadPeriodsMap = buildWorkloadPeriodsMap;
+Object.assign(dinext_projects.work_efforts, {
+    load_all_assignments_if_needed,
+    get_task_assignments,
+    check_plan_load_for_percentage_assignments,
+    load_detailed_assignments,
+    clear_assignments_cache,
+    expandParents,
+    initCustomTooltip,
+    showCustomTooltip,
+    hideCustomTooltip,
+    isPeriodInTaskDates,
+    hasWorkloadInPeriod,
+    buildWorkloadPeriodsMap,
+});

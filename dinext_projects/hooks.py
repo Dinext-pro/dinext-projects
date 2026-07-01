@@ -215,6 +215,7 @@ fixtures = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
+# Project / Work Efforts: we-calc.js первым (frappe.provide → dinext_projects.work_efforts).
 doctype_js = {
     "Project": [
         "public/js/we-calc.js",

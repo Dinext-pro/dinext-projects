@@ -1,10 +1,16 @@
 // we-table/limits.js — recalculatePeriodLimits, setCellStyles
 // ISS-2025-01239
 
-// === Расчёт лимитов по периодам ISS-2025-01239 ===
+/**
+ * Расчёт лимитов по периодам через work_efforts_api.calculate_timesheet_limits.
+ * @param {WorkEffortsForm} frm
+ * @param {string} periodType
+ * @param {() => void} [callback]
+ */
 function recalculatePeriodLimits(frm, periodType, callback) {
+    /** @type {TimesheetPositionInput[]} */
     let periodPositions = [];
-    let periods = get_display_periods(frm, periodType);
+    let periods = dinext_projects.work_efforts.get_display_periods(frm, periodType);
 
     Object.values(frm.aggregatedTasks || {}).forEach(task => {
         (task.role_data || []).forEach(roleEntry => {
@@ -58,10 +64,10 @@ function recalculatePeriodLimits(frm, periodType, callback) {
 }
 
 function setCellStyles() {
-    // debugger;
-    const tasksHeaderCell = document.querySelector(".work-efforts-table .dt-cell--header-0");
     $(".work-efforts-table .datatable .dt-scrollable").addClass("dt-fit-height");
 }
 
-window.recalculatePeriodLimits = recalculatePeriodLimits;
-window.setCellStyles = setCellStyles;
+Object.assign(dinext_projects.work_efforts, {
+    recalculatePeriodLimits,
+    setCellStyles,
+});

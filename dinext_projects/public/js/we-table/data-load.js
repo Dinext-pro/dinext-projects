@@ -1,20 +1,24 @@
 // we-table/data-load.js — load_work_efforts_data, rollup_fact_data
 // ISS-2025-01239
 
-let _sum_we_cache = {};
-
+/**
+ * Загружает consolidated data через work_efforts_api.get_work_efforts_consolidated_data.
+ * @param {WorkEffortsForm} frm
+ * @param {string} periodType
+ * @param {string} unit
+ * @param {boolean} [updateRows]
+ */
 function load_work_efforts_data(frm, periodType, unit, updateRows) {
     // Очистка кэша назначений при загрузке новых данных
-    clear_assignments_cache();
+    dinext_projects.work_efforts.clear_assignments_cache();
 
     if (frm.last_loaded_project == frm.doc.name && (new Date() - frm.last_loaded_time) < 300000) {
         return;
     }
 
     frm.work_efforts_dt.freeze();
-    console.time("load_work_efforts_data_optimized");
 
-    clearTaskIndexCacheFor(frm.aggregatedTasks);
+    dinext_projects.work_efforts.clearTaskIndexCacheFor(frm.aggregatedTasks);
 
     frappe.call({
         method: "dinext_projects.dinext_projects.work_efforts_api.get_work_efforts_consolidated_data",
@@ -25,8 +29,6 @@ function load_work_efforts_data(frm, periodType, unit, updateRows) {
         freeze_message: __("Загрузка данных о трудозатратах..."),
         callback: function(r) {
             if (r.message) {
-                console.timeLog("load_work_efforts_data_optimized", "Данные получены");
-
                 let tasksArray = r.message;
                 frm.aggregatedTasks = {};
 
@@ -36,10 +38,6 @@ function load_work_efforts_data(frm, periodType, unit, updateRows) {
                     }
                 });
 
-                console.log("Загруженные задачи:", Object.keys(frm.aggregatedTasks));
-
-                _sum_we_cache = {};
-
                 function doContinue() {
                     let table_data = tasksArray;
                     let visibleRows;
@@ -48,11 +46,9 @@ function load_work_efforts_data(frm, periodType, unit, updateRows) {
                         visibleRows = frm.work_efforts_dt.bodyRenderer.visibleRowIndices;
                     }
 
-                    buildWorkloadPeriodsMap(frm).then(() => {
-                        console.time("work_efforts_dt.refresh");
+                    dinext_projects.work_efforts.buildWorkloadPeriodsMap(frm).then(() => {
                         frm.work_efforts_dt.refresh(table_data);
                         frm.work_efforts_dt.rowmanager.collapseAllNodes();
-                        console.timeEnd("work_efforts_dt.refresh");
 
                         if (visibleRows) {
                             frm.work_efforts_dt.rowmanager.showRows(visibleRows);
@@ -60,26 +56,21 @@ function load_work_efforts_data(frm, periodType, unit, updateRows) {
 
                         frm.work_efforts_dt.unfreeze();
 
-                        setCellStyles();
+                        dinext_projects.work_efforts.setCellStyles();
 
-                        if (typeof render_labour_percentage_chart === 'function') {
+                        if (typeof render_labour_percentage_chart === "function") {
                             render_labour_percentage_chart(frm);
                         }
 
-                        if (typeof render_work_efforts_chart === 'function') {
-                            render_work_efforts_chart(frm);
-                        }
-
-                        syncPlTaskDimensionFromWe(frm);
-
-                        console.timeEnd("load_work_efforts_data_optimized");
+                        dinext_projects.work_efforts.render_work_efforts_chart(frm);
+                        dinext_projects.work_efforts.syncPlTaskDimensionFromWe(frm);
 
                         frm.last_loaded_project = frm.doc.name;
                         frm.last_loaded_time = new Date();
                     });
                 }
 
-                recalculatePeriodLimits(frm, periodType, doContinue);
+                dinext_projects.work_efforts.recalculatePeriodLimits(frm, periodType, doContinue);
             }
         },
         error: function(err) {
@@ -90,8 +81,11 @@ function load_work_efforts_data(frm, periodType, unit, updateRows) {
     });
 }
 
-// Свёртка (rollup) фактических данных:
-// для каждой задачи суммируются fact_* из дочерних задач с той же ролью.
+/**
+ * Свёртка (rollup) фактических данных:
+ * для каждой задачи суммируются fact_* из дочерних задач с той же ролью.
+ * @param {Record<string, ConsolidatedTaskEntry>} aggregatedTasks
+ */
 function rollup_fact_data(aggregatedTasks) {
     let tasksArray = Object.values(aggregatedTasks).sort((a, b) => b.indent - a.indent);
     tasksArray.forEach(child => {
@@ -124,5 +118,7 @@ function rollup_fact_data(aggregatedTasks) {
     });
 }
 
-window.load_work_efforts_data = load_work_efforts_data;
-window.rollup_fact_data = rollup_fact_data;
+Object.assign(dinext_projects.work_efforts, {
+    load_work_efforts_data,
+    rollup_fact_data,
+});
