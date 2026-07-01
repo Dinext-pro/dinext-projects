@@ -1,7 +1,5 @@
-// render.js — render_work_efforts_table, updateTable, frappe.ui.form.on Project
-// Part of dinext_projects.work_efforts namespace (we-table/)
-
-applyWorkEffortsStyles();
+// we-table/render.js — render_work_efforts_table, updateTable, frappe.ui.form.on Project
+// ISS-2025-01239
 
 /**
  * Синхронизация задач WE -> P&L без повторной инъекции (guard от double pass).
@@ -15,20 +13,11 @@ function syncPlTaskDimensionFromWe(frm) {
     if (budgetsArr.some(row => row && row.task)) return;
     updateTaskDimension(frm);
 }
-dinext_projects.work_efforts.syncPlTaskDimensionFromWe = syncPlTaskDimensionFromWe;
 
-frappe.ui.form.on("Project", {
-    refresh: function(frm) {
-        render_work_efforts_table(frm);
-    }
-});
-
-frappe.ui.form.on("Project", {
-    onload: function(frm) {
-        frm.show_assignments = false;
-        render_work_efforts_table(frm);
-    }
-});
+// Тонкая обёртка над calc_we_column_total_optimized из we-calc.js
+function calc_we_column_total(frm, roles, period, calc_plan = true, calc_fact = false) {
+    return calc_we_column_total_optimized(frm, roles, period, calc_plan, calc_fact);
+}
 
 /**
  * Отрисовка таблицы «Трудозатраты»
@@ -45,8 +34,8 @@ function render_work_efforts_table(frm) {
 
     let wrapper = frm.get_field("custom_work_efforts").$wrapper;
     wrapper.addClass("work_efforts_container");
-
     wrapper.empty();
+
     frm.aggregatedTasks = null;
     frm.we_periods = {};
 
@@ -66,7 +55,7 @@ function render_work_efforts_table(frm) {
     let selectedUnit = "hours";
     let all_roles = get_project_roles(frm);
 
-    // Добавляем чекбокс "Назначения"
+    // Чекбокс "Назначения"
     let checkbox_wrapper = $('<div class="assignments-checkbox-wrapper"></div>').appendTo(controls);
 
     let assignments_checkbox = frappe.ui.form.make_control({
@@ -81,7 +70,6 @@ function render_work_efforts_table(frm) {
                 let newStickyCount = frm.show_assignments ? 5 : 4;
                 frm.work_efforts_dt.setStickyColumnsCount(newStickyCount);
 
-                // Используем updateTable вместо refresh для сохранения иерархии
                 if (frm.show_assignments && !allAssignmentsLoaded) {
                     load_all_assignments_if_needed(frm).then(() => {
                         updateTable(frm, selectedPeriodType, selectedUnit);
@@ -95,9 +83,10 @@ function render_work_efforts_table(frm) {
         only_input: false,
         render_input: true
     });
+
     assignments_checkbox.refresh();
 
-    // Добавляем кнопку "Проверить" с margin-left: auto
+    // Кнопка "Проверить"
     controls.append(`
         <div class="btn-group">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -154,7 +143,6 @@ function render_work_efforts_table(frm) {
         e.stopPropagation();
         perform_overload_check(frm);
     });
-    //
 
     // Инициализация таблицы
     function init_table() {
@@ -201,13 +189,16 @@ function render_work_efforts_table(frm) {
                             total_actual += r.actual;
                         });
 
-                        let delta = total_plan ? (((total_actual - total_plan) / total_plan) * 100).toFixed(1) : 0;
+                        let delta = total_plan
+                            ? (((total_actual - total_plan) / total_plan) * 100).toFixed(1)
+                            : 0;
 
                         return `<div class="work-efforts-group">
                             ${cur_frm.hide_plan ? "" : `<div class="we-group-plan"><span>${total_plan.toFixed(1)}</span></div>`}
                             <div class="we-group-actual"><span class="readonly-fact">${total_actual.toFixed(1)}</span></div>
                             ${cur_frm.hide_delta ? "" : `<div class="we-group-delta"><span>${Number.parseFloat(delta).toFixed(1)}%</span></div>`}
                           </div>`;
+
                     } else if (cell.colIndex == 0) {
                         return __('Итого');
                     } else if (cell.colIndex > 1) {
@@ -225,10 +216,12 @@ function render_work_efforts_table(frm) {
                             let total_plan = r.plan;
                             let total_actual = r.actual;
 
-                            let delta = total_plan ? (((total_actual - total_plan) / total_plan) * 100).toFixed(1) : 0;
+                            let delta = total_plan
+                                ? (((total_actual - total_plan) / total_plan) * 100).toFixed(1)
+                                : 0;
 
                             return `<div class="work-efforts-group"
-                                data-year="${year}" 
+                                data-year="${year}"
                                 data-month="${month}">
                                 ${cur_frm.hide_plan ? "" : `<div class="we-group-plan"><span>${total_plan.toFixed(1)}</span></div>`}
                                 <div class="we-group-actual"><span class="readonly-fact">${total_actual.toFixed(1)}</span></div>
@@ -236,6 +229,7 @@ function render_work_efforts_table(frm) {
                               </div>`;
                         }
                     }
+
                     return "";
                 }
             }
@@ -243,14 +237,14 @@ function render_work_efforts_table(frm) {
 
         load_work_efforts_data(frm, selectedPeriodType, selectedUnit);
     }
+
     init_table();
+
     frm.last_loaded_project = frm.doc.name;
     frm.last_loaded_time = new Date();
 
-    // Рендерим легенду
     render_legend(legend_container);
 }
-dinext_projects.work_efforts.render_work_efforts_table = render_work_efforts_table;
 
 function updateTable(frm, periodType, unit, skipRestore = false) {
     console.log('UPDATE TABLE');
@@ -268,16 +262,12 @@ function updateTable(frm, periodType, unit, skipRestore = false) {
         cur_frm.work_efforts_dt.bodyScrollable.dispatchEvent(new CustomEvent('scroll'));
         frm.work_efforts_dt.unfreeze();
 
-        // При внесении прогноза и плана исчезали загрузка и назначения
-        // Добавил восстановление карты загрузки и перезагрузку назначений после обновления таблицы
+        // Восстановление карты загрузки и назначений после обновления таблицы
         if (!skipRestore) {
             setTimeout(() => {
-                // Восстанавливаем карту загрузки
                 buildWorkloadPeriodsMap(frm).then(() => {
-                    // Если чекбокс включен - восстанавливаем назначения
                     if (frm.show_assignments) {
                         load_all_assignments_if_needed(frm).then(() => {
-                            // Обновляем ТОЛЬКО колонку назначений (не пересоздавая таблицу)
                             frm.work_efforts_dt.refresh(
                                 Object.values(frm.aggregatedTasks),
                                 get_columns_definition(frm, periodType, unit)
@@ -294,55 +284,18 @@ function updateTable(frm, periodType, unit, skipRestore = false) {
         }
     });
 }
-dinext_projects.work_efforts.updateTable = updateTable;
 
-// Обработчик клика на строку назначений
-$(document).on('click', '.assignment-row', function(e) {
-    e.stopPropagation();
+window.render_work_efforts_table = render_work_efforts_table;
+window.updateTable = updateTable;
+window.syncPlTaskDimensionFromWe = syncPlTaskDimensionFromWe;
+window.calc_we_column_total = calc_we_column_total;
 
-    let task_id = $(this).data('task');
-    if (!task_id) {
-        let $row = $(this).closest('.dt-row');
-        let rowIndex = $row.data('row-index');
-        if (rowIndex !== undefined) {
-            let rowData = cur_frm.work_efforts_dt.datamanager.getData(rowIndex);
-            if (rowData && rowData.value) {
-                task_id = rowData.value;
-            }
-        }
-    }
-
-    if (!task_id) return;
-
-    let task_data = cur_frm.aggregatedTasks[task_id];
-    if (!task_data) return;
-
-    let task = {
-        name: task_id,
-        project: cur_frm.doc.name,
-        subject: task_data.subject,
-        exp_start_date: task_data.exp_start_date,
-        exp_end_date: task_data.exp_end_date
-    };
-
-    if (typeof start_pwa_dialog === 'function') {
-        start_pwa_dialog(function(pwas) {
-            clear_assignments_cache();
-
-            load_all_assignments_if_needed(cur_frm).then(() => {
-                updateTable(cur_frm, "month", "hours");
-
-                setTimeout(() => {
-                    check_plan_load_for_percentage_assignments(cur_frm);
-                }, 300);
-            });
-
-            frappe.show_alert({
-                message: __('Назначения обновлены'),
-                indicator: 'green'
-            }, 3);
-        }, task);
-    } else {
-        frappe.msgprint(__("Функция назначений недоступна"));
+frappe.ui.form.on("Project", {
+    refresh: function(frm) {
+        render_work_efforts_table(frm);
+    },
+    onload: function(frm) {
+        frm.show_assignments = false;
+        render_work_efforts_table(frm);
     }
 });
