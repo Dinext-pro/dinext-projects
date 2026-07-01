@@ -179,7 +179,7 @@ function save_forecast_as_plan(frm) {
     }
 
     frappe.call({
-        method: "save_forecast_as_plan",
+        method: "dinext_projects.dinext_projects.work_efforts_api.save_forecast_as_plan",
         args: {
             project: frm.doc.name,
             data: JSON.stringify(data)

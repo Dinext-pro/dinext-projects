@@ -9,18 +9,27 @@ from __future__ import annotations
 
 import frappe
 
+from dinext_projects.dinext_projects.work_efforts.models import (
+    ConsolidatedDataFormInput,
+    ConsolidatedDataResponse,
+    ConsolidatedTaskEntry,
+    WorkEffortRoleEntry,
+)
+
 
 _logger = frappe.logger("work_efforts")
 
 
-def _to_float(value) -> float:
+def _to_float(value: object) -> float:
     try:
         return float(value or 0)
     except Exception:
         return 0.0
 
 
-def run_get_work_efforts_consolidated_data(form_dict) -> list:
+def run_get_work_efforts_consolidated_data(
+    form_dict: ConsolidatedDataFormInput,
+) -> ConsolidatedDataResponse:
     project = form_dict.get("project")
 
     Task = frappe.qb.DocType("Task")
@@ -56,14 +65,14 @@ def run_get_work_efforts_consolidated_data(form_dict) -> list:
 
     task_dict = {task["value"]: task for task in tasks}
 
-    child_map: dict[str, list] = {}
+    child_map: dict[str, list[str]] = {}
     for task in tasks:
         parent = task["parent_task"] or ""
         if parent not in child_map:
             child_map[parent] = []
         child_map[parent].append(task["value"])
 
-    def build_hierarchy(parent_id: str, level: int, result_list: list) -> None:
+    def build_hierarchy(parent_id: str, level: int, result_list: list[dict]) -> None:
         if parent_id in child_map:
             for child_id in child_map[parent_id]:
                 if child_id in task_dict:
@@ -72,7 +81,7 @@ def run_get_work_efforts_consolidated_data(form_dict) -> list:
                     result_list.append(task)
                     build_hierarchy(child_id, level + 1, result_list)
 
-    hierarchical_tasks: list = []
+    hierarchical_tasks: list[dict] = []
     if "" in child_map:
         for root_id in child_map[""]:
             if root_id in task_dict:
@@ -103,7 +112,7 @@ def run_get_work_efforts_consolidated_data(form_dict) -> list:
     )
     pwe_list = pwe_query.run(as_dict=True)
 
-    pwe_grouped: dict = {}
+    pwe_grouped: dict[tuple[str, str], dict] = {}
     for row in pwe_list:
         key = (row["pwe_task"], row["pwe_project_role"] or "")
         if key not in pwe_grouped:
@@ -135,7 +144,7 @@ def run_get_work_efforts_consolidated_data(form_dict) -> list:
     )
     ts_raw_data = ts_query.run(as_dict=True)
 
-    fact_grouped: dict = {}
+    fact_grouped: dict[tuple[str, str], dict] = {}
     for row in ts_raw_data:
         if row["period"]:
             parts = row["period"].split("-")
@@ -157,14 +166,14 @@ def run_get_work_efforts_consolidated_data(form_dict) -> list:
                     fact_grouped[key]["fact_utps"][period_key] = []
                 fact_grouped[key]["fact_utps"][period_key].append(row["name"])
 
-    aggregated_tasks: dict = {}
+    aggregated_tasks: dict[str, ConsolidatedTaskEntry] = {}
     for task in tasks:
         task_id = task["value"]
         aggregated_tasks[task_id] = {**task, "role_data": []}
 
     for (task_id, role), data in pwe_grouped.items():
         if task_id in aggregated_tasks:
-            role_entry: dict = {"role": role}
+            role_entry: WorkEffortRoleEntry = {"role": role}
             for period_key, value in data["plan_data"].items():
                 role_entry[f"plan_{period_key}"] = value
             for period_key, value in data["forecast_data"].items():
@@ -173,7 +182,7 @@ def run_get_work_efforts_consolidated_data(form_dict) -> list:
 
     for (task_id, role), data in fact_grouped.items():
         if task_id in aggregated_tasks:
-            role_entry = None
+            role_entry: WorkEffortRoleEntry | None = None
             for entry in aggregated_tasks[task_id]["role_data"]:
                 if entry["role"] == role:
                     role_entry = entry
@@ -202,7 +211,7 @@ def run_get_work_efforts_consolidated_data(form_dict) -> list:
             parent = aggregated_tasks[parent_id]
             for role_entry in child.get("role_data", []):
                 role = role_entry["role"]
-                parent_role_entry = None
+                parent_role_entry: WorkEffortRoleEntry | None = None
                 for pre in parent.get("role_data", []):
                     if pre["role"] == role:
                         parent_role_entry = pre
@@ -222,7 +231,7 @@ def run_get_work_efforts_consolidated_data(form_dict) -> list:
                         parent_utps = parent_role_entry.get(key, [])
                         parent_role_entry[key] = parent_utps + child_utps
 
-    result_list: list = []
+    result_list: ConsolidatedDataResponse = []
     if "" in child_map:
         for root_id in child_map[""]:
             if root_id in aggregated_tasks:

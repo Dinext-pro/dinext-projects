@@ -16,6 +16,13 @@ import frappe
 from dinext_projects.dinext_projects.work_efforts.consolidated_data import (
     run_get_work_efforts_consolidated_data,
 )
+from dinext_projects.dinext_projects.work_efforts.models import (
+    ConsolidatedDataFormInput,
+    ConsolidatedDataResponse,
+    SaveForecastAsPlanFormInput,
+    TimesheetLimitsFormInput,
+    TimesheetLimitsResponse,
+)
 from dinext_projects.dinext_projects.work_efforts.timesheet_limits import (
     run_calculate_timesheet_limits,
 )
@@ -25,18 +32,21 @@ from dinext_projects.dinext_projects.work_efforts.save_forecast_as_plan import (
 
 
 @frappe.whitelist()
-def get_work_efforts_consolidated_data():
+def get_work_efforts_consolidated_data() -> ConsolidatedDataResponse:
     """Consolidated Work Efforts data for a project. API method: get_work_efforts_consolidated_data."""
-    return run_get_work_efforts_consolidated_data(frappe.form_dict)
+    form_input: ConsolidatedDataFormInput = frappe.form_dict
+    return run_get_work_efforts_consolidated_data(form_input)
 
 
 @frappe.whitelist()
-def calculate_timesheet_limits():
+def calculate_timesheet_limits() -> TimesheetLimitsResponse:
     """Calculate plan/fact limits for timesheet positions. API method: calculate_timesheet_limits."""
-    return run_calculate_timesheet_limits(frappe.form_dict)
+    form_input: TimesheetLimitsFormInput = frappe.form_dict
+    return run_calculate_timesheet_limits(form_input)
 
 
 @frappe.whitelist()
-def save_forecast_as_plan():
+def save_forecast_as_plan() -> int:
     """Save forecast values as plan in Project Work Efforts. API method: save_forecast_as_plan."""
-    return run_save_forecast_as_plan(frappe.form_dict)
+    form_input: SaveForecastAsPlanFormInput = frappe.form_dict
+    return run_save_forecast_as_plan(form_input)

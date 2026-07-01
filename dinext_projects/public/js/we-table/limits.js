@@ -32,7 +32,7 @@ function recalculatePeriodLimits(frm, periodType, callback) {
 
     if (periodPositions.length > 0) {
         frappe.call({
-            method: 'calculate_timesheet_limits',
+            method: 'dinext_projects.dinext_projects.work_efforts_api.calculate_timesheet_limits',
             args: {
                 timesheet_name: '',
                 positions: periodPositions
