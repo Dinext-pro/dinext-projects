@@ -1,8 +1,9 @@
 /**
- * Выполняет проверку перегрузки
+ * Проверка перегрузки PWA относительно прогноза PWE.
+ * @param {WorkEffortsForm} frm
  */
 function perform_overload_check(frm) {
-    let periods = get_display_periods(frm, "month");
+    let periods = dinext_projects.work_efforts.get_display_periods(frm, "month");
     
     frappe.call({
         method: "project_workload_assignment.project_workload_api.check_workload_overload",
@@ -47,7 +48,7 @@ function perform_overload_check(frm) {
                     }
                 });
                 
-                show_overload_details_dialog(overloads, frm);
+                dinext_projects.work_efforts.show_overload_details_dialog(overloads, frm);
             } else if (r.message && r.message.error) {
                 console.error("Server error:", r.message.error);
                 frappe.msgprint(__("Ошибка при проверке: {0}", [r.message.error]));
@@ -64,7 +65,8 @@ function perform_overload_check(frm) {
 }
 
 /**
- * Показывает диалог с деталями перегрузок используя StickyDataTable
+ * @param {Array<{task: string, role: string, months?: unknown[]}>} overloads
+ * @param {WorkEffortsForm} frm
  */
 function show_overload_details_dialog(overloads, frm) {
     if (!overloads || overloads.length === 0) return;
@@ -190,7 +192,7 @@ function show_overload_details_dialog(overloads, frm) {
             
             frappe.confirm(
                 __("Обновить прогноз для {0} позиций?", [selected_rows.length]),
-                () => update_forecast_from_assignments(frm, selected_rows, dialog)
+                () => dinext_projects.work_efforts.update_forecast_from_assignments(frm, selected_rows, dialog)
             );
         },
         secondary_action_label: __("Закрыть"),
@@ -319,7 +321,9 @@ function escape_html(str) {
 }
 
 /**
- * Обновляет прогнозные данные на основе назначений
+ * @param {WorkEffortsForm} frm
+ * @param {Array<{task: string, role: string, months: unknown[]}>} selectedRows
+ * @param {object} [dialog]
  */
 function update_forecast_from_assignments(frm, selectedRows, dialog) {
     let updates = [];
@@ -359,14 +363,14 @@ function update_forecast_from_assignments(frm, selectedRows, dialog) {
                 
                 if (dialog) dialog.hide();
                 
-                clear_assignments_cache();
-                clearTaskIndexCacheFor(frm.aggregatedTasks);
+                dinext_projects.work_efforts.clear_assignments_cache();
+                dinext_projects.work_efforts.clearTaskIndexCacheFor(frm.aggregatedTasks);
                 frm.last_loaded_time = null;
                 frm.last_loaded_project = null;
                 frm._overloadMap = {};
                 frm._missingPlanMap = {};
                 
-                load_work_efforts_data(frm, "month", "hours", true);
+                dinext_projects.work_efforts.load_work_efforts_data(frm, "month", "hours", true);
             } else if (r.message && r.message.error) {
                 frappe.msgprint(__("Ошибка при обновлении: {0}", [r.message.error]));
             } else {
@@ -380,7 +384,9 @@ function update_forecast_from_assignments(frm, selectedRows, dialog) {
     });
 }
 
-window.perform_overload_check = perform_overload_check;
-window.show_overload_details_dialog = show_overload_details_dialog;
-window.escape_html = escape_html;
-window.update_forecast_from_assignments = update_forecast_from_assignments;
+Object.assign(dinext_projects.work_efforts, {
+    perform_overload_check,
+    show_overload_details_dialog,
+    escape_html,
+    update_forecast_from_assignments,
+});

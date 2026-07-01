@@ -3,6 +3,7 @@
 
 /**
  * Синхронизация задач WE -> P&L без повторной инъекции (guard от double pass).
+ * @param {WorkEffortsForm} frm
  */
 function syncPlTaskDimensionFromWe(frm) {
     if (typeof updateTaskDimension !== 'function') return;
@@ -14,13 +15,21 @@ function syncPlTaskDimensionFromWe(frm) {
     updateTaskDimension(frm);
 }
 
-// Тонкая обёртка над calc_we_column_total_optimized из we-calc.js
+/**
+ * @param {WorkEffortsForm} frm
+ * @param {string[]} roles
+ * @param {DisplayPeriod} period
+ * @param {boolean} [calc_plan]
+ * @param {boolean} [calc_fact]
+ * @returns {ColumnTotal}
+ */
 function calc_we_column_total(frm, roles, period, calc_plan = true, calc_fact = false) {
-    return calc_we_column_total_optimized(frm, roles, period, calc_plan, calc_fact);
+    return dinext_projects.work_efforts.calc_we_column_total_optimized(frm, roles, period, calc_plan, calc_fact);
 }
 
 /**
- * Отрисовка таблицы «Трудозатраты»
+ * Отрисовка таблицы «Трудозатраты».
+ * @param {WorkEffortsForm} frm
  */
 function render_work_efforts_table(frm) {
     if (frm.show_assignments === undefined) {
@@ -28,7 +37,6 @@ function render_work_efforts_table(frm) {
     }
 
     if (frm.last_loaded_project == frm.doc.name && (new Date() - frm.last_loaded_time) < 300000) {
-        console.log("Загружены данные проекта и прошло менее 5 минут..");
         return;
     }
 
@@ -49,11 +57,11 @@ function render_work_efforts_table(frm) {
         <button class="btn btn-default" id="toggle_delta">${__("Показать Δ")}</button>
     `);
 
-    addViewOptionsControl(frm, controls);
+    dinext_projects.work_efforts.addViewOptionsControl(frm, controls);
 
     let selectedPeriodType = "month";
     let selectedUnit = "hours";
-    let all_roles = get_project_roles(frm);
+    let all_roles = dinext_projects.work_efforts.get_project_roles(frm);
 
     // Чекбокс "Назначения"
     let checkbox_wrapper = $('<div class="assignments-checkbox-wrapper"></div>').appendTo(controls);
@@ -71,11 +79,11 @@ function render_work_efforts_table(frm) {
                 frm.work_efforts_dt.setStickyColumnsCount(newStickyCount);
 
                 if (frm.show_assignments && !allAssignmentsLoaded) {
-                    load_all_assignments_if_needed(frm).then(() => {
-                        updateTable(frm, selectedPeriodType, selectedUnit);
+                    dinext_projects.work_efforts.load_all_assignments_if_needed(frm).then(() => {
+                        dinext_projects.work_efforts.updateTable(frm, selectedPeriodType, selectedUnit);
                     });
                 } else {
-                    updateTable(frm, selectedPeriodType, selectedUnit);
+                    dinext_projects.work_efforts.updateTable(frm, selectedPeriodType, selectedUnit);
                 }
             }
         },
@@ -109,7 +117,7 @@ function render_work_efforts_table(frm) {
             frappe.confirm(
                 __("Вы уверены, что хотите сохранить выбранные прогнозные / фактические данные как плановые?"),
                 () => {
-                    save_forecast_as_plan(frm);
+                    dinext_projects.work_efforts.save_forecast_as_plan(frm);
                 },
                 () => {
                     frappe.show_alert(__("Операция отменена"), 3);
@@ -121,32 +129,32 @@ function render_work_efforts_table(frm) {
     controls.find('#toggle_plan').on('click', function() {
         frm.hide_plan = !frm.hide_plan;
         $(this).text(frm.hide_plan ? __("Показать план") : __("Скрыть план"));
-        updateTable(frm, selectedPeriodType, selectedUnit);
-        render_work_efforts_chart(frm);
+        dinext_projects.work_efforts.updateTable(frm, selectedPeriodType, selectedUnit);
+        dinext_projects.work_efforts.render_work_efforts_chart(frm);
     });
 
     controls.find('#toggle_delta').on('click', function() {
         frm.hide_delta = !frm.hide_delta;
         $(this).text(frm.hide_delta ? __("Показать Δ") : __("Скрыть Δ"));
-        updateTable(frm, selectedPeriodType, selectedUnit);
+        dinext_projects.work_efforts.updateTable(frm, selectedPeriodType, selectedUnit);
     });
 
     controls.find('#check_plan_load').on('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        check_plan_load_for_percentage_assignments(frm);
+        dinext_projects.work_efforts.check_plan_load_for_percentage_assignments(frm);
     });
 
     //ISS-2025-02858 + ст.186
     controls.find('#check_workload_overload').on('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        perform_overload_check(frm);
+        dinext_projects.work_efforts.perform_overload_check(frm);
     });
 
     // Инициализация таблицы
     function init_table() {
-        let columns = get_columns_definition(frm, selectedPeriodType, selectedUnit);
+        let columns = dinext_projects.work_efforts.get_columns_definition(frm, selectedPeriodType, selectedUnit);
         let stickyCount = frm.show_assignments ? 5 : 4;
 
         frm.work_efforts_dt = new StickyDataTable(table_container[0], {
@@ -177,14 +185,14 @@ function render_work_efforts_table(frm) {
             hooks: {
                 columnTotal(columnValues, cell) {
                     if (cell.column.id == "total") {
-                        let periods = get_display_periods(frm, frm.currentPeriodType || "month");
-                        let all_roles = get_project_roles(frm).filter(r => r);
+                        let periods = dinext_projects.work_efforts.get_display_periods(frm, frm.currentPeriodType || "month");
+                        let all_roles = dinext_projects.work_efforts.get_project_roles(frm).filter(r => r);
 
                         let total_plan = 0;
                         let total_actual = 0;
 
                         periods.forEach(function(period) {
-                            let r = calc_we_column_total(frm, all_roles, period, !frm.hide_plan);
+                            let r = dinext_projects.work_efforts.calc_we_column_total(frm, all_roles, period, !frm.hide_plan);
                             total_plan += r.plan;
                             total_actual += r.actual;
                         });
@@ -207,12 +215,12 @@ function render_work_efforts_table(frm) {
                         if (parts.length == 3) {
                             let year = parts[1];
                             let month = parts[2];
-                            let periods = get_display_periods(frm, frm.currentPeriodType || "month");
+                            let periods = dinext_projects.work_efforts.get_display_periods(frm, frm.currentPeriodType || "month");
                             let period = periods.find(p => p.year == year && p.month == month);
 
-                            let all_roles = get_project_roles(frm).filter(r => r);
+                            let all_roles = dinext_projects.work_efforts.get_project_roles(frm).filter(r => r);
 
-                            let r = calc_we_column_total(frm, all_roles, period, !frm.hide_plan);
+                            let r = dinext_projects.work_efforts.calc_we_column_total(frm, all_roles, period, !frm.hide_plan);
                             let total_plan = r.plan;
                             let total_actual = r.actual;
 
@@ -235,7 +243,7 @@ function render_work_efforts_table(frm) {
             }
         });
 
-        load_work_efforts_data(frm, selectedPeriodType, selectedUnit);
+        dinext_projects.work_efforts.load_work_efforts_data(frm, selectedPeriodType, selectedUnit);
     }
 
     init_table();
@@ -243,19 +251,23 @@ function render_work_efforts_table(frm) {
     frm.last_loaded_project = frm.doc.name;
     frm.last_loaded_time = new Date();
 
-    render_legend(legend_container);
+    dinext_projects.work_efforts.render_legend(legend_container);
 }
 
+/**
+ * @param {WorkEffortsForm} frm
+ * @param {string} periodType
+ * @param {string} unit
+ * @param {boolean} [skipRestore]
+ */
 function updateTable(frm, periodType, unit, skipRestore = false) {
-    console.log('UPDATE TABLE');
-
-    recalculatePeriodLimits(frm, periodType, function() {
+    dinext_projects.work_efforts.recalculatePeriodLimits(frm, periodType, function() {
         frm.work_efforts_dt.freeze();
         let visibleRows = frm.work_efforts_dt.bodyRenderer.visibleRowIndices;
 
         frm.work_efforts_dt.refresh(
             Object.values(frm.aggregatedTasks),
-            get_columns_definition(frm, periodType, unit)
+            dinext_projects.work_efforts.get_columns_definition(frm, periodType, unit)
         );
 
         frm.work_efforts_dt.rowmanager.showRows(visibleRows);
@@ -265,12 +277,12 @@ function updateTable(frm, periodType, unit, skipRestore = false) {
         // Восстановление карты загрузки и назначений после обновления таблицы
         if (!skipRestore) {
             setTimeout(() => {
-                buildWorkloadPeriodsMap(frm).then(() => {
+                dinext_projects.work_efforts.buildWorkloadPeriodsMap(frm).then(() => {
                     if (frm.show_assignments) {
-                        load_all_assignments_if_needed(frm).then(() => {
+                        dinext_projects.work_efforts.load_all_assignments_if_needed(frm).then(() => {
                             frm.work_efforts_dt.refresh(
                                 Object.values(frm.aggregatedTasks),
-                                get_columns_definition(frm, periodType, unit)
+                                dinext_projects.work_efforts.get_columns_definition(frm, periodType, unit)
                             );
 
                             // Фикс от 24.04.2026 --- ПОСЛЕ ОБНОВЛЕНИЯ АВАТАРОВ - СВОРАЧИВАЕМ ВСЕ УЗЛЫ
@@ -285,17 +297,19 @@ function updateTable(frm, periodType, unit, skipRestore = false) {
     });
 }
 
-window.render_work_efforts_table = render_work_efforts_table;
-window.updateTable = updateTable;
-window.syncPlTaskDimensionFromWe = syncPlTaskDimensionFromWe;
-window.calc_we_column_total = calc_we_column_total;
+Object.assign(dinext_projects.work_efforts, {
+    render_work_efforts_table,
+    updateTable,
+    syncPlTaskDimensionFromWe,
+    calc_we_column_total,
+});
 
 frappe.ui.form.on("Project", {
     refresh: function(frm) {
-        render_work_efforts_table(frm);
+        dinext_projects.work_efforts.render_work_efforts_table(frm);
     },
     onload: function(frm) {
         frm.show_assignments = false;
-        render_work_efforts_table(frm);
+        dinext_projects.work_efforts.render_work_efforts_table(frm);
     }
 });

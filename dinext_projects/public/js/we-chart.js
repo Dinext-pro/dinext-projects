@@ -28,21 +28,21 @@ applyWEChartStyle();
 
 frappe.ui.form.on("Project", {
     refresh: function(frm) {
-        render_work_efforts_chart(frm, false);
+        dinext_projects.work_efforts.render_work_efforts_chart(frm, false);
     }
 });
 
 frappe.ui.form.on("Limit Control", "limit", function(frm, cdt, cdn) {
-    render_work_efforts_chart(frm, false)
+    dinext_projects.work_efforts.render_work_efforts_chart(frm, false)
 });
 
 frappe.ui.form.on("Limit Control", "type", function(frm, cdt, cdn) {
-    render_work_efforts_chart(frm, false)
+    dinext_projects.work_efforts.render_work_efforts_chart(frm, false)
 });
 
 frappe.ui.form.on("Limit Control", {  
     custom_limit_control_table_remove: function(frm, cdt, cdn) {  
-        render_work_efforts_chart(frm, false);
+        dinext_projects.work_efforts.render_work_efforts_chart(frm, false);
     }  
 });
 
@@ -53,14 +53,14 @@ function add_role_filter_control(frm, controls) {
 		df: {
 			fieldtype: 'Select',
 			fieldname: "chart-roles",
-			options: get_project_roles(frm),
+			options: dinext_projects.work_efforts.get_project_roles(frm),
 			get_status: function(i) {
                 return "Write";
             },
             change: async function(i){
                 if ( this.value != this.last_value ) {
                     frm._we_selected_role = this.value;
-                    render_work_efforts_chart(frm, false);
+                    dinext_projects.work_efforts.render_work_efforts_chart(frm, false);
                 }
             }
 		},
@@ -74,9 +74,14 @@ function add_role_filter_control(frm, controls) {
    labels, plan (по периодам), actual_forecast (по периодам),
    cumulative_plan, cumulative_actual_forecast, periods, plan_by_period
 */
+/**
+ * @param {WorkEffortsForm} frm
+ * @param {string} selectedRole
+ * @returns {object}
+ */
 function build_chart_data(frm, selectedRole) {
     let aggregatedTasks = frm.aggregatedTasks || {};
-    let periods = get_display_periods(frm, "month");
+    let periods = dinext_projects.work_efforts.get_display_periods(frm, "month");
     let labels = periods.map(p => `${p.year}-${String(p.month).padStart(2,'0')}`);
 
     // Вспомогательная рекурсивная функция: возвращает { plan, actual } для заданной задачи и роли за период
@@ -140,7 +145,7 @@ function build_chart_data(frm, selectedRole) {
     let plan_per_period = [];
     let actual_per_period = [];
     
-    let all_roles = get_project_roles(frm).filter(r => r );
+    let all_roles = dinext_projects.work_efforts.get_project_roles(frm).filter(r => r );
     let rootTasks = Object.values(aggregatedTasks).filter(t => !t.parent_task);
 
     if ( rootTasks.length ) {
@@ -196,7 +201,7 @@ function get_limits( frm ) {
 }
 
 function get_chart_data(frm, selectedRole) {
-    let dataObj = build_chart_data(frm, selectedRole);
+    let dataObj = dinext_projects.work_efforts.build_chart_data(frm, selectedRole);
     
     let finalCumulativePlan = dataObj.cumulative_plan.length ? dataObj.cumulative_plan[dataObj.cumulative_plan.length - 1] : Math.max(...(dataObj.plan_by_period.concat([1])));
     let finalCumulativeActual = dataObj.cumulative_actual_forecast.length ? dataObj.cumulative_actual_forecast[dataObj.cumulative_actual_forecast.length - 1] : Math.max(...(dataObj.actual_forecast.concat([1])));
@@ -274,10 +279,14 @@ function get_we_chart_options( frm, data ) {
    - plan и fact отображаются столбиками (bar) по периодам
    - cumulative_plan и cumulative_fact отображаются линиями (line)
 */
+/**
+ * @param {WorkEffortsForm} frm
+ * @param {boolean} [init]
+ */
 function render_work_efforts_chart(frm, init = true) {
     try {
         let selectedRole = frm._we_selected_role || "";
-        let data = get_chart_data(frm, selectedRole);
+        let data = dinext_projects.work_efforts.get_chart_data(frm, selectedRole);
         
         if ( frm._we_chart_instance ) {
             if ( init ) {
@@ -312,3 +321,9 @@ function render_work_efforts_chart(frm, init = true) {
         console.error("render_work_efforts_chart error:", e);
     }
 }
+
+Object.assign(dinext_projects.work_efforts, {
+    render_work_efforts_chart,
+    build_chart_data,
+    get_chart_data,
+});

@@ -13,10 +13,10 @@ function applyWorkEffortsStyles() {
 	document.head.appendChild(link);
 }
 
-window.applyWorkEffortsStyles = applyWorkEffortsStyles;
+Object.assign(dinext_projects.work_efforts, { applyWorkEffortsStyles });
 
-$(document).ready(() => applyWorkEffortsStyles());
+$(document).ready(() => dinext_projects.work_efforts.applyWorkEffortsStyles());
 
 if (typeof frappe !== "undefined") {
-	frappe.after_ajax(() => applyWorkEffortsStyles())
+	frappe.after_ajax(() => dinext_projects.work_efforts.applyWorkEffortsStyles())
 }
