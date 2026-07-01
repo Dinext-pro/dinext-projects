@@ -223,6 +223,13 @@ doctype_js = {
         "public/js/we-styles.js",
         "public/js/we-chart.js",
         "public/js/we-overload.js",
+        "public/js/we-table/controls.js",
+        "public/js/we-table/data-load.js",
+        "public/js/we-table/columns.js",
+        "public/js/we-table/cell-edit.js",
+        "public/js/we-table/limits.js",
+        "public/js/we-table/render.js",
+        "public/js/we-table.js",
     ]
 }
 doctype_css = {
