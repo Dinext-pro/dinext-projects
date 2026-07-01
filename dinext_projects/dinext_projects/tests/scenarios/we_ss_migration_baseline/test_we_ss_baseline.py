@@ -1,5 +1,5 @@
 # Copyright (c) 2026, Dinext
-"""Регрессия Server Script Work Efforts перед миграцией в dinext_projects Python."""
+"""Регрессия Server Script Work Efforts + dual-mode (SS vs Python) после миграции ISS-2025-01239."""
 
 from __future__ import annotations
 
@@ -20,11 +20,37 @@ from .data_setup import (
 	dependency_project_available,
 )
 
+from dinext_projects.dinext_projects.work_efforts.consolidated_data import (
+	run_get_work_efforts_consolidated_data,
+)
+from dinext_projects.dinext_projects.work_efforts.timesheet_limits import (
+	run_calculate_timesheet_limits,
+)
+from dinext_projects.dinext_projects.work_efforts.save_forecast_as_plan import (
+	run_save_forecast_as_plan,
+)
+
 
 FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
 
 VOLATILE_ROLE_PREFIXES = ("fact_utps_",)
 ROUND_DIGITS = 2
+
+
+def call_python_api(func_name: str, **params: Any) -> Any:
+	"""Вызывает Python-функцию из work_efforts модуля напрямую, без HTTP-слоя."""
+	prev_fd = getattr(frappe.local, "form_dict", None)
+	frappe.local.form_dict = frappe._dict(params)
+	try:
+		if func_name == "get_work_efforts_consolidated_data":
+			return run_get_work_efforts_consolidated_data(frappe.form_dict)
+		elif func_name == "calculate_timesheet_limits":
+			return run_calculate_timesheet_limits(frappe.form_dict)
+		elif func_name == "save_forecast_as_plan":
+			return run_save_forecast_as_plan(frappe.form_dict)
+		raise ValueError(f"Unknown func_name: {func_name}")
+	finally:
+		frappe.local.form_dict = prev_fd
 
 
 def call_server_script_api(api_method: str, **params: Any):
@@ -203,6 +229,132 @@ class TestWEServerScriptMigrationBaseline(FrappeTestCase):
 		]
 		frappe.set_user("Administrator")
 		call_server_script_api(
+			"save_forecast_as_plan",
+			project=project,
+			data=json.dumps(payload),
+		)
+
+		updated = get_plan_hours(pwe, fy, month)
+		self.assertAlmostEqual(updated, TC03_FORECAST_PLAN, places=ROUND_DIGITS)
+
+
+	def test_tc01_python_path_consolidated_data(self):
+		"""TC-01 Python: get_work_efforts_consolidated_data — Python-путь vs golden fixture."""
+		if not dependency_project_available():
+			self.skipTest(f"Dependency project {DEPENDENCY_PROJECT} отсутствует на сайте")
+
+		fixture_path = FIXTURES_DIR / "tc01_consolidated_golden.json"
+		if not fixture_path.exists():
+			self.skipTest(f"Golden fixture missing: {fixture_path.name}")
+
+		with open(fixture_path, encoding="utf-8") as f:
+			golden = json.load(f)
+		golden.pop("_comment", None)
+
+		frappe.set_user("Administrator")
+		raw = call_python_api(
+			"get_work_efforts_consolidated_data",
+			project=DEPENDENCY_PROJECT,
+			view_options=DEPENDENCY_VIEW_OPTIONS,
+		)
+		actual = normalize_consolidated_golden(
+			raw,
+			project=DEPENDENCY_PROJECT,
+			view_options=DEPENDENCY_VIEW_OPTIONS,
+		)
+
+		self.assertEqual(actual["project"], golden["project"])
+		self.assertEqual(actual["view_options"], golden["view_options"])
+		self.assertEqual(actual["task_count"], golden["task_count"])
+		self.assertEqual(actual["tasks"], golden["tasks"])
+
+	def test_tc01_dual_mode_consolidated_data(self):
+		"""TC-01 dual-mode: Python-путь vs SS-путь дают одинаковый нормализованный вывод."""
+		if not dependency_project_available():
+			self.skipTest(f"Dependency project {DEPENDENCY_PROJECT} отсутствует на сайте")
+
+		frappe.set_user("Administrator")
+		kwargs = dict(project=DEPENDENCY_PROJECT, view_options=DEPENDENCY_VIEW_OPTIONS)
+
+		raw_ss = call_server_script_api("get_work_efforts_consolidated_data", **kwargs)
+		raw_py = call_python_api("get_work_efforts_consolidated_data", **kwargs)
+
+		norm_ss = normalize_consolidated_golden(raw_ss, project=DEPENDENCY_PROJECT, view_options=DEPENDENCY_VIEW_OPTIONS)
+		norm_py = normalize_consolidated_golden(raw_py, project=DEPENDENCY_PROJECT, view_options=DEPENDENCY_VIEW_OPTIONS)
+
+		self.assertEqual(norm_py["task_count"], norm_ss["task_count"])
+		self.assertEqual(norm_py["tasks"], norm_ss["tasks"])
+
+	def test_tc02_python_path_timesheet_limits(self):
+		"""TC-02 Python: calculate_timesheet_limits — Python-путь vs golden fixture."""
+		fixture_path = FIXTURES_DIR / "tc02_limits_golden.json"
+		if not fixture_path.exists():
+			self.skipTest(f"Golden fixture missing: {fixture_path.name}")
+
+		with open(fixture_path, encoding="utf-8") as f:
+			golden = json.load(f)
+		golden.pop("_comment", None)
+
+		frappe.set_user("Administrator")
+		raw = call_python_api(
+			"calculate_timesheet_limits",
+			positions=json.dumps(golden["positions_payload"]),
+			timesheet_name=golden.get("timesheet_name") or "",
+		)
+		actual = normalize_limits_golden(raw)
+		self.assertEqual(actual, golden["results"])
+
+	def test_tc02_dual_mode_timesheet_limits(self):
+		"""TC-02 dual-mode: Python-путь vs SS-путь дают одинаковый нормализованный вывод."""
+		fixture_path = FIXTURES_DIR / "tc02_limits_golden.json"
+		if not fixture_path.exists():
+			self.skipTest(f"Golden fixture missing: {fixture_path.name}")
+
+		with open(fixture_path, encoding="utf-8") as f:
+			golden = json.load(f)
+		golden.pop("_comment", None)
+
+		frappe.set_user("Administrator")
+		kwargs = dict(
+			positions=json.dumps(golden["positions_payload"]),
+			timesheet_name=golden.get("timesheet_name") or "",
+		)
+
+		raw_ss = call_server_script_api("calculate_timesheet_limits", **kwargs)
+		raw_py = call_python_api("calculate_timesheet_limits", **kwargs)
+
+		norm_ss = normalize_limits_golden(raw_ss)
+		norm_py = normalize_limits_golden(raw_py)
+
+		self.assertEqual(norm_py, norm_ss)
+
+	def test_tc03_python_path_save_forecast_as_plan(self):
+		"""TC-03 Python: save_forecast_as_plan — Python-путь записывает pwea_plan."""
+		if not frappe.db.exists("DocType", "Project Work Efforts"):
+			self.skipTest("DocType Project Work Efforts не установлен")
+
+		ctx = prepare_case_save_forecast_as_plan()
+		project = str(ctx["project"])
+		task = str(ctx["task"])
+		pwe = str(ctx["pwe"])
+		fy = str(ctx["fiscal_year"])
+		year = int(ctx["year"])
+		month = int(ctx["month"])
+		role = str(ctx["role"])
+
+		self.assertEqual(get_plan_hours(pwe, fy, month), float(ctx["initial_plan"]))
+
+		payload = [
+			{
+				"task": task,
+				"role": role,
+				"year": year,
+				"month": month,
+				"plan_value": TC03_FORECAST_PLAN,
+			}
+		]
+		frappe.set_user("Administrator")
+		call_python_api(
 			"save_forecast_as_plan",
 			project=project,
 			data=json.dumps(payload),
