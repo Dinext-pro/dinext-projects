@@ -1,3 +1,4 @@
+/* Стили таблицы трудозатрат. Подключается из we-styles.js через <link> (Frappe не имеет doctype_css). */
 :root {
     --we-period-plan-bg: #ede0f5;
     --we-period-forecast-bg: #e0e8ff;

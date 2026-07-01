@@ -8,7 +8,6 @@ function load_work_efforts_data(frm, periodType, unit, updateRows) {
     clear_assignments_cache();
 
     if (frm.last_loaded_project == frm.doc.name && (new Date() - frm.last_loaded_time) < 300000) {
-        console.log("Используем кэшированные данные проекта (прошло менее 5 минут)");
         return;
     }
 
@@ -18,7 +17,7 @@ function load_work_efforts_data(frm, periodType, unit, updateRows) {
     clearTaskIndexCacheFor(frm.aggregatedTasks);
 
     frappe.call({
-        method: "get_work_efforts_consolidated_data",
+        method: "dinext_projects.dinext_projects.work_efforts_api.get_work_efforts_consolidated_data",
         args: {
             project: frm.doc.name,
             view_options: frm.view_options || "Прогноз и факт"
@@ -41,7 +40,6 @@ function load_work_efforts_data(frm, periodType, unit, updateRows) {
 
                 _sum_we_cache = {};
 
-                // === НОВЫЙ БЛОК: Расчёт лимитов по периодам ISS-2025-01239 ===
                 function doContinue() {
                     let table_data = tasksArray;
                     let visibleRows;
@@ -82,7 +80,6 @@ function load_work_efforts_data(frm, periodType, unit, updateRows) {
                 }
 
                 recalculatePeriodLimits(frm, periodType, doContinue);
-                // === КОНЕЦ БЛОКА ===
             }
         },
         error: function(err) {

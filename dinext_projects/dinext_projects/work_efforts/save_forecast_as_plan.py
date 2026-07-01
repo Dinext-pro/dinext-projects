@@ -13,8 +13,13 @@ import json
 
 import frappe
 
+from dinext_projects.dinext_projects.work_efforts.models import (
+    SaveForecastAsPlanFormInput,
+    SaveForecastAsPlanItem,
+)
 
-def run_save_forecast_as_plan(form_dict) -> int:
+
+def run_save_forecast_as_plan(form_dict: SaveForecastAsPlanFormInput) -> int:
     project = form_dict.get("project")
     data = form_dict.get("data", "[]")
 
@@ -27,7 +32,7 @@ def run_save_forecast_as_plan(form_dict) -> int:
         frappe.throw("Неверный формат данных")
         return 0
 
-    data_list = json.loads(data)
+    data_list: list[SaveForecastAsPlanItem] = json.loads(data)
     processed_count = 0
 
     for item in data_list:
@@ -60,7 +65,7 @@ def run_save_forecast_as_plan(form_dict) -> int:
         else:
             role = None
 
-        filters: dict = {"pwe_project": project, "pwe_task": task}
+        filters: dict[str, object] = {"pwe_project": project, "pwe_task": task}
         if role:
             filters["pwe_project_role"] = role
         else:

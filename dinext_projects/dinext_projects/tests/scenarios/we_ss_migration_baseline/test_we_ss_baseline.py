@@ -68,6 +68,21 @@ def call_server_script_api(api_method: str, **params: Any):
 		frappe.local.form_dict = prev_fd
 
 
+def server_script_api_enabled(api_method: str) -> bool:
+	return bool(
+		frappe.db.get_value(
+			"Server Script",
+			{"api_method": api_method, "disabled": 0},
+			"name",
+		)
+	)
+
+
+def call_work_efforts_api(api_method: str, **params: Any):
+	"""Primary path: Python module (post-migration). SS only for dual-mode."""
+	return call_python_api(api_method, **params)
+
+
 def _round_num(value: Any) -> Any:
 	if isinstance(value, bool) or value is None:
 		return value
@@ -167,7 +182,7 @@ class TestWEServerScriptMigrationBaseline(FrappeTestCase):
 		golden.pop("_comment", None)
 
 		frappe.set_user("Administrator")
-		raw = call_server_script_api(
+		raw = call_work_efforts_api(
 			"get_work_efforts_consolidated_data",
 			project=DEPENDENCY_PROJECT,
 			view_options=DEPENDENCY_VIEW_OPTIONS,
@@ -194,7 +209,7 @@ class TestWEServerScriptMigrationBaseline(FrappeTestCase):
 		golden.pop("_comment", None)
 
 		frappe.set_user("Administrator")
-		raw = call_server_script_api(
+		raw = call_work_efforts_api(
 			"calculate_timesheet_limits",
 			positions=json.dumps(golden["positions_payload"]),
 			timesheet_name=golden.get("timesheet_name") or "",
@@ -228,7 +243,7 @@ class TestWEServerScriptMigrationBaseline(FrappeTestCase):
 			}
 		]
 		frappe.set_user("Administrator")
-		call_server_script_api(
+		call_python_api(
 			"save_forecast_as_plan",
 			project=project,
 			data=json.dumps(payload),
@@ -270,6 +285,8 @@ class TestWEServerScriptMigrationBaseline(FrappeTestCase):
 
 	def test_tc01_dual_mode_consolidated_data(self):
 		"""TC-01 dual-mode: Python-путь vs SS-путь дают одинаковый нормализованный вывод."""
+		if not server_script_api_enabled("get_work_efforts_consolidated_data"):
+			self.skipTest("Server Script disabled — dual-mode skipped")
 		if not dependency_project_available():
 			self.skipTest(f"Dependency project {DEPENDENCY_PROJECT} отсутствует на сайте")
 
@@ -306,6 +323,8 @@ class TestWEServerScriptMigrationBaseline(FrappeTestCase):
 
 	def test_tc02_dual_mode_timesheet_limits(self):
 		"""TC-02 dual-mode: Python-путь vs SS-путь дают одинаковый нормализованный вывод."""
+		if not server_script_api_enabled("calculate_timesheet_limits"):
+			self.skipTest("Server Script disabled — dual-mode skipped")
 		fixture_path = FIXTURES_DIR / "tc02_limits_golden.json"
 		if not fixture_path.exists():
 			self.skipTest(f"Golden fixture missing: {fixture_path.name}")

@@ -1,19 +1,22 @@
-// CSS загружается через doctype_css (we-table.css).
-// Функция оставлена для обратной совместимости с вызовами из других скриптов.
+// we-styles.js — подключает we-table.css на форме Project (паттерн как PWR)
+// ISS-2025-01239
+
+const WE_TABLE_CSS = "/assets/dinext_projects/css/we-table.css";
+
 function applyWorkEffortsStyles() {
-    // Удаляем старый inline <style> от Client Script если остался
-    var old = document.getElementById('work-efforts-styles');
-    if (old) old.remove();
+	if (document.querySelector(`link[href^="${WE_TABLE_CSS}"]`)) return;
+
+	const link = document.createElement("link");
+	link.id = "work-efforts-styles";
+	link.rel = "stylesheet";
+	link.href = WE_TABLE_CSS;
+	document.head.appendChild(link);
 }
 
 window.applyWorkEffortsStyles = applyWorkEffortsStyles;
 
-$(document).ready(function() {
-    applyWorkEffortsStyles();
-});
+$(document).ready(() => applyWorkEffortsStyles());
 
-if (typeof frappe !== 'undefined') {
-    frappe.after_ajax(function() {
-        applyWorkEffortsStyles();
-    });
+if (typeof frappe !== "undefined") {
+	frappe.after_ajax(() => applyWorkEffortsStyles())
 }
