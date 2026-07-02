@@ -21,11 +21,36 @@ from dinext_projects.dinext_projects.work_efforts.models import (
 )
 
 
+def _parse_limit_rows(rows: list[dict]) -> dict[str, float | None]:
+    def parse(typ: str) -> float | None:
+        for row in rows:
+            row_type = (row.get("type") or "").strip().lower()
+            if row_type == typ:
+                limit = row.get("limit")
+                if isinstance(limit, (int, float)):
+                    return float(limit)
+                if limit and str(limit).replace(".", "", 1).isdigit():
+                    return float(limit)
+        return None
+
+    return {
+        "block": parse("блокировка"),
+        "warning": parse("предупреждение") or 100,
+        "message": parse("уведомление"),
+    }
+
+
 def run_calculate_timesheet_limits(
     form_dict: TimesheetLimitsFormInput,
 ) -> TimesheetLimitsResponse:
     positions: list[TimesheetPositionInput] = json.loads(form_dict["positions"])
     timesheet_name = form_dict.get("timesheet_name")
+
+    session_limits_override: dict[str, float | None] | None = None
+    if form_dict.get("project_limits"):
+        session_limits_override = _parse_limit_rows(
+            json.loads(form_dict["project_limits"])
+        )
 
     cache: dict[str, dict] = {
         "has_children": {},
@@ -242,6 +267,9 @@ def run_calculate_timesheet_limits(
         return None
 
     def get_project_limits(project: str) -> dict[str, float | None]:
+        if session_limits_override is not None:
+            return session_limits_override
+
         if project in cache["limits"]:
             return cache["limits"][project]
 
@@ -250,21 +278,7 @@ def run_calculate_timesheet_limits(
             filters={"parent": project, "parenttype": "Project"},
             fields=["type", "limit"],
         )
-
-        def parse(typ: str) -> float | None:
-            for r in rows:
-                if r.type.strip().lower() == typ:
-                    if isinstance(r.limit, (int, float)):
-                        return float(r.limit)
-                    if r.limit and str(r.limit).replace(".", "", 1).isdigit():
-                        return float(r.limit)
-            return None
-
-        limits = {
-            "block": parse("блокировка"),
-            "warning": parse("предупреждение") or 100,
-            "message": parse("уведомление"),
-        }
+        limits = _parse_limit_rows(rows)
         cache["limits"][project] = limits
         return limits
 
