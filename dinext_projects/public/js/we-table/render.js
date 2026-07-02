@@ -61,6 +61,8 @@ function render_work_efforts_table(frm) {
 
     let selectedPeriodType = "month";
     let selectedUnit = "hours";
+    frm._we_period_type = selectedPeriodType;
+    frm._we_unit = selectedUnit;
     let all_roles = dinext_projects.work_efforts.get_project_roles(frm);
 
     // Чекбокс "Назначения"
@@ -311,5 +313,8 @@ frappe.ui.form.on("Project", {
     onload: function(frm) {
         frm.show_assignments = false;
         dinext_projects.work_efforts.render_work_efforts_table(frm);
-    }
+    },
+    after_save: function(frm) {
+        dinext_projects.work_efforts.refreshLimitHighlight(frm);
+    },
 });
