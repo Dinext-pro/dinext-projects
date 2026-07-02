@@ -29,11 +29,19 @@ class TimesheetPositionInput(TypedDict, total=False):
     custom_username: str | None
 
 
+class LimitControlRowInput(TypedDict, total=False):
+    """Строка child table Limit Control (override порогов с формы)."""
+
+    type: str | None
+    limit: float | str | int | None
+
+
 class TimesheetLimitsFormInput(TypedDict, total=False):
     """Входные параметры для calculate_timesheet_limits."""
 
     positions: str
     timesheet_name: str | None
+    project_limits: str | None
 
 
 class SaveForecastAsPlanItem(TypedDict, total=False):

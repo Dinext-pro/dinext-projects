@@ -1,5 +1,20 @@
-// we-table/limits.js — recalculatePeriodLimits, setCellStyles
+// we-table/limits.js — recalculatePeriodLimits, refreshLimitHighlight, setCellStyles
 // ISS-2025-01239
+
+/**
+ * Пороги из child table «Контроль лимитов» (актуальные значения формы, в т.ч. до save).
+ * @param {WorkEffortsForm} frm
+ * @returns {Array<{type: string, limit: number}> | null}
+ */
+function getProjectLimitsOverride(frm) {
+    let rows = frm.doc.custom_limit_control_table || [];
+    if (!rows.length) {
+        return null;
+    }
+    return rows
+        .filter((row) => row.type)
+        .map((row) => ({ type: row.type, limit: row.limit }));
+}
 
 /**
  * Расчёт лимитов по периодам через work_efforts_api.calculate_timesheet_limits.
@@ -36,13 +51,21 @@ function recalculatePeriodLimits(frm, periodType, callback) {
         });
     });
 
+    /** @type {Record<string, unknown>} */
+    let apiArgs = {
+        timesheet_name: '',
+        positions: periodPositions,
+    };
+
+    let limitsOverride = getProjectLimitsOverride(frm);
+    if (limitsOverride) {
+        apiArgs.project_limits = limitsOverride;
+    }
+
     if (periodPositions.length > 0) {
         frappe.call({
             method: 'dinext_projects.dinext_projects.work_efforts_api.calculate_timesheet_limits',
-            args: {
-                timesheet_name: '',
-                positions: periodPositions
-            },
+            args: apiArgs,
             callback: function(r) {
                 if (r.message) {
                     frm.periodLimitStatuses = {};
@@ -63,11 +86,39 @@ function recalculatePeriodLimits(frm, periodType, callback) {
     }
 }
 
+/**
+ * Пересчитать обводку лимитов в таблице (без полной перезагрузки данных).
+ * @param {WorkEffortsForm} frm
+ */
+function refreshLimitHighlight(frm) {
+    if (!frm.work_efforts_dt || !frm.aggregatedTasks) {
+        return;
+    }
+    let periodType = frm._we_period_type || "month";
+    let unit = frm._we_unit || "hours";
+    dinext_projects.work_efforts.updateTable(frm, periodType, unit, true);
+}
+
 function setCellStyles() {
     $(".work-efforts-table .datatable .dt-scrollable").addClass("dt-fit-height");
 }
 
 Object.assign(dinext_projects.work_efforts, {
     recalculatePeriodLimits,
+    refreshLimitHighlight,
     setCellStyles,
+});
+
+frappe.ui.form.on("Limit Control", "limit", function(frm) {
+    dinext_projects.work_efforts.refreshLimitHighlight(frm);
+});
+
+frappe.ui.form.on("Limit Control", "type", function(frm) {
+    dinext_projects.work_efforts.refreshLimitHighlight(frm);
+});
+
+frappe.ui.form.on("Limit Control", {
+    custom_limit_control_table_remove: function(frm) {
+        dinext_projects.work_efforts.refreshLimitHighlight(frm);
+    },
 });
