@@ -215,22 +215,8 @@ fixtures = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# Project / Work Efforts: we-calc.js первым (frappe.provide → dinext_projects.work_efforts).
-doctype_js = {
-    "Project": [
-        "public/js/we-calc.js",
-        "public/js/we-checks.js",
-        "public/js/we-styles.js",
-        "public/js/we-chart.js",
-        "public/js/we-overload.js",
-        "public/js/we-table/controls.js",
-        "public/js/we-table/data-load.js",
-        "public/js/we-table/columns.js",
-        "public/js/we-table/cell-edit.js",
-        "public/js/we-table/limits.js",
-        "public/js/we-table/render.js",
-    ]
-}
+# Work Efforts UI → project_workload_assignment (ISS-2026-00002)
+# doctype_js = {}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
