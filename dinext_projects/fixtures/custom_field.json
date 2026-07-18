@@ -1052,7 +1052,7 @@
   "in_list_view": 0,
   "in_preview": 0,
   "in_standard_filter": 0,
-  "insert_after": "confirm",
+  "insert_after": "is_template",
   "is_system_generated": 0,
   "is_virtual": 0,
   "label": "Include in the User Timesheet",

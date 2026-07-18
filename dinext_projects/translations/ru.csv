@@ -45,7 +45,7 @@
 "Sprint","Спринт",""
 "Task for ABAP","Задача для ABAP",""
 "Phase","Фаза",""
-"Stage","Этап",""
+"Stage","Этап","Dinext.TaskType"
 "Rate","Тариф",""
 "Rate Category","Тариф",""
 "Cost Level","Ставка",""
