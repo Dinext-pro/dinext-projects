@@ -97,6 +97,9 @@ async function loadPositions(frm) {
 			"document_type",
 			"document_name",
 			"status",
+			"workflow_state",
+			"all_hours",
+			"custom_username",
 		],
 		limit: 0,
 		order_by: "creation asc",
@@ -108,13 +111,20 @@ async function loadPositions(frm) {
 		const details = (doc.table || []).filter(
 			(d) => d.date >= frm.doc.ts_valid_from && d.date <= frm.doc.ts_valid_for
 		);
+		const status = (item.status || item.workflow_state || "").trim();
 		let reject_reason = "";
-		if (item.status === "Отклонено") {
+		if (status === "Отклонено") {
 			reject_reason = await loadRejectReason(item.name);
 		}
+		const hoursFromDetails = details.reduce((sum, d) => sum + (flt(d.hours) || 0), 0);
 		positions.push({
 			...item,
+			status,
+			workflow_state: item.workflow_state || status,
 			user: item.user || frm.doc.timesheet_from,
+			custom_username:
+				item.custom_username || frm.doc.timesheet_from_name || "",
+			all_hours: hoursFromDetails || flt(item.all_hours) || 0,
 			details,
 			reject_reason,
 			new: false,

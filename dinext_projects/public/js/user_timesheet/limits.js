@@ -13,15 +13,48 @@ const LIMIT_COLORS = {
 	"no-plan": "#9E9E9E",
 };
 
+/** Prefer UTP.status; fall back to workflow_state (often only that is set). */
+export function positionLimitStatus(pos) {
+	return (pos?.status || pos?.workflow_state || "").trim();
+}
+
+/** Sync all_hours/status from grid rows before limits API (demodev getPayload). */
 export function getLimitsPayload(frm) {
 	const deleted = frm.deletedPositions || [];
-	const positions = (frm.ts_positions || []).filter(
-		(pos) => !deleted.some((del) => String(del) === String(pos.name))
-	);
+	const byId = {};
+	for (const row of frm.ut?.rows || []) {
+		if (row?.rowType === "position" && row.id != null) {
+			byId[String(row.id)] = row;
+		}
+	}
+	const positions = (frm.ts_positions || [])
+		.filter((pos) => !deleted.some((del) => String(del) === String(pos.name)))
+		.map((pos) => {
+			const row = byId[String(pos.name)];
+			const allHours =
+				row != null && row.total !== "" && row.total != null
+					? flt(row.total)
+					: flt(pos.all_hours);
+			return {
+				...pos,
+				status: positionLimitStatus(pos) || positionLimitStatus(row),
+				all_hours: allHours,
+				custom_username:
+					pos.custom_username || frm.doc.timesheet_from_name || "",
+			};
+		});
 	return {
 		timesheet_name: frm.doc.name,
 		positions,
 	};
+}
+
+/** demodev Check Limits_V2 tooltip text. */
+export function limitTooltipForResult(r) {
+	if (r?.planned_hours > 0) {
+		return `${r.completion_percentage}% из ${r.planned_hours} ч.`;
+	}
+	return __("Не определены плановые трудозатраты");
 }
 
 async function callLimits(args) {
@@ -56,8 +89,8 @@ export async function checkPlannedHoursAndLimits(frm) {
 				document_name: p.document_name,
 				project_role: p.project_role,
 				project: p.project,
-				status: p.status,
-				all_hours: p.all_hours,
+				status: positionLimitStatus(p),
+				all_hours: flt(p.all_hours),
 			})),
 		});
 		(message || []).forEach((r) => {
@@ -93,30 +126,52 @@ export async function checkPlannedHoursAndLimits(frm) {
 	return { errors, warnings };
 }
 
+/**
+ * demodev apply_limit_styles: write status/tooltip onto rows, force AG Grid redraw.
+ * Same rowData ref is ignored by AG Grid — replace rows + refreshCells/redrawRows.
+ */
+export function applyLimitStyles(frm, results) {
+	const byPos = {};
+	(results || []).forEach((r) => {
+		byPos[String(r.position)] = r;
+	});
+	frm.ut.limitResults = byPos;
+
+	const nextRows = (frm.ut.rows || []).map((row) => {
+		if (row.rowType !== "position") {
+			return row;
+		}
+		const r = byPos[String(row.id)];
+		return {
+			...row,
+			limit_status: r?.status || "",
+			limit_icon: r?.status || "",
+			limit_tooltip: limitTooltipForResult(r),
+		};
+	});
+	frm.ut.rows = nextRows;
+
+	const table = frm.ut.table;
+	if (!table) {
+		return;
+	}
+	table.refresh?.(nextRows);
+	const api = table.api;
+	if (api?.refreshCells) {
+		api.refreshCells({ columns: ["limit_icon"], force: true });
+	}
+	if (api?.redrawRows) {
+		api.redrawRows();
+	}
+}
+
 /** Apply limit status onto position rows + refresh grid. */
 export async function refreshLimits(frm) {
 	if (!frm.ts_positions?.length || !frm.doc.name || !frm.ut?.table) {
 		return;
 	}
 	const message = await callLimits(getLimitsPayload(frm));
-	const byPos = {};
-	(message || []).forEach((r) => {
-		byPos[String(r.position)] = r;
-	});
-	frm.ut.limitResults = byPos;
-	for (const row of frm.ut.rows || []) {
-		if (row.rowType !== "position") {
-			continue;
-		}
-		const r = byPos[String(row.id)];
-		row.limit_status = r?.status || "";
-		row.limit_icon = "";
-		row.limit_tooltip =
-			r?.planned_hours > 0
-				? `${r.completion_percentage}% из ${r.planned_hours} ч.`
-				: __("Не определены плановые трудозатраты");
-	}
-	frm.ut.table.refresh?.(frm.ut.rows);
+	applyLimitStyles(frm, message);
 }
 
 /** Debounced refresh after cell edit / copy / add-delete (demodev timesheetDataUpdated). */

@@ -13,23 +13,26 @@ function holidayHeaderClass(holidays, date) {
 	return isHoliday(holidays, date) ? "ut-holiday-col" : "";
 }
 
-/** demodev: btn-xs + fa-info-circle; color by limit status; click → plan/fact. */
+/** demodev Check Limits_V2 setButtonStyle + title tooltip; click → plan/fact. */
 function limitIconRenderer(frm) {
 	return function (params) {
 		const row = params?.data;
 		if (!row || row.rowType !== "position") {
 			return "";
 		}
+		const status = row.limit_status || "";
 		const wrap = document.createElement("button");
 		wrap.type = "button";
-		wrap.className = "btn btn-default ut-info-btn";
+		wrap.className = `btn btn-default btn-xs ut-info-btn${
+			status ? ` ut-limit-${status}` : ""
+		}`;
 		wrap.title = row.limit_tooltip || __("План / факт");
-		const color = limitIconColor(row.limit_status);
+		const color = limitIconColor(status);
 		if (color) {
 			wrap.style.color = color;
 			wrap.style.borderColor = color;
 		}
-		wrap.innerHTML = '<i class="fa fa-info-circle"></i>';
+		wrap.innerHTML = '<i class="fa fa-info-circle" aria-hidden="true"></i>';
 		wrap.addEventListener("mousedown", (e) => e.stopPropagation());
 		wrap.addEventListener("click", (e) => {
 			e.stopPropagation();

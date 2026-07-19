@@ -132,26 +132,40 @@
 	line-height: 1;
 }
 
-.user-timesheet-table .ut-limit-row-block .ut-info-btn,
-.user-timesheet-table .ut-limit-block {
-	color: #f44336;
+/* demodev Check Limits_V2 setButtonStyle — color on button + icon */
+.user-timesheet-table .ut-info-btn i {
+	color: inherit;
 }
 
+.user-timesheet-table .ut-limit-row-block .ut-info-btn,
+.user-timesheet-table .ut-info-btn.ut-limit-block {
+	color: #f44336 !important;
+	border-color: #f44336 !important;
+}
+
+/* warning = yellow; message = orange (legacy Check Limits_V2) */
 .user-timesheet-table .ut-limit-row-warning .ut-info-btn,
+.user-timesheet-table .ut-info-btn.ut-limit-warning {
+	color: #ffeb3b !important;
+	border-color: #ffeb3b !important;
+}
+
 .user-timesheet-table .ut-limit-row-message .ut-info-btn,
-.user-timesheet-table .ut-limit-warning,
-.user-timesheet-table .ut-limit-message {
-	color: #ff9800;
+.user-timesheet-table .ut-info-btn.ut-limit-message {
+	color: #ff9800 !important;
+	border-color: #ff9800 !important;
 }
 
 .user-timesheet-table .ut-limit-row-normal .ut-info-btn,
-.user-timesheet-table .ut-limit-normal {
-	color: #4caf50;
+.user-timesheet-table .ut-info-btn.ut-limit-normal {
+	color: #4caf50 !important;
+	border-color: #4caf50 !important;
 }
 
 .user-timesheet-table .ut-limit-row-no-plan .ut-info-btn,
-.user-timesheet-table .ut-limit-no-plan {
-	color: #9e9e9e;
+.user-timesheet-table .ut-info-btn.ut-limit-no-plan {
+	color: #9e9e9e !important;
+	border-color: #9e9e9e !important;
 }
 
 /* Inline Select — fill cell; center caret */
