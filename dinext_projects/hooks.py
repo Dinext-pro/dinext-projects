@@ -216,8 +216,25 @@ fixtures = [
 
 # include js in doctype views
 # Work Efforts UI → project_workload_assignment (ISS-2026-00002)
-# doctype_js = {}
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+# User Timesheet UI → public/js/user_timesheet (ISS-2026-00926 try3)
+doctype_js = {
+	"User Timesheet": "public/js/user_timesheet/entry.js",
+	"User Timesheet Position": "public/js/user_timesheet_position/form/route.js",
+}
+doctype_list_js = {
+	"User Timesheet": [
+		# reprocess helpers before status_color onload
+		"public/js/user_timesheet/list/reprocess_je.js",
+		"public/js/user_timesheet/list/status_color.js",
+	],
+	"User Timesheet Position": [
+		"public/js/user_timesheet_position/list/style.js",
+		"public/js/user_timesheet_position/list/period_filter.js",
+		"public/js/user_timesheet_position/list/functions.js",
+		"public/js/user_timesheet_position/list/history.js",
+		"public/js/user_timesheet_position/list/custom_listview.js",
+	],
+}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -309,35 +326,39 @@ after_install = "dinext_projects.install.after_install"
 # Document Events
 # ---------------
 # Hook on document methods and events
+# User Timesheet domain events (ISS-2026-00926 try3 phase 2 block A)
+# Canon bodies: demodev Server Scripts — disable matching SS on site after cutover.
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"User Timesheet": {
+		"before_save": "dinext_projects.dinext_projects.user_timesheet.events.user_timesheet.before_save",
+		# Server Script "After Save" ≡ Document.on_update (JE create/cancel)
+		"on_update": "dinext_projects.dinext_projects.user_timesheet.events.user_timesheet.on_update",
+	},
+	"User Timesheet Position": {
+		"before_insert": "dinext_projects.dinext_projects.user_timesheet.events.user_timesheet_position.before_insert",
+		"before_save": "dinext_projects.dinext_projects.user_timesheet.events.user_timesheet_position.before_save",
+		# Server Script "After Save" ≡ Document.on_update
+		"on_update": "dinext_projects.dinext_projects.user_timesheet.events.user_timesheet_position.on_update",
+		"on_trash": "dinext_projects.dinext_projects.user_timesheet.events.user_timesheet_position.on_trash",
+	},
+	"Comment": {
+		# Server Script "After Insert" ≡ Document.after_insert
+		"after_insert": "dinext_projects.dinext_projects.user_timesheet.events.comment.transfer_utp_comment_to_ut",
+	},
+}
 
 # Scheduled Tasks
 # ---------------
+# TSCrW2 weekly UT create (ISS-2026-00926 phase 2 F). Demodev cron: Mon 08:30.
 
-# scheduler_events = {
-# 	"all": [
-# 		"dinext_projects.tasks.all"
-# 	],
-# 	"daily": [
-# 		"dinext_projects.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"dinext_projects.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"dinext_projects.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"dinext_projects.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"cron": {
+		"30 8 * * 1": [
+			"dinext_projects.dinext_projects.user_timesheet.scheduler.create_weekly_timesheets",
+		],
+	},
+}
 
 # Testing
 # -------

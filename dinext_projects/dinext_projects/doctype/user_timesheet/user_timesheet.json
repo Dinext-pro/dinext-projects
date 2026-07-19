@@ -267,7 +267,7 @@
   },
   {
    "fieldname": "timesheet_details",
-   "fieldtype": "Data",
+   "fieldtype": "HTML",
    "label": "Timesheet Details"
   }
  ],
