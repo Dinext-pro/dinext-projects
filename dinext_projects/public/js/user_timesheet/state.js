@@ -1,3 +1,5 @@
+import { closeDescriptionPopover } from "./editors/description-popover.js";
+
 /**
  * Table runtime state on frm.ut (WE uses frm.we).
  * Position model for limits/copy CS compat: frm.ts_positions.
@@ -43,6 +45,7 @@ export function destroyTable(frm) {
 	if (!state) {
 		return;
 	}
+	closeDescriptionPopover();
 	if (state.table?.destroy) {
 		state.table.destroy();
 	}

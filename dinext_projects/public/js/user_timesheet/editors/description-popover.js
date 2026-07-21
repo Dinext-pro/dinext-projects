@@ -8,9 +8,7 @@ const POPOVER_SEL = ".ut-descr-popover";
 const POPOVER_WIDTH = 252;
 
 function isClosedStatus(frm) {
-	return ["На согласовании", "Согласован", "Отклонено"].includes(
-		frm.doc?.ut_status
-	);
+	return ["На согласовании", "Согласован", "Отклонено"].includes(frm.doc?.ut_status);
 }
 
 /**
@@ -45,10 +43,42 @@ export function closeDescriptionPopover() {
 	$(POPOVER_SEL).remove();
 }
 
+function focusColId(column) {
+	if (column == null) {
+		return "";
+	}
+	if (typeof column === "string") {
+		return column;
+	}
+	if (typeof column.getColId === "function") {
+		return column.getColId();
+	}
+	return "";
+}
+
+/** Live focused day cell — AG Grid marks it with .ag-cell-focus after navigation. */
+function focusedDayCellEl(api) {
+	const gui = api?.getGui?.();
+	if (gui) {
+		return gui.querySelector(".ag-cell-focus");
+	}
+	return document.querySelector(".user-timesheet-table .ag-cell-focus");
+}
+
+function resolveAnchorEl(api, anchor) {
+	if (anchor?.jquery) {
+		anchor = anchor[0];
+	}
+	if (anchor?.getBoundingClientRect) {
+		return anchor;
+	}
+	return focusedDayCellEl(api);
+}
+
 function placePopover($popover, anchor) {
-	const el = anchor?.jquery ? anchor[0] : anchor;
+	const el = resolveAnchorEl(null, anchor);
 	if (!el?.getBoundingClientRect) {
-		return;
+		return false;
 	}
 	const rect = el.getBoundingClientRect();
 	const gap = 10;
@@ -73,6 +103,7 @@ function placePopover($popover, anchor) {
 			left: `${left}px`,
 			"--caret-left": `${Math.max(14, Math.min(width - 14, caretX))}px`,
 		});
+	return true;
 }
 
 function focusDayCell(frm, row, date) {
@@ -170,9 +201,13 @@ export function openDescriptionPopover(frm, row, date, anchor) {
 		return;
 	}
 
+	const api = frm.ut?.table?.api;
 	const hoursField = dayField(date);
 	const descriptionKey = descField(date);
-	const $anchor = anchor ? $(anchor) : $();
+	const anchorEl = resolveAnchorEl(api, anchor);
+	if (!anchorEl) return;
+	
+	const $anchor = $(anchorEl);
 	const $existing = $(POPOVER_SEL);
 
 	/* Same cell — reposition / sync, do not remount (keeps cell focus). */
@@ -183,7 +218,7 @@ export function openDescriptionPopover(frm, row, date, anchor) {
 	) {
 		$existing.data({
 			utOpenedAt: Date.now(),
-			utAnchor: $anchor[0] || $anchor,
+			utAnchor: anchorEl,
 			utCtx: { frm, row, date },
 		});
 		$existing.find(".ut-descr-popover__hours").text(hoursLabel(row, date));
@@ -191,7 +226,7 @@ export function openDescriptionPopover(frm, row, date, anchor) {
 		if (!$ta.is(":focus")) {
 			$ta.val(row[descriptionKey] || "");
 		}
-		placePopover($existing, $anchor[0] || $anchor);
+		placePopover($existing, anchorEl);
 		bindOutsideClose($existing, $anchor, hoursField);
 		return;
 	}
@@ -270,12 +305,12 @@ export function openDescriptionPopover(frm, row, date, anchor) {
 		utOpenedAt: Date.now(),
 		utRowId: String(row.id),
 		utDate: date,
-		utAnchor: $anchor[0] || $anchor,
+		utAnchor: anchorEl,
 		utCtx: { frm, row, date },
 	});
 
 	$("body").append($popover);
-	placePopover($popover, $anchor[0] || $anchor);
+	placePopover($popover, anchorEl);
 	/* No autofocus — demodev: hours input keeps focus, comment is companion. */
 	setTimeout(() => bindOutsideClose($popover, $anchor, hoursField), 0);
 }
@@ -287,6 +322,40 @@ export function focusDescriptionTextarea() {
 		return true;
 	}
 	return false;
+}
+
+/**
+ * demodev: hours focus opens comment companion.
+ * Wired via gridOptions.onCellFocused → DinextTable mergeGridOptions/chainHandlers
+ * (alongside selection + fillHandle).
+ */
+export function handleDayDescrCellFocused(frm, event) {
+	const api = frm.ut?.table?.api;
+	if (!api || event?.rowIndex == null) {
+		return;
+	}
+
+	const field = focusColId(event.column);
+	if (!field.startsWith("day_")) {
+		if (!$(document.activeElement).closest(POPOVER_SEL).length) {
+			closeDescriptionPopover();
+		}
+		return;
+	}
+
+	const node = api.getDisplayedRowAtIndex?.(event.rowIndex);
+	const row = node?.data;
+	if (!row || row.rowType !== "position") {
+		closeDescriptionPopover();
+		return;
+	}
+
+	openDescriptionPopover(
+		frm,
+		row,
+		field.slice("day_".length),
+		focusedDayCellEl(api)
+	);
 }
 
 /** Alt+↓ / F2 on day cell → focus comment textarea. */

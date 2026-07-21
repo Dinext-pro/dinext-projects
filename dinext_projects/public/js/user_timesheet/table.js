@@ -5,9 +5,10 @@ import { canEdit } from "./model.js";
 import { onSaveCells, onValidateCells } from "./save.js";
 import {
 	closeDescriptionPopoverOnScroll,
+	handleDayDescrCellFocused,
 	handleDayDescrKeyDown,
-	openDescriptionPopover,
 } from "./editors/description-popover.js";
+
 import { showTaskPlanFact } from "./limits.js";
 import {
 	FIELD_PROJECT,
@@ -56,20 +57,6 @@ function resolveFullscreenOpts(container) {
 			afterLayout();
 		},
 	};
-}
-
-function onCellClicked(frm, params) {
-	const row = params?.data;
-	const field = params?.colDef?.field || "";
-	if (!row || row.rowType !== "position" || !field.startsWith("day_")) {
-		return;
-	}
-	openDescriptionPopover(
-		frm,
-		row,
-		field.slice("day_".length),
-		params.eGridCell || params.event?.target
-	);
 }
 
 function onCellDoubleClicked(frm, params) {
@@ -176,7 +163,7 @@ function buildTableOptions(frm, state) {
 		onDeleteRows: (ctx) => onDeleteTimesheetRows(frm, ctx),
 		onValidateCells: (ctx) => onValidateCells(frm, ctx),
 		onSaveCells: (ctx) => onSaveCells(frm, ctx),
-		/* Only onCellDoubleClicked is wired from top-level opts in DinextTable. */
+		/* Top-level: only onReady / onCellDoubleClicked are first-class in DinextTable. */
 		onCellDoubleClicked: (params) => onCellDoubleClicked(frm, params),
 		gridOptions: {
 			rowHeight: 30,
@@ -185,11 +172,13 @@ function buildTableOptions(frm, state) {
 			suppressNoRowsOverlay: true,
 			suppressMovableColumns: true,
 			getRowClass,
+			/* Domain callbacks chain with selection/clipboard/fillHandle (mergeGridOptions). */
 			onCellKeyDown: (event) => {
 				handleCascadeCellKeyDown(frm, event);
 				handleDayDescrKeyDown(frm, event);
 			},
-			onCellClicked: (params) => onCellClicked(frm, params),
+			/* demodev hours focus → companion; covers mouse + keyboard (no separate onCellClicked). */
+			onCellFocused: (event) => handleDayDescrCellFocused(frm, event),
 			onBodyScroll: () => closeDescriptionPopoverOnScroll(),
 			onGridSizeChanged: () => scheduleCascadeLayout(frm),
 		},
