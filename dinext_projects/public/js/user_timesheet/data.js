@@ -2,6 +2,7 @@ import { initState } from "./state.js";
 import { getDatesBetween } from "./model.js";
 import { buildRows } from "./rows.js";
 import { buildSummaryRows } from "./summary.js";
+import { sortPositionsByStoredOrder } from "./row-order.js";
 
 async function loadTemplate(frm) {
 	const r = await frappe.db.get_value(
@@ -204,7 +205,7 @@ export async function loadGridData(frm) {
 	frm.holidays = holidays;
 	frm.work_hours = workHours;
 	frm.tasks_data = tasksData;
-	frm.ts_positions = positions;
+	frm.ts_positions = sortPositionsByStoredOrder(frm, positions);
 
 	state.rows = buildRows(frm);
 	state.summaryRows = buildSummaryRows(frm);

@@ -23,6 +23,11 @@ import {
 	onDeleteTimesheetRows,
 	onValidateDeleteTimesheetRows,
 } from "./toolbar.js";
+import {
+	canReorderTimesheetRow,
+	onTimesheetRowReorder,
+	validateTimesheetRowReorder,
+} from "./row-order.js";
 
 let _layoutTimer = null;
 function scheduleCascadeLayout(frm) {
@@ -132,7 +137,7 @@ function buildTableOptions(frm, state) {
 		selection: { enabled: true },
 		clipboard: { enabled: editable },
 		fillHandle: { enabled: editable },
-		rowReorder: { enabled: true },
+		rowReorder: { enabled: editable, allowTree: false },
 		rowCheck: {
 			enabled: editable,
 			unit: "row",
@@ -158,6 +163,9 @@ function buildTableOptions(frm, state) {
 			headerColumnBorder: true,
 		},
 		canCheckRow: (ctx) => canCheckTimesheetRow(frm, ctx),
+		canReorderRow: (ctx) => canReorderTimesheetRow(ctx),
+		onValidateRowReorder: (ctx) => validateTimesheetRowReorder(ctx),
+		onRowReorder: (ctx) => onTimesheetRowReorder(frm, ctx),
 		onAddRow: () => onAddTimesheetRow(frm),
 		onValidateDeleteRows: (ctx) => onValidateDeleteTimesheetRows(frm, ctx),
 		onDeleteRows: (ctx) => onDeleteTimesheetRows(frm, ctx),
@@ -240,6 +248,7 @@ export async function refreshRuntime(frm) {
 	state.table.setOption?.("edit", editable);
 	state.table.setOption?.("clipboard", { enabled: editable });
 	state.table.setOption?.("fillHandle", { enabled: editable });
+	state.table.setOption?.("rowReorder", { enabled: editable, allowTree: false });
 	state.table.setOption?.("navigation", {
 		enabled: editable,
 		enterMovesDown: false,

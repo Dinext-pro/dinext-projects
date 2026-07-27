@@ -4,6 +4,7 @@
 import { loadTitles } from "./data.js";
 import { refreshRows } from "./toolbar.js";
 import { scheduleRefreshLimits } from "./limits.js";
+import { applyStoredPositionOrder } from "./row-order.js";
 
 const COPY_PREV =
 	"dinext_projects.dinext_projects.user_timesheet.api.copy_positions_from_previous_timesheet";
@@ -118,6 +119,7 @@ async function applyCopiedPositions(frm, positions) {
 		added.push(row);
 	}
 	await loadTitles(added);
+	applyStoredPositionOrder(frm);
 	refreshRows(frm);
 	scheduleRefreshLimits(frm);
 	frm.dirty();
