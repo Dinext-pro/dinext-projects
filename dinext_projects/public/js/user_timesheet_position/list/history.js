@@ -4,7 +4,7 @@ function addHistoryButton( parent, position ) {
     const historyButton = $(`
         <button class="btn btn-default btn-xs history-button" 
                 data-docname="${position.name}" 
-                title=${__("История согласования")}
+                title=${__("Approval History")}
                 style="width: 24px; height: 24px; padding: 0; border-radius: 50%; color: var(--text-muted);">
             <i class="fa fa-history" style="margin: 0;" aria-hidden="true"></i>
         </button>
@@ -42,17 +42,17 @@ function addHistoryButton( parent, position ) {
                 }
                 
                 let d = new frappe.ui.Dialog({
-                    title: __("История согласований"),
+                    title: __("Approval History"),
                     fields: [
                         {
-                            label: __("Задача"),
+                            label: __("Task"),
                             fieldname: 'task',
                             fieldtype: "Link",
                             options: position.document_type,
                             default: position.document_name
                         },
                         {
-                            label: __("Хронолоогия"),
+                            label: __("Chronology"),
                             fieldname: 'table',
                             fieldtype: 'Table',
                             cannot_add_rows: 1,
@@ -61,7 +61,7 @@ function addHistoryButton( parent, position ) {
                             on_setup: null,
                             fields: [
                                 {
-                                    label: __("Пользователь"),
+                                    label: __("User"),
                                     fieldname: 'full_name',
                                     fieldtype: 'Data',
                                     read_only: 1,
@@ -70,7 +70,7 @@ function addHistoryButton( parent, position ) {
                                     columns: 3
                                 },
                                 {
-                                    label: __("Дата-время"),
+                                    label: __("Date-time"),
                                     fieldname: 'creation',
                                     fieldtype: 'Date Time',
                                     read_only: 1,
@@ -79,7 +79,7 @@ function addHistoryButton( parent, position ) {
                                     columns: 3
                                 },
                                 {
-                                    label: __("Запись"),
+                                    label: __("Entry"),
                                     fieldname: 'content',
                                     fieldtype: 'Text',
                                     read_only: 1,
@@ -105,7 +105,7 @@ function addHistoryButton( parent, position ) {
 
                 d.show();
             } else {
-                frappe.msgprint(__('Нет данных для отображения.'));
+                frappe.msgprint(__('No data to display.'));
             }
         });
     });

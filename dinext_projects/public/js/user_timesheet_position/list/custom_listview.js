@@ -262,7 +262,7 @@ frappe.listview_settings["User Timesheet Position"] = {
                                 title: "Details",
                                 fields: [
                                     {
-                                        label: __("Задача"),
+                                        label: __("Task"),
                                         fieldname: 'first_name',
                                         fieldtype: "Link",
                                         options: data.document_type,
@@ -326,7 +326,7 @@ frappe.listview_settings["User Timesheet Position"] = {
                             d.show();
                             setModalWindowStyles(d);
                         } else {
-                            frappe.msgprint(__('Нет данных для отображения.'));
+                            frappe.msgprint(__('No data to display.'));
                         }
                     });
                 });
@@ -374,7 +374,7 @@ frappe.listview_settings["User Timesheet Position"] = {
                                             }
 
                                             frappe.show_alert({
-                                                message:__('Данные сохранены'),
+                                                message:__('Data saved'),
                                                 indicator:'green'
                                             }, 3);
                                             //updateFilters( listview, docname );
@@ -394,7 +394,7 @@ frappe.listview_settings["User Timesheet Position"] = {
             });
         } catch (error) {
             console.error("Error in listview refresh:", error);
-            frappe.msgprint(__('Произошла ошибка при загрузке данных. Пожалуйста, обновите страницу.'));
+            frappe.msgprint(__('An error occurred while loading data. Please refresh the page.'));
         }
         
         //makeResizable();
@@ -429,7 +429,7 @@ async function processWorkflow( listview ) {
                             return;
                         }
                         await updateStatusesMultiple( listview, cur_transition, data.comment );
-                    }, `Комментарий для действия "${cur_transition.action}"`, __('Сохранить'));
+                    }, `Комментарий для действия "${cur_transition.action}"`, __('Save'));
                     
                 } else {
     			    await updateStatusesMultiple( listview, cur_transition );
@@ -453,7 +453,7 @@ async function updateStatusesMultiple( listview, transition, comment ) {
         }/**/
 
         frappe.show_alert({
-            message:__('Данные сохранены'),
+            message:__('Data saved'),
             indicator:'green'
         }, 5);
 	}
@@ -708,7 +708,7 @@ function catchError( err ) {
         message = String( err );
     }
     
-    frappe.warn(__("Ошибка при сохранении данных"), message, () => processBacklog(), __("Повторить"), false);
+    frappe.warn(__("Error saving data"), message, () => processBacklog(), __("Retry"), false);
 }
 
 async function addComment(docname, comment) {
@@ -758,7 +758,7 @@ async function showCommentDialog( docname, selectedTransition ) {
             processBacklog();
             addComment(docname, data.comment);
             resolve();
-        }, `Комментарий для действия "${selectedTransition.action}"`, __('Сохранить'));
+        }, `Комментарий для действия "${selectedTransition.action}"`, __('Save'));
     });
 }
 

@@ -40,7 +40,7 @@ export async function showTimesheetDashboard(frm) {
 					const names = (users || []).map((u) => u.full_name).filter(Boolean);
 					if (names.length) {
 						frm.dashboard.add_comment(
-							__("Ожидается согласование от: {0}", [
+							__("Awaiting approval from: {0}", [
 								frappe.utils.comma_and(names),
 							]),
 							"blue",
@@ -57,7 +57,7 @@ export async function showTimesheetDashboard(frm) {
 		(frm.doc.ut_status === "Черновик" || frm.doc.ut_status === "На доработке")
 	) {
 		frm.dashboard.add_comment(
-			__("Таймшит просрочен! Срочно отправьте позиции на согласование!"),
+			__("Timesheet is overdue! Submit positions for approval immediately!"),
 			"orange",
 			true
 		);

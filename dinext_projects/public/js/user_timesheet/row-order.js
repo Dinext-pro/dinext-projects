@@ -166,13 +166,13 @@ export function canReorderTimesheetRow(ctx) {
 export function validateTimesheetRowReorder(ctx) {
 	const move = ctx?.move;
 	if (!move) {
-		return __("Некорректное перемещение");
+		return __("Invalid Move");
 	}
 	const rows = ctx?.table?.sourceData || [];
 	const byId = new Map(rows.map((r) => [String(r?.id), r]));
 	const dragged = byId.get(String(move.rowId));
 	if (!dragged || dragged.rowType !== "position") {
-		return __("Можно перемещать только позиции таймшита");
+		return __("Only timesheet positions can be moved");
 	}
 	if (move.targetRowId != null) {
 		const target = byId.get(String(move.targetRowId));
@@ -183,7 +183,7 @@ export function validateTimesheetRowReorder(ctx) {
 				move.position === "before" &&
 				(targetType === "section" || targetType === "leave");
 			if (!parkBeforeLeave) {
-				return __("Нельзя перемещать строки в блок отсутствий");
+				return __("Cannot move rows into the leave block");
 			}
 		}
 	}

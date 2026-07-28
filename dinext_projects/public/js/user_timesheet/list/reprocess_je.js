@@ -1,7 +1,7 @@
 /** Port from demodev Client Script UT List Reprocess JE.js — ISS-2026-00926 phase 3 */
 function add_reprocces_button( listview ) {
     if (frappe.user.has_role('Dinext_Projects_Director') || frappe.user.has_role('Dinext_Projects_Admin') ) {
-        listview.page.add_action_item(__("Перепровести проводки"), async () => {
+        listview.page.add_action_item(__("Repost Entries"), async () => {
             let uts = listview.get_checked_items( false );
             
             const approved_uts = uts.filter(function(element, index) { return element.ut_status == "Согласован" });
@@ -10,17 +10,17 @@ function add_reprocces_button( listview ) {
                 let total = approved_uts.length ;
                 let processed = 0;
                 
-                frappe.show_progress(__("Проводим..."), processed, total);
+                frappe.show_progress(__("Posting..."), processed, total);
                 
                 for (approved_ut of approved_uts) {
                     await reprocces_timesheet( approved_ut );
                     processed++;
-                    frappe.show_progress(__("Проводим..."), processed, total);
+                    frappe.show_progress(__("Posting..."), processed, total);
                 }
                 
                 frappe.hide_progress();
                 frappe.show_alert({
-                    message:__('Данные сохранены'),
+                    message:__('Data saved'),
                     indicator:'green'
                 }, 5);
             }

@@ -53,10 +53,10 @@ function hasPositionRows(frm) {
 /** Why Start is blocked, or "" if can submit. */
 function startButtonBlockReason(frm) {
 	if (!hasPositionRows(frm)) {
-		return __("Добавьте хотя бы одну позицию");
+		return __("Add at least one position");
 	}
 	if (needsSaveBeforeSubmit(frm)) {
-		return __("Сначала сохраните таймшит");
+		return __("Save the timesheet first");
 	}
 	return "";
 }
@@ -258,7 +258,7 @@ async function sendTimesheet(workflow, frm) {
 		return;
 	}
 	if (workflow !== "Start" && needsSaveBeforeSubmit(frm)) {
-		frappe.msgprint(__("Сначала сохраните таймшит"));
+		frappe.msgprint(__("Save the timesheet first"));
 		return;
 	}
 
@@ -279,12 +279,12 @@ async function sendTimesheet(workflow, frm) {
 		if (showErrors && errors.length) {
 			setInvalidCells(frm, validation.invalidCells || []);
 			frappe.msgprint({
-				title: __("Ошибки заполнения ТШ:<br>"),
+				title: __("Timesheet filling errors:<br>"),
 				indicator: "red",
 				as_list: true,
 				message: errors,
 				primary_action: {
-					label: __("Исправить"),
+					label: __("Fix"),
 					action() {
 						frappe.msg_dialog?.cancel?.();
 					},
@@ -300,8 +300,7 @@ async function sendTimesheet(workflow, frm) {
 		).length;
 		if (updatedPositions.length !== expected) {
 			frappe.msgprint(
-				__(
-					"Ошибка при обработке позиций ТШ. Пожалуйста, обновите страницу и попробуйте заново."
+				__("Error processing timesheet positions. Please refresh the page and try again."
 				)
 			);
 			return;
@@ -320,7 +319,7 @@ async function sendTimesheet(workflow, frm) {
 				},
 				silent: true,
 				freeze: true,
-				freeze_message: __("Сохранение..."),
+				freeze_message: __("Saving..."),
 			});
 		} else {
 			await frappe.db.set_value(
@@ -332,7 +331,7 @@ async function sendTimesheet(workflow, frm) {
 		}
 
 		frappe.show_alert(
-			{ message: __("Данные успешно сохранены"), indicator: "green" },
+			{ message: __("Data saved successfully"), indicator: "green" },
 			5
 		);
 		frm.reload_doc();
@@ -344,7 +343,7 @@ async function sendTimesheet(workflow, frm) {
 			error?.responseJSON?.exception ||
 			String(error);
 		frappe.msgprint({
-			title: __("Ошибка обработки ТШ"),
+			title: __("Timesheet processing error"),
 			indicator: "red",
 			message,
 		});
@@ -389,11 +388,11 @@ export function setupSubmitButtons(frm) {
 			if (status === "Согласован") {
 				frappe.warn(
 					"Вы уверены, что хотите вернуть ТШ на редактирование?",
-					__("Потребуется повторное согласование всего таймшита!"),
+					__("The entire timesheet will require re-approval!"),
 					async () => {
 						await sendTimesheet("Edit", frm);
 					},
-					__("Продолжить"),
+					__("Continue"),
 					true
 				);
 			} else {

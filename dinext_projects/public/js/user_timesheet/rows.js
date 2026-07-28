@@ -59,7 +59,7 @@ function leaveSectionRow() {
 		rowType: "section",
 		isNew: false,
 		project: "",
-		project_label: __("Заявки на отсутствие:"),
+		project_label: __("Leave requests:"),
 		document_type: "",
 		document_name: "",
 		document_label: "",

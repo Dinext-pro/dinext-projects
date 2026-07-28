@@ -26,7 +26,7 @@ function limitIconRenderer(frm) {
 		wrap.className = `btn btn-default btn-xs ut-info-btn${
 			status ? ` ut-limit-${status}` : ""
 		}`;
-		wrap.title = row.limit_tooltip || __("План / факт");
+		wrap.title = row.limit_tooltip || __("Plan / Actual");
 		const color = limitIconColor(status);
 		if (color) {
 			wrap.style.color = color;
@@ -125,7 +125,7 @@ export function getColumns(frm) {
 	const cols = [
 		{
 			field: "project_label",
-			headerName: __("Проект"),
+			headerName: __("Project"),
 			pinned: "left",
 			width: saved[FIELD_PROJECT] || getCascadeColDefWidth(FIELD_PROJECT),
 			minWidth: 140,
@@ -135,7 +135,7 @@ export function getColumns(frm) {
 		},
 		{
 			field: "document_label",
-			headerName: __("Задача"),
+			headerName: __("Task"),
 			pinned: "left",
 			width: saved[FIELD_TASK] || getCascadeColDefWidth(FIELD_TASK),
 			minWidth: 160,
@@ -145,7 +145,7 @@ export function getColumns(frm) {
 		},
 		{
 			field: "project_role",
-			headerName: __("Проектная роль"),
+			headerName: __("Project Role"),
 			pinned: "left",
 			width: saved[FIELD_ROLE] || getCascadeColDefWidth(FIELD_ROLE),
 			minWidth: 120,
@@ -194,7 +194,7 @@ export function getColumns(frm) {
 
 	cols.push({
 		field: "total",
-		headerName: __("Итого"),
+		headerName: __("Total"),
 		type: "number",
 		edit: false,
 		width: 72,

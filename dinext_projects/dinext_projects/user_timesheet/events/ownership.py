@@ -10,6 +10,7 @@ Ports demodev Server Scripts:
 from __future__ import annotations
 
 import frappe
+from frappe import _
 from frappe.utils import getdate
 
 
@@ -56,14 +57,14 @@ def set_utp_period(doc) -> None:
 	)
 
 	if not user_timesheet:
-		frappe.msgprint("Табель пользователя не найден")
+		frappe.msgprint(_("User timesheet not found"))
 		return
 
 	ts_valid_from = user_timesheet.get("ts_valid_from")
 	ts_valid_for = user_timesheet.get("ts_valid_for")
 
 	if not ts_valid_from or not ts_valid_for:
-		frappe.msgprint("Одно из полей даты пустое")
+		frappe.msgprint(_("One of the date fields is empty"))
 		return
 
 	date_from = getdate(ts_valid_from)
@@ -85,4 +86,4 @@ def set_utp_period(doc) -> None:
 		month_number = date_from.month
 		doc.period = f"{date_from.year}-{month_number:02d}"
 	else:
-		frappe.msgprint("Разница в днях не соответствует заданным условиям")
+		frappe.msgprint(_("The day difference does not match the expected conditions"))

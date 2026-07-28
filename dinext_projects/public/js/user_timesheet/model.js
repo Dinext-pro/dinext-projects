@@ -173,7 +173,7 @@ export function collectDuplicatePositionErrors(positionRows, errors, invalidCell
 		}
 		const lines = group.map((g) => g.line).join(", ");
 		errors.push(
-			__("Дублируются строки {0}: одинаковые проект, задача и роль", [lines])
+			__("Duplicate rows {0}: same project, task, and role", [lines])
 		);
 		for (const { row } of group) {
 			invalidCells.push({ rowId: row.id, field: FIELD_PROJECT });
@@ -198,15 +198,15 @@ export function buildSavePayload(frm) {
 	positionRows.forEach((row, idx) => {
 		const line = idx + 1;
 		if (!row.project) {
-			errors.push(__("Выберите проект в строке {0}", [line]));
+			errors.push(__("Select a project in row {0}", [line]));
 			invalidCells.push({ rowId: row.id, field: FIELD_PROJECT });
 		}
 		if (!row.document_name) {
-			errors.push(__("Выберите запрос или задачу в строке {0}", [line]));
+			errors.push(__("Select a request or task in row {0}", [line]));
 			invalidCells.push({ rowId: row.id, field: FIELD_TASK });
 		}
 		if (!row.project_role) {
-			errors.push(__("Выберите проектную роль в строке {0}", [line]));
+			errors.push(__("Select a project role in row {0}", [line]));
 			invalidCells.push({ rowId: row.id, field: FIELD_ROLE });
 		}
 
@@ -223,8 +223,7 @@ export function buildSavePayload(frm) {
 				frm.template_doc?._is_mandatory
 			) {
 				errors.push(
-					__(
-						"{0} по задаче {1} не заполнено описание.",
+					__("{0} for task {1}: description is not filled.",
 						[date, row.document_label || row.document_name || line]
 					)
 				);

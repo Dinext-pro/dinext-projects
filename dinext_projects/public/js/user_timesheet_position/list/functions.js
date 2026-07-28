@@ -27,7 +27,7 @@ function apply_list_limit_styles(results) {
             // Формируем подсказку
             let tooltip = hoursData.planned_hours > 0 
                 ? `${hoursData.completion_percentage.toFixed( 1 )}% из ${hoursData.planned_hours.toFixed( 1 )} ч.`
-                : __("Не определены плановые трудозатраты");
+                : __("Planned work efforts are not defined");
             
             button.attr('title', tooltip);
         });

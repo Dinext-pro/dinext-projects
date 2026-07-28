@@ -330,7 +330,7 @@ def load_projects_remap2_customers(template_name, ts_start, ts_end, ts_owner):
     organized_customers = {}
     for proj in projects_filtered:
         proj_name = proj.name
-        customer_name = (proj.customer.strip() if proj.customer else _("Без Клиента"))
+        customer_name = (proj.customer.strip() if proj.customer else _("No Client"))
         # объединяем задачи и запросы
         items = []
         items.extend(structured_tasks_by_project.get(proj_name, []))

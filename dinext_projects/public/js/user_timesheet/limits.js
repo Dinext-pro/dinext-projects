@@ -54,7 +54,7 @@ export function limitTooltipForResult(r) {
 	if (r?.planned_hours > 0) {
 		return `${r.completion_percentage}% из ${r.planned_hours} ч.`;
 	}
-	return __("Не определены плановые трудозатраты");
+	return __("Planned work efforts are not defined");
 }
 
 async function callLimits(args) {
@@ -120,7 +120,7 @@ export async function checkPlannedHoursAndLimits(frm) {
 			error?.responseJSON?.exception ||
 			String(error);
 		errors.push(
-			`${__("Ошибка при проверке плановых трудозатрат и лимитов")}: ${detail}`
+			`${__("Error checking planned work efforts and limits")}: ${detail}`
 		);
 	}
 	return { errors, warnings };
@@ -194,8 +194,7 @@ function getNoPlanWarningHtml() {
 	return `
 		<div class="alert alert-danger" style="margin-bottom: 15px;">
 			<i class="fa fa-exclamation-triangle"></i>
-			<strong> ${__("Внимание!")}</strong> ${__(
-				"Для этой задачи обязательно указание плановых трудозатрат!"
+			<strong> ${__("Attention!")}</strong> ${__("Planned work efforts are required for this task!"
 			)}
 		</div>`;
 }
@@ -211,7 +210,7 @@ function getCompletionTableHtml(result) {
 			continue;
 		}
 		rows.push({
-			status: key === "total" ? __("Всего") : key,
+			status: key === "total" ? __("Total") : key,
 			isTotal: key === "total",
 			plan: Number.parseFloat(result.planned_hours).toFixed(1),
 			fact: `${Number.parseFloat(result.hours_data[key]).toFixed(1)} ч.`,
@@ -223,10 +222,10 @@ function getCompletionTableHtml(result) {
 			<table class="table table-bordered" style="width: 100%; margin-bottom: 10px;">
 				<thead>
 					<tr>
-						<th style="width: 30%;">${__("Статус")}</th>
-						<th style="width: 20%; text-align: right;">${__("План")}</th>
-						<th style="width: 20%; text-align: right;">${__("Факт")}</th>
-						<th style="width: 30%;">${__("% выполнения")}</th>
+						<th style="width: 30%;">${__("Status")}</th>
+						<th style="width: 20%; text-align: right;">${__("Plan")}</th>
+						<th style="width: 20%; text-align: right;">${__("Actual")}</th>
+						<th style="width: 30%;">${__("% Complete")}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -265,22 +264,21 @@ function getHoursUsers(result, frm) {
 	if (!users.length) {
 		return "";
 	}
-	return `<br>${__("Учтены часы от:")} ${frappe.utils.comma_and(users)}`;
+	return `<br>${__("Hours included from:")} ${frappe.utils.comma_and(users)}`;
 }
 
 function getHoursNoteHtml(result) {
 	if (result.used_children_for_actual) {
-		return `${__("Фактические данные: с учетом других дочерних задач")} (${
+		return `${__("Actual data: including other child tasks")} (${
 			result.child_tasks_count
 		} шт.)`;
 	}
-	return __("Фактические данные: только текущая задача");
+	return __("Actual data: current task only");
 }
 
 function getParentTaskInfoHtml(result) {
 	if (result.planned_hours > 0) {
-		return `<div class="hours-note">${__(
-			"Плановые данные определены на уровне:"
+		return `<div class="hours-note">${__("Plan data is defined at level:"
 		)} ${frappe.utils.escape_html(result.plan_task_subject || "")}</div>`;
 	}
 	return "";
@@ -289,7 +287,7 @@ function getParentTaskInfoHtml(result) {
 /** Plan/fact modal for a position row (demodev showTaskPlanFact). */
 export async function showTaskPlanFact(frm, position) {
 	if (!position?.document_name) {
-		frappe.msgprint(__("Не выбрана задача для отображения информации"));
+		frappe.msgprint(__("No task selected to display information"));
 		return;
 	}
 	const message = await callLimits(getLimitsPayload(frm));
@@ -297,7 +295,7 @@ export async function showTaskPlanFact(frm, position) {
 		(el) => String(el.position) === String(position.name || position.id)
 	);
 	if (!result) {
-		frappe.msgprint(__("Нет данных плана/факта для позиции"));
+		frappe.msgprint(__("No plan/actual data for the position"));
 		return;
 	}
 
@@ -310,7 +308,7 @@ export async function showTaskPlanFact(frm, position) {
 				fieldname: "body",
 			},
 		],
-		primary_action_label: __("Закрыть"),
+		primary_action_label: __("Close"),
 		primary_action() {
 			d.hide();
 		},
@@ -350,19 +348,18 @@ export async function alertLimitWarnings(frm) {
 	const message = uniq
 		.map(
 			(w) =>
-				`• <b>${frappe.utils.escape_html(w.task_subject)}</b> (${__(
-					"Проект"
-				)}: ${frappe.utils.escape_html(w.project)}, ${__("Роль")}: ${frappe.utils.escape_html(
+				`• <b>${frappe.utils.escape_html(w.task_subject)}</b> (${__("Project"
+				)}: ${frappe.utils.escape_html(w.project)}, ${__("Role")}: ${frappe.utils.escape_html(
 					w.role
 				)})<br>` +
-				`&nbsp;&nbsp;${__("Фактические трудозатраты")}: ${
+				`&nbsp;&nbsp;${__("Actual Work Efforts")}: ${
 					w.completion_percentage
-				}% ${__("плана")}`
+				}% ${__("of plan")}`
 		)
 		.join("<br><br>");
 	frappe.show_alert(
 		{
-			message: `<b>${__("Обратите внимание на следующие задачи:")}</b><br><br>${message}`,
+			message: `<b>${__("Please note the following tasks:")}</b><br><br>${message}`,
 			indicator: "yellow",
 		},
 		15

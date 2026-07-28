@@ -32,7 +32,7 @@ export const CASCADE_DATA_FIELDS = [
 function ensureCatalog(frm) {
 	const customers = frm.ut?.tasksData || frm.tasks_data;
 	if (!customers || !Object.keys(customers).length) {
-		frappe.msgprint(__("Список задач ещё не загружен"));
+		frappe.msgprint(__("Task list is not loaded yet"));
 		return false;
 	}
 	return true;
@@ -172,7 +172,7 @@ function resolveField(frm, row, params, field) {
 			onCommit: (next) => {
 				const project = resolveProjectOption(projects, next);
 				if (!project) {
-					frappe.msgprint(__("Проект не найден"));
+					frappe.msgprint(__("Project not found"));
 					refreshCells(params, [FIELD_PROJECT]);
 					return;
 				}
@@ -203,7 +203,7 @@ function resolveField(frm, row, params, field) {
 			onCommit: (next) => {
 				const task = resolveTaskOption(tasks, next);
 				if (!task) {
-					frappe.msgprint(__("Задача не найдена"));
+					frappe.msgprint(__("Task not found"));
 					refreshCells(params, [FIELD_TASK]);
 					return;
 				}
@@ -243,7 +243,7 @@ function mountSelect(frm, wrap, row, params, field, { openList: shouldOpenList, 
 	const spec = resolveField(frm, row, params, field);
 	if (spec.needProject) {
 		frappe.show_alert({
-			message: __("Сначала выберите проект"),
+			message: __("Select a project first"),
 			indicator: "orange",
 		});
 		openCascadeSelect(frm, { params, field: FIELD_PROJECT, openList: true });
@@ -251,7 +251,7 @@ function mountSelect(frm, wrap, row, params, field, { openList: shouldOpenList, 
 	}
 	if (!spec.options?.length) {
 		frappe.show_alert({
-			message: __("Нет доступных вариантов"),
+			message: __("No options available"),
 			indicator: "orange",
 		});
 		return;
