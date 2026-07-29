@@ -6,7 +6,7 @@ frappe.query_reports["Отчет по ТШ"] = {
     "filters": [
         {
             "fieldname": "project",
-            "label": __("Проект"),
+            "label": __("Project"),
             "fieldtype": "Link",
             "options": "Project",
             "reqd": 0,
@@ -15,7 +15,7 @@ frappe.query_reports["Отчет по ТШ"] = {
         },
         {
             "fieldname": "custom_username",
-            "label": __("Пользователь"),
+            "label": __("User"),
             "fieldtype": "Data",
             "reqd": 0,
             "default": null,
@@ -23,7 +23,7 @@ frappe.query_reports["Отчет по ТШ"] = {
         },
         {
             "fieldname": "user_group",
-            "label": __("Функциональная группа"),
+            "label": __("Functional Group"),
             "fieldtype": "Link",
             "options": "User Group",
             "reqd": 0,

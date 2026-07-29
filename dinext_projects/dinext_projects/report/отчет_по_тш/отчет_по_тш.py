@@ -5,17 +5,17 @@ from frappe import _
 def execute(filters=None):
     # колонки
     columns = [
-        {"fieldname": "user", "label": _("Пользователь"), "fieldtype": "Data", "width": 150},
-        {"fieldname": "user_group", "label": _("Функциональная группа"), "fieldtype": "Link", "options": "User Group", "width": 150},
-        {"fieldname": "status", "label": _("Статус"), "fieldtype": "Data", "width": 100},
-        {"fieldname": "project_id", "label": _("Проект (ID)"), "fieldtype": "Link", "options": "Project", "width": 150},
-        {"fieldname": "project_name", "label": _("Наименование проекта"), "fieldtype": "Data", "width": 200},
-        {"fieldname": "project_role", "label": _("Проектная роль"), "fieldtype": "Data", "width": 150},
-        {"fieldname": "task_id", "label": _("Задача (ID)"), "fieldtype": "Dynamic Link", "options": "document_type", "width": 150},
-        {"fieldname": "task_name", "label": _("Наименование задачи"), "fieldtype": "Data", "width": 200},
-        {"fieldname": "date", "label": _("Дата"), "fieldtype": "Date", "width": 100},
-        {"fieldname": "hours", "label": _("Часы"), "fieldtype": "Float", "width": 80},
-        {"fieldname": "description", "label": _("Описание"), "fieldtype": "Data", "width": 300}
+        {"fieldname": "user", "label": __("User"), "fieldtype": "Data", "width": 150},
+        {"fieldname": "user_group", "label": __("Functional Group"), "fieldtype": "Link", "options": "User Group", "width": 150},
+        {"fieldname": "status", "label": __("Status"), "fieldtype": "Data", "width": 100},
+        {"fieldname": "project_id", "label": __("Project (ID)"), "fieldtype": "Link", "options": "Project", "width": 150},
+        {"fieldname": "project_name", "label": __("Project Name"), "fieldtype": "Data", "width": 200},
+        {"fieldname": "project_role", "label": __("Project Role"), "fieldtype": "Data", "width": 150},
+        {"fieldname": "task_id", "label": __("Task (ID)"), "fieldtype": "Dynamic Link", "options": "document_type", "width": 150},
+        {"fieldname": "task_name", "label": __("Task Name"), "fieldtype": "Data", "width": 200},
+        {"fieldname": "date", "label": __("Date"), "fieldtype": "Date", "width": 100},
+        {"fieldname": "hours", "label": __("Hours"), "fieldtype": "Float", "width": 80},
+        {"fieldname": "description", "label": __("Description"), "fieldtype": "Data", "width": 300}
     ]
 
     query = """
