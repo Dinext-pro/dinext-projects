@@ -7,7 +7,6 @@ app_license = "mit"
 
 fixtures = [
     "Project Payment Scheme",
-    "Type Of Leave",    
     "Issue Identification Type",    
     "Workflow State",
     "Workflow Action Master",    
@@ -39,19 +38,7 @@ fixtures = [
     {
         "doctype": "Custom HTML Block",
         "filters": [
-            ["name", "in", ["My Kanban", "Idea Picture", "DiLike Picture", "My Calendar", "Leaderboard"]]
-        ]
-    },
-    {
-        "doctype": "Calendar View",
-        "filters": [
-            ["name", "in", ["AFL"]]
-        ]
-    },
-    {
-        "doctype": "Kanban Board",
-        "filters": [
-            ["name", "in", ["Все задачи"]]
+            ["name", "in", ["Idea Picture", "DiLike Picture", "My Calendar", "Leaderboard"]]
         ]
     },
     {
@@ -102,13 +89,25 @@ fixtures = [
         "doctype": "Role",
         "filters": [
             ["name", "like", "%Dinext%"],
+            ["name", "not in", ["Dinext_UT_Full_Access", "Dinext_UTP_Appoval"]],
             ["disabled", "=", 0]
         ]
     },
     {
         "doctype": "Custom DocPerm",
         "filters": [
-            ["role", "like", "%Dinext%"]
+            ["role", "like", "%Dinext%"],
+            ["parent", "not in", [
+                "Timesheet Template",
+                "User Timesheet",
+                "User Timesheet Position",
+                "User Timesheet Position Details",
+                "Application For Leave",
+                "Type Of Leave",
+                "Working Hours Table",
+                "Doctype For Timesheet",
+                "User Projects",
+            ]],
         ]
     },
     {
@@ -118,15 +117,9 @@ fixtures = [
         ]
     },    
     {
-        "doctype": "Timesheet Template",
-        "filters": [
-            ["name", "in", "Внутренняя команда РФ"]
-        ]
-    },    
-    {
         "doctype": "Workflow",
         "filters": [
-            ["document_type", "in", ["Application For Leave", "User Timesheet Position", "Project", "Expense Claim", "Purchase Invoice", "Sales Invoice"]],
+            ["document_type", "in", ["Project", "Expense Claim", "Purchase Invoice", "Sales Invoice"]],
             ["is_active", "=", 1]            
         ]
     },    
@@ -138,16 +131,12 @@ fixtures = [
                     "ToDo",
                     "Sales Invoice",
                     "Purchase Invoice",
-                    "Timesheet Template",
-                    "User Timesheet",
-                    "User Timesheet Position",
                     "Worker",
                     "Task",
                     "Issue",
                     "User Delegate",
                     "Meeting Notes",
                     "GL Entry",
-                    "Application For Leave"
                 ]
             ],
             ["docstatus", "!=", 2]            
@@ -165,12 +154,8 @@ fixtures = [
 #                                    "Статус по всем ком.проектам",
 #                                    "Мои задачи по датам",
 #                                    "Контроль ставок по проектам",
-#                                    "Отчет по утилизации",
 #                                    "Контроль ставок по T&M проектам_V2",
 #                                    "Контроль ставок по T&M проектам",
-#                                    "Статистика по ТШ",
-#                                    "Отчет по ТШ",
-#                                    "Отчет для Подрядчиков"
 #                                   ])
 #                   },
 #    },
@@ -215,7 +200,8 @@ fixtures = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"Project": "public/js/project_pl_entry.js"}
+# Work Efforts UI → project_workload_assignment (ISS-2026-00002)
+# doctype_js = {}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
