@@ -2,33 +2,37 @@
 
 ## Обзор
 
-**Dinext Projects** — это приложение для платформы [Frappe](https://frappeframework.com/), расширяющее возможности управления проектами, учётом времени, согласованиями и финансовым контролем. Оно не является самостоятельным продуктом: приложение устанавливается в существующее окружение [Bench](https://github.com/frappe/bench) (Frappe/ERPNext) и добавляет модуль **Dinext Projects** с кастомными типами документов, рабочими процессами, отчётами, дашбордами и уведомлениями.
+**Dinext Projects** — приложение для платформы [Frappe](https://frappeframework.com/), расширяющее управление проектами, согласованиями и финансовым контролем. Оно не является самостоятельным продуктом: устанавливается в существующее окружение [Bench](https://github.com/frappe/bench) (Frappe/ERPNext) и добавляет модуль **Dinext Projects** с кастомными типами документов, рабочими процессами, отчётами, дашбордами и уведомлениями.
 
-Значительная часть поведения системы задаётся не классическим Python-кодом, а экспортируемыми метаданными Frappe: DocType, Custom Field, Client Script, Server Script, Workflow, Report, Workspace, Notification. Тонкий слой Python используется для whitelisted API (проверка прав, получение переходов workflow) и для части отчётов (Script Report).
+Учёт времени (таймшиты, заявки на отсутствие, связанные отчёты и workspace) вынесен в отдельное приложение **[dinext_timesheets](https://dinext.gitlab.yandexcloud.net/erpnext/dinext/dinext-timesheets)**. Это приложение публикует shared-контракт для timesheets: **Worker** (в т.ч. поле `wtimesheet_template`), **Working Hours On Date** и **Project.custom_working_hours_on_date**.
+
+Значительная часть поведения задаётся экспортируемыми метаданными Frappe: DocType, Custom Field, Client Script, Server Script, Workflow, Report, Workspace, Notification. Тонкий слой Python используется для whitelisted API (проверка прав, получение переходов workflow).
 
 ---
 
 ## Возможности
 
-### Таймшиты и утилизация
+### Shared-контракт для таймшитов
 
-- **User Timesheet** и **User Timesheet Position** — учёт времени по проектам, задачам (Task/Issue), ролям и датам с полями: запланированные/фактические/утилизационные часы, отпуск, нормализация, отчётный период.
-- **User Timesheet Position Details** — детализация по датам и часам внутри позиции таймшита.
-- Расчёт итогов, графика, отпусков, плана утилизации и нормализации выполняется серверными скриптами (fixtures).
-- **Worker**, **Timesheet Template**, **Working Hours On Date**, **Worker Level**, **Worker Utilization Table** — справочники и шаблоны для расчёта утилизации и рабочих часов.
+Эти объекты остаются в `dinext_projects` и потребляются `dinext_timesheets`:
 
-### Отпуска и согласования
+- **Worker** — карточка исполнителя; поле `wtimesheet_template` ссылается на `Timesheet Template` из `dinext_timesheets`.
+- **Working Hours On Date** — справочник сокращённых/особых рабочих дней.
+- **Project.custom_working_hours_on_date** — связь проекта с календарём рабочих часов (используется, в том числе, серверным скриптом расчёта оценок Issue).
 
-- **Application For Leave** — заявки на отсутствие с привязкой к Worker, типу отпуска, проектам, части дня; расчёт часов с учётом Holiday List и шаблона таймшита (серверные скрипты).
-- Workflow для согласования заявок на отпуск, таймшитов, проектов, Expense Claim, Purchase Invoice, Sales Invoice (экспортируемые Workflow в fixtures).
+Роли согласования таймшитов (`Dinext_UTP_Appoval`, `Dinext_UT_Full_Access`) и DocType таймшитов принадлежат `dinext_timesheets`. Роль `Dinext_Worker` остаётся в projects.
+
+### Согласования
+
+- Workflow для согласования проектов, Expense Claim, Purchase Invoice, Sales Invoice (экспортируемые Workflow в fixtures).
 - **Workflow Task** — задачи согласования с текущим/следующим состоянием, действием, назначенным пользователем и доступными переходами; создание/закрытие ToDo через Server Script.
 
 ### Проектное планирование и лимиты
 
-- **Project** (стандартный DocType) расширен большим набором кастомных полей и дочерних таблиц: учёт, бизнес-сферы, портфель, риски, контакты, утилизация, настройки по задачам/типам (см. `dinext_projects/dinext_projects/custom/project.json`).
+- **Project** (стандартный DocType) расширен кастомными полями и дочерними таблицами: учёт, бизнес-сферы, портфель, контакты, утилизация, настройки по задачам/типам.
 - **Project Work Efforts** и **Project Work Efforts Amount** — плановые трудозатраты по проекту, задаче, роли и периоду.
-- **Limit Control** — пороги предупреждения/уведомления/блокировки; проверка лимитов по задачам реализована в Server Script.
-- **Project Utilization Table** — плановая утилизация по проекту.
+- **Limit Control** — пороги предупреждения/уведомления/блокировки.
+- **Project Utilization Table** / **Worker Utilization Table** — плановая утилизация.
 
 ### Команды проекта, ставки и прибыльность
 
@@ -39,20 +43,14 @@
 
 ### Отчёты и дашборды
 
-- **Отчёт по ТШ** (Script Report) — детализация таймшитов по пользователю, группе, проекту, роли, задаче, дате и часам (фильтры: проект, пользователь, функциональная группа, период).
-- **Отчёт для подрядчиков** (Script Report) — отчётность по подрядчикам.
-- **Отчёт по утилизации**, **Статус по всем ком. проектам**, **Статистика по ТШ**, **Контроль ставок по проектам**, **Контроль ставок по T&M проектам V2** — Query/Report Builder отчёты.
-- **Workspace**: «Мои проекты», «Мои задачи», «Мои таймшиты», «Аналитика», «Фин. контроль», «Моя доска», «DiLike» — рабочие пространства с number cards, графиками и быстрыми ссылками.
-- **Number Card** (22 карточки): просроченные задачи, заявки/таймшиты на согласовании/согласованные/отклонённые, баллы, задачи без сроков/ответственных и др.
+- **Статус по всем ком. проектам**, **Контроль ставок по проектам**, **Контроль ставок по T&M проектам V2** — Query/Report Builder отчёты.
+- Отчёты по таймшитам и утилизации живут в `dinext_timesheets`.
+- **Workspace**: «Мои проекты», «Мои задачи», «Аналитика», «Фин. контроль», «DiLike» — рабочие пространства с number cards, графиками и быстрыми ссылками.
 - **Dashboard Chart**: «Выручка по клиентам», «Доходы и расходы».
 
 ### Уведомления и автоматизации
 
-- **Таймшит не отправлен** — напоминание о неподанном таймшите.
-- **Требуется согласование** / **Согласование ТШ** — уведомления о таймшитах на согласовании.
-- **Требуется исправление** — уведомление о необходимости правок.
-- **Лимит по задаче** — уведомление о превышении лимита по задаче.
-- Контекст уведомлений задаётся Python-файлами в соответствующих папках `notification/`.
+- **Требуется согласование** / **Требуется исправление** — уведомления по workflow-задачам.
 - Автозаполнение Issue по входящей коммуникации, создание Task из Meeting Notes, зеркалирование тегов Issue–Task и др. реализованы в Server Script (fixtures).
 
 ### Прочее
@@ -60,8 +58,8 @@
 - **Meeting Notes** и **Assignments** — протоколы встреч с решениями и поручениями; автоматическое создание Task и ToDo из поручений (Server Script).
 - **Projects Email Mapping**, **Setting Table** — маппинг писем на клиента/проект и настройки.
 - **Issue Identification**, **Issue Estimations**, **Issue Participants**, **Project Issue Setting** — расширение работы с тикетами и настройками по проекту.
-- **User Delegate**, **User Projects** — делегирование и привязка пользователей к проектам.
-- **Doctype For Timesheet**, **Task Relation**, **Type Of Meeting**, **Business Area**, **Tax Id Code Type** и др. — вспомогательные справочники и связи.
+- **User Delegate** — делегирование пользователей.
+- **Task Relation**, **Type Of Meeting**, **Business Area**, **Tax Id Code Type** и др. — вспомогательные справочники и связи.
 
 ---
 
@@ -71,21 +69,19 @@
 
 1. **Метаданные Frappe (fixtures и DocType)**  
    При установке и миграции приложение подтягивает из репозитория и синхронизирует с сайтом:
-   - кастомные DocType и дочерние таблицы;
-   - Custom Field (в т.ч. массивное расширение Project);
-   - Client Script и Server Script (модуль «Dinext Projects»);
-   - Workflow для заявок на отпуск, таймшитов, проектов, счетов;
-   - роли, права (Custom DocPerm), Module Profile, Role Permission for Page and Report;
-   - справочники (Issue Priority, Project Payment Scheme, Project Type, Type Of Leave, Holiday List, Timesheet Template, Working Hours On Date и др.);
-   - Workspace, Number Card, Dashboard Chart, Notification, Web Page.
+   - кастомные DocType и дочерние таблицы проектов;
+   - Custom Field (в т.ч. расширение Project, включая `custom_working_hours_on_date`);
+   - Client Script и Server Script модуля «Dinext Projects»;
+   - Workflow для проектов и счетов;
+   - роли projects (без `Dinext_UT_*`), Custom DocPerm (без parents таймшитов), Module Profile, Role Permission for Page and Report;
+   - справочники проектов и shared `Working Hours On Date`;
+   - Workspace, Number Card, Dashboard Chart, Notification.
 
 2. **Минимальный Python-слой**  
-   - `dinext_projects/dinext_projects/permissions.py` — whitelisted-методы `has_permission`, `get_doc_permissions`, `get_users_with_role` (обёртки над стандартным API Frappe с возможностью проверки прав от имени другого пользователя).
-   - `dinext_projects/dinext_projects/model/workflow.py` — `get_transitions(doc, user, workflow)` для получения доступных переходов workflow от имени указанного пользователя.
-   - Script Report: `report/отчет_по_тш/отчет_по_тш.py`, `report/отчет_для_подрядчиков/отчет_для_подрядчиков.py` — колонки, SQL-запросы и фильтры.
-   - Notification: Python-файлы в `notification/*/` для контекста шаблонов.
+   - `dinext_projects/dinext_projects/permissions.py` — whitelisted-методы `has_permission`, `get_doc_permissions`, `get_users_with_role`.
+   - `dinext_projects/dinext_projects/model/workflow.py` — `get_transitions(doc, user, workflow)`.
 
-Итого: основная бизнес-логика (расчёты часов, лимиты, согласования, автозаполнение, создание задач) сосредоточена в Server Script и Client Script, экспортируемых в `dinext_projects/fixtures/`. Репозиторий не содержит отдельного `api.py`; публичный API ограничен указанными whitelisted-методами.
+Итого: основная бизнес-логика проектов сосредоточена в Server Script и Client Script в `dinext_projects/fixtures/`. Логика таймшитов — в `dinext_timesheets`.
 
 ---
 
@@ -127,11 +123,10 @@
 
 - **Мои проекты** — список и дашборд проектов (по типам, статусам, клиентам), справочники и отчёты.
 - **Мои задачи** — задачи пользователя.
-- **Мои таймшиты** — учёт времени, отправка на согласование.
 - **Аналитика** — выручка, расходы, графики P&amp;L, выручка по клиентам.
 - **Фин. контроль** — контроль ставок и финансовых показателей.
 
-Создание и согласование таймшитов, заявок на отпуск и workflow-задач выполняется через стандартные формы Frappe с подключёнными Client/Server Script и Workflow. Отчёты доступны через «Отчёты» и через ссылки в workspace.
+Учёт времени и workspace «Мои таймшиты» доступны после установки `dinext_timesheets`. Workflow-задачи проектов выполняются через стандартные формы Frappe с Client/Server Script и Workflow.
 
 ---
 
@@ -148,7 +143,7 @@
 
 - Конфигурация приложения задаётся в `dinext_projects/hooks.py` (в т.ч. список `fixtures`). Менять поведение установки без правки кода можно только в рамках возможностей Frappe (сайт, DocType, скрипты в UI).
 - Переменные окружения и параметры сервера — стандартные для Bench/Frappe (см. документацию [Frappe](https://frappeframework.com/docs)).
-- Роли и права экспортируются в fixtures (роли с именем, содержащим «Dinext»; Custom DocPerm, Module Profile, Role Permission for Page and Report). После изменения прав в системе рекомендуется выполнить `bench export-fixtures` и закоммитить обновлённые JSON (см. AGENTS.md).
+- Роли и права экспортируются в fixtures: роли `Dinext_%` кроме timesheets-ролей; Custom DocPerm с исключением parents таймшитов. После изменения прав в системе — `bench export-fixtures` и коммит JSON.
 
 ---
 
@@ -226,6 +221,7 @@ pre-commit install
 
 Краткая сводка последних изменений по истории коммитов:
 
+- **Split таймшитов:** учёт времени и отпусков перенесён в `dinext_timesheets`; в projects оставлен shared-контракт (`Worker`, `Working Hours On Date`, `Project.custom_working_hours_on_date`) и скорректированы правила экспорта fixtures.
 - **Удаление устаревшего кода:** удалены deprecated файлы и конфигурации, связанные с бюджетом проектов, управлением рисками (категории, уровни, воздействия, стратегии, приоритеты, вероятности), назначением рабочей нагрузки, устаревшими Server Script и Client Script; упрощение структуры и улучшение сопровождаемости.
 - **Дашборды и P&amp;L:** доработка дашборда задач по проектам (client_script), улучшение отображения графиков и элементов; добавлено выпадающее меню для действий P&amp;L в планировании проектов, правки стилей элементов бюджета.
 - **Рефакторинг проектной части:** обновление JS/JSON для планирования проектов, кастомных полей и типов; улучшение UI отчётов по прибыли и убыткам; приведение имён и типов полей в соответствие с требованиями; удаление устаревших полей и скриптов.
@@ -251,92 +247,36 @@ dinext_projects/
 │   │   ├── workflow.json
 │   │   ├── role.json
 │   │   ├── custom_docperm.json
-│   │   ├── module_profile.json
-│   │   ├── web_page.json
-│   │   ├── workflow_state.json
-│   │   ├── workflow_action_master.json
-│   │   ├── holiday_list.json
-│   │   ├── timesheet_template.json
 │   │   ├── working_hours_on_date.json
-│   │   ├── issue_priority.json
-│   │   ├── issue_type.json
-│   │   ├── task_type.json
-│   │   ├── project_type.json
-│   │   ├── project_payment_scheme.json
-│   │   ├── type_of_leave.json
-│   │   ├── issue_identification_type.json
-│   │   ├── role_profile.json
-│   │   ├── calendar_view.json
-│   │   ├── custom_html_block.json
-│   │   ├── kanban_board.json
 │   │   └── ...
 │   ├── dinext_projects/              # Модуль "Dinext Projects"
 │   │   ├── permissions.py           # Whitelisted: has_permission, get_doc_permissions, get_users_with_role
 │   │   ├── model/
 │   │   │   └── workflow.py          # Whitelisted: get_transitions
 │   │   ├── doctype/                  # Кастомные DocType (JSON + при необходимости .py/.js)
-│   │   │   ├── user_timesheet/
-│   │   │   ├── user_timesheet_position/
-│   │   │   ├── user_timesheet_position_details/
 │   │   │   ├── worker/
-│   │   │   ├── application_for_leave/
+│   │   │   ├── working_hours_on_date/
 │   │   │   ├── workflow_task/
 │   │   │   ├── project_team_details/
 │   │   │   ├── project_work_efforts/
-│   │   │   ├── project_work_efforts_amount/
-│   │   │   ├── limit_control/
 │   │   │   ├── meeting_notes/
-│   │   │   ├── assignments/
-│   │   │   ├── rate_table/
-│   │   │   ├── rate_category/
-│   │   │   ├── cost_level/
-│   │   │   ├── timesheet_template/
-│   │   │   ├── working_hours_on_date/
-│   │   │   ├── worker_level/
-│   │   │   ├── worker_utilization_table/
-│   │   │   └── ... (остальные DocType)
-│   │   ├── report/                   # Отчёты (Script Report и Query Report)
-│   │   │   ├── отчет_по_тш/         # Script Report: детализация таймшитов
-│   │   │   ├── отчет_для_подрядчиков/
-│   │   │   ├── отчет_по_утилизации/
-│   │   │   ├── статус_по_всем_ком.проектам/
-│   │   │   ├── статистика_по_тш/
-│   │   │   ├── контроль_ставок_по_проектам/
-│   │   │   ├── контроль_ставок_по_t&m_проектам_v2/
-│   │   │   └── ...
-│   │   ├── workspace/                # Рабочие пространства Desk
-│   │   │   ├── мои_проекты/
-│   │   │   ├── мои_задачи/
-│   │   │   ├── мои_таймшиты/
-│   │   │   ├── аналитика/
-│   │   │   ├── фин._контроль/
-│   │   │   ├── моя_доска/
-│   │   │   └── dilike/
-│   │   ├── number_card/              # Карточки KPI для дашбордов (22 карточки)
-│   │   ├── dashboard_chart/          # Графики: выручка по клиентам, доходы и расходы
-│   │   ├── notification/             # Шаблоны уведомлений (таймшиты, согласования, лимиты)
-│   │   │   ├── таймшит_не_отправлен/
-│   │   │   ├── требуется_согласование/
-│   │   │   ├── согласоанияе_тш/
-│   │   │   ├── требуется_исправление/
-│   │   │   └── лимит_по_задаче/
-│   │   └── custom/                   # Расширения стандартных DocType
-│   │       └── project.json         # Массив кастомных полей и таблиц для Project
-│   ├── public/                      # Статические ресурсы (при необходимости)
+│   │   │   └── ... (остальные DocType проектов)
+│   │   ├── report/
+│   │   ├── workspace/                # Мои проекты, Мои задачи, Аналитика, Фин. контроль, DiLike
+│   │   ├── number_card/
+│   │   ├── dashboard_chart/
+│   │   ├── notification/
+│   │   └── custom/
+│   ├── public/
 │   ├── templates/
 │   └── translations/
 │       └── ru.csv
-├── pyproject.toml                   # Метаданные пакета, ruff, зависимости
-├── .pre-commit-config.yaml          # Pre-commit: ruff, eslint, prettier, hooks
-├── .eslintrc
-├── .editorconfig
-├── .gitignore
-├── license.txt                      # MIT
-├── README.md                        # Этот файл
-├── AGENTS.md                        # Руководство по разработке для агентов и разработчиков
-└── .cursor/                         # Настройки и навыки Cursor (не часть продукта)
-    └── skills/
+├── pyproject.toml
+├── README.md
+└── AGENTS.md                        # stub → центральные инструкции в dinext-docs
 ```
+
+Таймшитные DocType, отчёты, workspace «Мои таймшиты» и связанные уведомления находятся в приложении `dinext_timesheets`.
 
 **Назначение ключевых каталогов:**
 
@@ -363,14 +303,16 @@ flowchart LR
   Hooks --> Meta[DocTypes, Custom Fields, Workflows]
   Meta --> Desk[Workspaces, Reports, Notifications]
   Meta --> Automation[Client Scripts, Server Scripts]
-  Automation --> CoreDocs[Project, Task, Issue, Timesheet, Leave]
+  Automation --> CoreDocs[Project, Task, Issue, Worker]
+  CoreDocs --> Shared[Working Hours On Date / Project calendar]
+  Shared --> TimesheetsApp[dinext_timesheets]
   CoreDocs --> Analytics[Reports, Number Cards, Charts]
   CoreDocs --> Approval[Workflow Tasks, Approvals]
   permissions[permissions.py] --> CoreDocs
   workflow_model[model/workflow.py] --> Approval
 ```
 
-Упрощённо: Bench загружает приложение; `hooks.py` задаёт набор fixtures. Метаданные (DocType, поля, workflow) формируют структуру данных и сценарии согласований. Client Script и Server Script реализуют расчёты и автоматизации поверх документов Project, Task, Issue, таймшитов и заявок на отпуск. Отчёты и дашборды потребляют эти данные. Тонкие Python-модули `permissions.py` и `model/workflow.py` предоставляют API для проверки прав и переходов workflow.
+Упрощённо: Bench загружает приложение; `hooks.py` задаёт набор fixtures. Метаданные формируют структуру данных и сценарии согласований для Project/Task/Issue. Shared-объекты Worker и Working Hours On Date потребляются `dinext_timesheets`. Тонкие Python-модули `permissions.py` и `model/workflow.py` предоставляют API для проверки прав и переходов workflow.
 
 ---
 
