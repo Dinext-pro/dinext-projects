@@ -8,6 +8,8 @@
  "field_order": [
   "pt_role",
   "pt_worker",
+  "worker_type",
+  "virtual_worker",
   "pt_participant_type",
   "pt_participant",
   "base_cost_level",
@@ -40,6 +42,22 @@
    "options": "Worker",
    "print_width": "2",
    "width": "2"
+  },
+  {
+   "columns": 1,
+   "fieldname": "worker_type",
+   "fieldtype": "Select",
+   "label": "Тип",
+   "options": "\nEmployee\nSupplier",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "default": "0",
+   "fieldname": "virtual_worker",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Виртуальный участник"
   },
   {
    "columns": 1,
@@ -137,7 +155,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-04-26 21:06:27.842587",
+ "modified": "2026-06-24 17:10:00.000000",
  "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "Project Team Details",
