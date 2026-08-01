@@ -6,10 +6,10 @@
   "doctype": "Role",
   "home_page": null,
   "is_custom": 0,
-  "modified": "2026-02-13 11:43:19.105056",
-  "name": "Dinext_UT_Full_Access",
+  "modified": "2026-06-10 10:28:16.285063",
+  "name": "Dinext_Workload_Manager",
   "restrict_to_domain": null,
-  "role_name": "Dinext_UT_Full_Access",
+  "role_name": "Dinext_Workload_Manager",
   "two_factor_auth": 0
  },
  {
@@ -266,10 +266,10 @@
   "doctype": "Role",
   "home_page": null,
   "is_custom": 0,
-  "modified": "2026-04-25 14:57:06.874294",
-  "name": "Dinext_UTP_Appoval",
+  "modified": "2026-05-29 02:06:09.928653",
+  "name": "Dinext_Budget_Approver",
   "restrict_to_domain": null,
-  "role_name": "Dinext_UTP_Appoval",
+  "role_name": "Dinext_Budget_Approver",
   "two_factor_auth": 0
  }
 ]
