@@ -1,0 +1,139 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"WBE8tN7oj_\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Фин. Контроль</span>\",\"col\":12}},{\"id\":\"Fnol0eAkmq\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"RZM2jnrzQU\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Worker\",\"col\":10}},{\"id\":\"zriGUQlkGM\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Timesheet Template\",\"col\":10}},{\"id\":\"x4Ofj8ccsP\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Holiday List\",\"col\":10}},{\"id\":\"Kn7pfNIIdQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Group\",\"col\":10}},{\"id\":\"gXzwuLZWrf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cost Level\",\"col\":10}},{\"id\":\"gZNTAH6cLQ\",\"type\":\"card\",\"data\":{\"card_name\":\"Календарные данные\",\"col\":4}},{\"id\":\"52X1h5FfQa\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"0Ysnd-8nUD\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b></b></span><span class=\\\"h4\\\">Согласования</span><b></b>\",\"col\":12}},{\"id\":\"pFpt7wl4IT\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cost Center Allocation\",\"col\":3}},{\"id\":\"Aw7YYWFbm1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"1NmqS2vZhd\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Отчетность</span>\",\"col\":12}},{\"id\":\"PUgnEd11jg\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"D3dsBfxcqr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Отчетность по ТШ\",\"col\":10}},{\"id\":\"L9rnsRIIVn\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Контроль ставок по T&M Проектам\",\"col\":10}},{\"id\":\"n6TK-bhXIh\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Отчет по утилизации\",\"col\":10}}]",
+ "creation": "2026-02-07 13:31:04.032251",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "list-alt",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Financial Control",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Календарные данные",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Праздники и выходные",
+   "link_count": 0,
+   "link_to": "Holiday List",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Соращенные дни",
+   "link_count": 0,
+   "link_to": "Working Hours On Date",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-02-07 14:01:00.421989",
+ "modified_by": "Administrator",
+ "module": "Dinext Projects",
+ "name": "Financial Control",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Dinext_Financier"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 46.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Отчетность по ТШ",
+   "link_to": "Отчет по ТШ",
+   "report_ref_doctype": "User Timesheet Position",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Отчет по утилизации",
+   "link_to": "Отчет по утилизации",
+   "report_ref_doctype": "User Timesheet",
+   "type": "Report"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "Worker",
+   "link_to": "Worker",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "Cost Center Allocation",
+   "link_to": "Cost Center Allocation",
+   "stats_filter": "[[\"Cost Center Allocation\",\"workflow_state\",\"=\",\"На согласовании\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Контроль ставок по T&M Проектам",
+   "link_to": "Контроль ставок по T&M проектам_V2",
+   "report_ref_doctype": "Project",
+   "type": "Report"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "Timesheet Template",
+   "link_to": "Timesheet Template",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "Holiday List",
+   "link_to": "Holiday List",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "User Group",
+   "link_to": "User Group",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "Cost Level",
+   "link_to": "Cost Level",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Financial Control"
+}

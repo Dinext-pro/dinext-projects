@@ -1,0 +1,354 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"zwmM8crDLE\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Действующие проекты</b></span>\",\"col\":12}},{\"id\":\"elLmu0zYA1\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Коммерческие \",\"col\":3}},{\"id\":\"ceycnkUP-d\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Presale\",\"col\":3}},{\"id\":\"hHDJacSKg_\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Внутренние\",\"col\":3}},{\"id\":\"My7HWSGTAq\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Внепроектные работы\",\"col\":3}},{\"id\":\"Wqt9eCH99T\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Tj1lXB-MDQ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Проекты по статусам</b></span>\",\"col\":12}},{\"id\":\"hhn9Jp0hV_\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"На согласовании\",\"col\":3}},{\"id\":\"A0Llg9-rnP\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Черновики\",\"col\":3}},{\"id\":\"s6L4yiS2bs\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Отклонены\",\"col\":3}},{\"id\":\"qYNU27sd_b\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Завершены\",\"col\":3}},{\"id\":\"tDnqjKNg7W\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"-kQMyEnTAX\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Проекты по клиентам</b></span>\",\"col\":12}},{\"id\":\"cakHl2achK\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Газпром ПАО\",\"col\":6}},{\"id\":\"qlyjkpi9Xo\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Лукойл ПАО\",\"col\":6}},{\"id\":\"czxda7n-GK\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"BkA-1fvkJj\",\"type\":\"card\",\"data\":{\"card_name\":\"Справочники и настройки\",\"col\":6}},{\"id\":\"T3Jijh_N1a\",\"type\":\"card\",\"data\":{\"card_name\":\"Отчеты\",\"col\":6}},{\"id\":\"TzEYDz8wGY\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"YSP-bW-NgZ\",\"type\":\"card\",\"data\":{\"card_name\":\"Распределение дохода и расхода\",\"col\":4}}]",
+ "creation": "2026-02-07 13:31:04.328702",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "projects",
+ "idx": 1,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "My Projects",
+ "links": [
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Project",
+   "link_count": 0,
+   "link_to": "Project",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Task",
+   "link_count": 0,
+   "link_to": "Task",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Project Template",
+   "link_count": 0,
+   "link_to": "Project Template",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Project Type",
+   "link_count": 0,
+   "link_to": "Project Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Project",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Project Update",
+   "link_count": 0,
+   "link_to": "Project Update",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Timesheet",
+   "link_count": 0,
+   "link_to": "Timesheet",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Activity Type",
+   "link_count": 0,
+   "link_to": "Activity Type",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Activity Type",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Activity Cost",
+   "link_count": 0,
+   "link_to": "Activity Cost",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Распределение дохода и расхода",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Центр Затрат",
+   "link_count": 0,
+   "link_to": "Cost Center",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Распределение Центров Затрат",
+   "link_count": 0,
+   "link_to": "Cost Center Allocation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Справочники и настройки",
+   "link_count": 9,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Шаблон проекта",
+   "link_count": 0,
+   "link_to": "Project Template",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Тип проекта",
+   "link_count": 0,
+   "link_to": "Project Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Project",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Обновление проекта",
+   "link_count": 0,
+   "link_to": "Project Update",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Проектные роли",
+   "link_count": 0,
+   "link_to": "Project Role",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Уровни / грейды",
+   "link_count": 0,
+   "link_to": "Cost Level",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Категории / тарифы",
+   "link_count": 0,
+   "link_to": "Rate Category",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Тип оплаты",
+   "link_count": 0,
+   "link_to": "Project Payment Scheme",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "СДЗ / МВЗ",
+   "link_count": 0,
+   "link_to": "Cost Center",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Клиенты",
+   "link_count": 0,
+   "link_to": "Customer",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Отчеты",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Контроль ставок по T&M Проектам",
+   "link_count": 0,
+   "link_to": "Контроль ставок по T&M проектам_V2",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Статус по проектам",
+   "link_count": 0,
+   "link_to": "Статус по всем ком.проектам",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Project",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Загрузка на проектах",
+   "link_count": 0,
+   "link_to": "Projects Workload Report",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "План-Факт-Прогноз Бюджета",
+   "link_count": 0,
+   "link_to": "Project Budget Plan vs Forecast",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-04-26 17:42:20.769327",
+ "modified_by": "Administrator",
+ "module": "Dinext Projects",
+ "name": "My Projects",
+ "number_cards": [
+  {
+   "label": "Внепроектные работы",
+   "number_card_name": "Внепроектные работы"
+  },
+  {
+   "label": "Коммерческие ",
+   "number_card_name": "Коммерческие проекты"
+  },
+  {
+   "label": "Внутренние",
+   "number_card_name": "Внутренние проекты"
+  },
+  {
+   "label": "Presale",
+   "number_card_name": "Presale проекты"
+  },
+  {
+   "label": "На согласовании",
+   "number_card_name": "Проекты на согласовании"
+  },
+  {
+   "label": "Черновики",
+   "number_card_name": "Проекты-черновики"
+  },
+  {
+   "label": "Отклонены",
+   "number_card_name": "Проекты отклонены"
+  },
+  {
+   "label": "Завершены",
+   "number_card_name": "Проекты завершены"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Project",
+   "label": "Газпром ПАО",
+   "quick_list_filter": "[[\"Project\",\"customer\",\"=\",\"Газпром ПАО\",false],[\"Project\",\"status\",\"=\",\"Open\",false],[\"Project\",\"is_active\",\"=\",\"Yes\",false]]"
+  },
+  {
+   "document_type": "Project",
+   "label": "Лукойл ПАО",
+   "quick_list_filter": "[[\"Project\",\"status\",\"=\",\"Open\",false],[\"Project\",\"is_active\",\"=\",\"Yes\",false],[\"Project\",\"customer\",\"=\",\"Лукойл ПАО\",false],[\"Project\",\"project_type\",\"=\",\"Коммерческий\",false]]"
+  }
+ ],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "Dinext_Project_Manager"
+  },
+  {
+   "role": "Dinext_Management"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 39.0,
+ "shortcuts": [],
+ "title": "My Projects"
+}

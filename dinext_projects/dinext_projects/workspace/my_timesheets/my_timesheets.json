@@ -1,0 +1,148 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"78DXiXdey6\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Мои Таймшиты</span>\",\"col\":12}},{\"id\":\"Ych2Us08RK\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"таймшитов всего\",\"col\":4}},{\"id\":\"4rRKTW9xcr\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"тш на редактировании\",\"col\":4}},{\"id\":\"eoxTQeHlJ1\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"тш на согласовании\",\"col\":4}},{\"id\":\"V9N5Jb7bTS\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"тш отклонено\",\"col\":4}},{\"id\":\"X3L9ekhaMv\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"тш просрочено\",\"col\":4}},{\"id\":\"ZHd7K0dgCW\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"тш согласовано\",\"col\":4}},{\"id\":\"tU5Tk2P8sp\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Ypqlj384xt\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Мои Заявки на расходы<b></b></span>\",\"col\":12}},{\"id\":\"8U2fco2DgC\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"из них на согласовании\",\"col\":4}},{\"id\":\"9UXpC3wR5e\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"из них согласовано\",\"col\":4}},{\"id\":\"m29rp4cEAB\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"из них отклонено\",\"col\":4}},{\"id\":\"QFS2RkQQ-e\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"GNwQY2sQgf\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Мои Заявки на отсутствие</b></span>\",\"col\":12}},{\"id\":\"v59OsO9FyB\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"заявок всего\",\"col\":3}},{\"id\":\"VjocwxgDNw\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"заявок на согласовании\",\"col\":3}},{\"id\":\"c02TPOlLb8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"заявок согласовано\",\"col\":3}},{\"id\":\"MBvN-Q1SA7\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"заявок отклонено\",\"col\":3}},{\"id\":\"wZTfNXxZQ3\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"QB1TOjS2S9\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Мои согласования:</b></span>\",\"col\":12}},{\"id\":\"eLQxUrMomT\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>По Таймшитам</b></span>\",\"col\":4}},{\"id\":\"XeaBq7l2sR\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>По Заявкам на отсутствие</b></span>\",\"col\":4}},{\"id\":\"RlfK7Y_jO5\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b></b></span><span class=\\\"h4\\\">По Заявкам на расходы</span>\",\"col\":4}},{\"id\":\"3bruDvGoUL\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"ТШ у меня на согласовании\",\"col\":4}},{\"id\":\"0pt3X0Jm_9\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Заявки у меня на согласовании\",\"col\":4}},{\"id\":\"RPkQwvO2Qa\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Расходы у меня на согласовании\",\"col\":4}},{\"id\":\"7QZCDyRBMc\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"ТШ согласованные мной\",\"col\":4}},{\"id\":\"zisSticUW2\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Заявки согласованные мной\",\"col\":4}},{\"id\":\"mzxxycRAiN\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Расходы согласованные мной\",\"col\":4}},{\"id\":\"OolMy5FYV1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"C648qKxTOZ\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"CrG4btogWC\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Отчетность</b></span>\",\"col\":12}},{\"id\":\"t0AOcA2iXq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Мои списания по ТШ\",\"col\":12}},{\"id\":\"OX_CGdK7uI\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Отчетность по ТШ\",\"col\":12}},{\"id\":\"T_dPTtT5cB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Отчет по утилизации\",\"col\":12}},{\"id\":\"6h6jeuDwEU\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Календарь отсутствий\",\"col\":12}}]",
+ "creation": "2026-02-07 13:31:04.195285",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "quantity-1",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "My Timesheets",
+ "links": [],
+ "modified": "2026-02-07 14:00:13.411133",
+ "modified_by": "Administrator",
+ "module": "Dinext Projects",
+ "name": "My Timesheets",
+ "number_cards": [
+  {
+   "label": "Расходы у меня на согласовании",
+   "number_card_name": "Заявок EC у меня на согласовании"
+  },
+  {
+   "label": "заявок на согласовании",
+   "number_card_name": "Моих Заявок на согласовании"
+  },
+  {
+   "label": "ТШ согласованные мной",
+   "number_card_name": "ТШ согласованные мной-1"
+  },
+  {
+   "label": "Заявки согласованные мной",
+   "number_card_name": "Заявки на отсутствие согласованные мной-1"
+  },
+  {
+   "label": "ТШ у меня на согласовании",
+   "number_card_name": "ТШ у меня на согласовании-2"
+  },
+  {
+   "label": "Заявки у меня на согласовании",
+   "number_card_name": "Заявки на отсутствие у меня на согласовании-2"
+  },
+  {
+   "label": "таймшитов всего",
+   "number_card_name": "Моих Таймшитов всего"
+  },
+  {
+   "label": "заявок всего",
+   "number_card_name": "Моих Заявок всего"
+  },
+  {
+   "label": "тш на редактировании",
+   "number_card_name": "Моих таймшитов на редактировании"
+  },
+  {
+   "label": "тш на согласовании",
+   "number_card_name": "Моих таймшитов на согласовании"
+  },
+  {
+   "label": "из них на согласовании",
+   "number_card_name": "Заявок EC на согласовании"
+  },
+  {
+   "label": "Расходы согласованные мной",
+   "number_card_name": "Заявок EC Согласованных мной"
+  },
+  {
+   "label": "заявок согласовано",
+   "number_card_name": "Моих Заявок Согласовано"
+  },
+  {
+   "label": "тш отклонено",
+   "number_card_name": "Мои отклоненные таймшиты"
+  },
+  {
+   "label": "из них согласовано",
+   "number_card_name": "Заявок EC Согласовано"
+  },
+  {
+   "label": "заявок отклонено",
+   "number_card_name": "Моих Заявок Отклонено"
+  },
+  {
+   "label": "тш просрочено",
+   "number_card_name": "Мои просроченные таймшиты"
+  },
+  {
+   "label": "тш согласовано",
+   "number_card_name": "Мои согласованные таймшиты"
+  },
+  {
+   "label": "из них отклонено",
+   "number_card_name": "Заявок EC Отклонено"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Dinext_Worker"
+  },
+  {
+   "role": "Dinext_UTP_Appoval"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 43.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Мои списания по ТШ",
+   "link_to": "Отчет для Подрядчиков",
+   "report_ref_doctype": "User Timesheet Position",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Отчет по утилизации",
+   "link_to": "Отчет по утилизации",
+   "report_ref_doctype": "User Timesheet",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Календарь отсутствий",
+   "type": "URL",
+   "url": "/app/application-for-leave/view/calendar/AFL?status=%D0%A1%D0%BE%D0%B3%D0%BB%D0%B0%D1%81%D0%BE%D0%B2%D0%B0%D0%BD%D0%BE"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Отчетность по ТШ",
+   "link_to": "Отчет по ТШ",
+   "report_ref_doctype": "User Timesheet Position",
+   "type": "Report"
+  }
+ ],
+ "title": "My Timesheets"
+}

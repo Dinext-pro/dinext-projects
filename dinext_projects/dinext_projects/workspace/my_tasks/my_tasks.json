@@ -1,0 +1,144 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"UITAXO-Wj9\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Запросы (Issue)</span>\",\"col\":12}},{\"id\":\"pODiO37qHY\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Назначенные на меня\",\"col\":4}},{\"id\":\"TU8OkjuXJA\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Просроченные на мне\",\"col\":4}},{\"id\":\"itG-rDT7eG\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"На паузе на мне\",\"col\":4}},{\"id\":\"pX09SVSunS\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Созданные мной\",\"col\":4}},{\"id\":\"l5EVqkDCj8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Отмеченные мной\",\"col\":4}},{\"id\":\"-Z_icOnZzU\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Мои решенные запросы\",\"col\":4}},{\"id\":\"851EEczPAZ\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Запросов всего\",\"col\":3}},{\"id\":\"mPlfUpYu45\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Просроченные\",\"col\":3}},{\"id\":\"ouxtsdqsrY\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Высокого приоритета\",\"col\":3}},{\"id\":\"iT8WeSOSxI\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Без ответственных\",\"col\":3}},{\"id\":\"qCfOD6wLoF\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Создать запрос\",\"col\":3}},{\"id\":\"UORtPuFzZw\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"YZsfA_GV68\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Задачи (Task)</span>\",\"col\":12}},{\"id\":\"TXTuaGJ_JJ\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Мои задачи\",\"col\":3}},{\"id\":\"_b3KKaUMTt\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Мои просроченные задачи\",\"col\":3}},{\"id\":\"wl642mZozz\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Созданные мной задачи\",\"col\":3}},{\"id\":\"8mIOJUjyHX\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"У меня на подтверждении\",\"col\":3}},{\"id\":\"AAPjmpyKcY\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Задач всего\",\"col\":4}},{\"id\":\"00pXcSUKvc\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Задачи на сегодня\",\"col\":4}},{\"id\":\"X3z9b0XbWg\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Задачи на эту неделю\",\"col\":4}},{\"id\":\"fXtB8bAbcV\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Просроченные задачи\",\"col\":4}},{\"id\":\"c78o3N_WaJ\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Задачи без ответственных\",\"col\":4}},{\"id\":\"niK-UGuiPO\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Задачи без сроков\",\"col\":4}},{\"id\":\"Juo3kU2Fb6\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"nIxK-NgQDU\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Создать задачу\",\"col\":5}},{\"id\":\"-9jhxBrBIc\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Вехи</b></span>\",\"col\":12}},{\"id\":\"dDzfU-7Cjn\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Ближайшие вехи\",\"col\":6}},{\"id\":\"2SMUiJ0ZE0\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Просроченные вехи\",\"col\":6}}]",
+ "creation": "2026-02-07 13:31:04.428968",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "color-energy-points",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "My Tasks",
+ "links": [],
+ "modified": "2026-04-26 17:42:38.933320",
+ "modified_by": "Administrator",
+ "module": "Dinext Projects",
+ "name": "My Tasks",
+ "number_cards": [
+  {
+   "label": "Задачи без сроков",
+   "number_card_name": "Задачи без сроков"
+  },
+  {
+   "label": "Назначенные на меня",
+   "number_card_name": "Запросы, назначенные на меня"
+  },
+  {
+   "label": "Мои просроченные задачи",
+   "number_card_name": "Мои просроченные задачи"
+  },
+  {
+   "label": "Созданные мной",
+   "number_card_name": "Запросы, созданные мной"
+  },
+  {
+   "label": "Мои задачи",
+   "number_card_name": "Мои задачи-1"
+  },
+  {
+   "label": "Мои решенные запросы",
+   "number_card_name": "Мои решенные запросы"
+  },
+  {
+   "label": "Просроченные на мне",
+   "number_card_name": "Мои просроченные запросы"
+  },
+  {
+   "label": "Задачи без ответственных",
+   "number_card_name": "Задачи без ответственных"
+  },
+  {
+   "label": "Созданные мной задачи",
+   "number_card_name": "Задачи, созданные мной-1"
+  },
+  {
+   "label": "На паузе на мне",
+   "number_card_name": "Мои запросы на паузе"
+  },
+  {
+   "label": "У меня на подтверждении",
+   "number_card_name": "Выполненные задачи на подтверждении"
+  },
+  {
+   "label": "Задач всего",
+   "number_card_name": "Задачи"
+  },
+  {
+   "label": "Отмеченные мной",
+   "number_card_name": "Запросы отмеченные мной"
+  },
+  {
+   "label": "Просроченные",
+   "number_card_name": "Просроченные запросы"
+  },
+  {
+   "label": "Высокого приоритета",
+   "number_card_name": "Запросы высокого приоритета"
+  },
+  {
+   "label": "Без ответственных",
+   "number_card_name": "Запросы без ответственных"
+  },
+  {
+   "label": "Задачи на эту неделю",
+   "number_card_name": "Задачи на эту неделю"
+  },
+  {
+   "label": "Задачи на сегодня",
+   "number_card_name": "Задачи на сегодня"
+  },
+  {
+   "label": "Просроченные задачи",
+   "number_card_name": "Просроченные задачи"
+  },
+  {
+   "label": "Запросов всего",
+   "number_card_name": "Запросов всего"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Task",
+   "label": "Просроченные вехи",
+   "quick_list_filter": "{\"status\":[\"=\",\"Overdue\"],\"is_milestone\":[\"=\",1]}"
+  },
+  {
+   "document_type": "Task",
+   "label": "Ближайшие вехи",
+   "quick_list_filter": "{\"status\":[\"in\",[\"Open\",\"Working\",null]],\"is_milestone\":[\"=\",1]}"
+  }
+ ],
+ "roles": [
+  {
+   "role": "Dinext_User"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 40.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "New",
+   "label": "Создать запрос",
+   "link_to": "Issue",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "New",
+   "label": "Создать задачу",
+   "link_to": "Task",
+   "type": "DocType"
+  }
+ ],
+ "title": "My Tasks"
+}
