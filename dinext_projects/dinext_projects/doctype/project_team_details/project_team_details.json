@@ -47,7 +47,7 @@
    "columns": 1,
    "fieldname": "worker_type",
    "fieldtype": "Select",
-   "label": "Тип",
+   "label": "Type",
    "options": "\nEmployee\nSupplier",
    "read_only": 1
   },
@@ -57,7 +57,7 @@
    "fieldname": "virtual_worker",
    "fieldtype": "Check",
    "in_list_view": 1,
-   "label": "Виртуальный участник"
+   "label": "Virtual Participant"
   },
   {
    "columns": 1,
@@ -84,7 +84,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "is_virtual": 1,
-   "label": "\u0411\u0430\u0437\u043e\u0432\u0430\u044f \u0441\u0442\u0430\u0432\u043a\u0430",
+   "label": "Base Rate",
    "permlevel": 1,
    "read_only": 1
   },
@@ -93,7 +93,7 @@
    "fieldname": "pt_cost_level",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "\u0421\u0442\u0430\u0432\u043a\u0430 \u0441\u0435\u0431\u0435\u0441\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u0438",
+   "label": "Cost Rate",
    "options": "Cost Level",
    "permlevel": 3,
    "print_width": "1",
@@ -148,7 +148,7 @@
    "default": "0",
    "fieldname": "notifications_on_limits",
    "fieldtype": "Check",
-   "label": "\u0423\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f \u043f\u043e \u043b\u0438\u043c\u0438\u0442\u0430\u043c"
+   "label": "Limit Notifications"
   }
  ],
  "grid_page_length": 50,

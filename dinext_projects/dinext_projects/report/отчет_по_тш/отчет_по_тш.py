@@ -30,7 +30,7 @@ def execute(filters=None):
             CASE 
                 WHEN p.document_type = 'Issue' THEN i.subject 
                 WHEN p.document_type = 'Task' THEN t.subject 
-                ELSE 'Неизвестный тип'
+                ELSE 'Unknown type'
             END AS task_name,
             d.date AS date,
             d.hours AS hours,

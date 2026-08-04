@@ -18,7 +18,7 @@
  "owner": "Administrator",
  "prepared_report": 0,
  "ref_doctype": "User Timesheet Position",
- "report_name": "\u041e\u0442\u0447\u0435\u0442 \u043f\u043e \u0422\u0428",
+ "report_name": "Timesheet Report",
  "report_type": "Script Report",
  "roles": [
   {

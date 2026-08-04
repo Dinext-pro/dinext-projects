@@ -19,7 +19,7 @@ frappe.query_reports["Отчет для Подрядчиков"] = {
     "filters": [
         {
             "fieldname": "user",
-            "label": ("Email"),
+            "label": __("Email"),
             "fieldtype": "Link",
             "options": "User",
             "reqd": 0,
@@ -28,7 +28,7 @@ frappe.query_reports["Отчет для Подрядчиков"] = {
         },
         {
             "fieldname": "project",
-            "label": ("Проект"),
+            "label": __("Project"),
             "fieldtype": "Link",
             "options": "Project",
             "reqd": 0,
@@ -37,7 +37,7 @@ frappe.query_reports["Отчет для Подрядчиков"] = {
         },
         {
             "fieldname": "from_date",
-            "label": ("From Date"),
+            "label": __("From Date"),
             "fieldtype": "Date",
             "reqd": 0,
             "default": null,

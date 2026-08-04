@@ -5,25 +5,25 @@
   {
    "fieldname": "timesheet_from_name",
    "fieldtype": "Data",
-   "label": "\u0410\u0432\u0442\u043e\u0440",
+   "label": "Author",
    "width": 0
   },
   {
    "fieldname": "ts_valid_from",
    "fieldtype": "Date",
-   "label": "\u0421",
+   "label": "Valid From",
    "width": 0
   },
   {
    "fieldname": "ts_valid_for",
    "fieldtype": "Date",
-   "label": "\u041f\u043e",
+   "label": "Valid For",
    "width": 0
   },
   {
    "fieldname": "utilization",
    "fieldtype": "Float",
-   "label": "\u0423\u0442\u0438\u043b\u0438\u0437\u0430\u0446\u0438\u044f",
+   "label": "Utilization",
    "width": 0
   }
  ],
@@ -35,7 +35,7 @@
   {
    "fieldname": "timesheet_from",
    "fieldtype": "Link",
-   "label": "\u0410\u0432\u0442\u043e\u0440",
+   "label": "Author",
    "mandatory": 0,
    "options": "User",
    "wildcard_filter": 0
@@ -52,7 +52,7 @@
  "owner": "Administrator",
  "prepared_report": 0,
  "ref_doctype": "User Timesheet",
- "report_name": "\u041e\u0442\u0447\u0435\u0442 \u043f\u043e \u0443\u0442\u0438\u043b\u0438\u0437\u0430\u0446\u0438\u0438",
+ "report_name": "Utilization Report",
  "report_type": "Report Builder",
  "roles": [
   {
