@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"zwmM8crDLE\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Действующие проекты</b></span>\",\"col\":12}},{\"id\":\"elLmu0zYA1\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Коммерческие \",\"col\":3}},{\"id\":\"ceycnkUP-d\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Presale\",\"col\":3}},{\"id\":\"hHDJacSKg_\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Внутренние\",\"col\":3}},{\"id\":\"My7HWSGTAq\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Внепроектные работы\",\"col\":3}},{\"id\":\"Wqt9eCH99T\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Tj1lXB-MDQ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Проекты по статусам</b></span>\",\"col\":12}},{\"id\":\"hhn9Jp0hV_\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"На согласовании\",\"col\":3}},{\"id\":\"A0Llg9-rnP\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Черновики\",\"col\":3}},{\"id\":\"s6L4yiS2bs\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Отклонены\",\"col\":3}},{\"id\":\"qYNU27sd_b\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Завершены\",\"col\":3}},{\"id\":\"tDnqjKNg7W\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"-kQMyEnTAX\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Проекты по клиентам</b></span>\",\"col\":12}},{\"id\":\"cakHl2achK\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Газпром ПАО\",\"col\":6}},{\"id\":\"qlyjkpi9Xo\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Лукойл ПАО\",\"col\":6}},{\"id\":\"czxda7n-GK\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"BkA-1fvkJj\",\"type\":\"card\",\"data\":{\"card_name\":\"Справочники и настройки\",\"col\":6}},{\"id\":\"T3Jijh_N1a\",\"type\":\"card\",\"data\":{\"card_name\":\"Отчеты\",\"col\":6}},{\"id\":\"TzEYDz8wGY\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"YSP-bW-NgZ\",\"type\":\"card\",\"data\":{\"card_name\":\"Распределение дохода и расхода\",\"col\":4}}]",
+ "content": "[{\"id\":\"zwmM8crDLE\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Active Projects</b></span>\",\"col\":12}},{\"id\":\"elLmu0zYA1\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Commercial \",\"col\":3}},{\"id\":\"ceycnkUP-d\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Presale\",\"col\":3}},{\"id\":\"hHDJacSKg_\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Internal\",\"col\":3}},{\"id\":\"My7HWSGTAq\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Non-Project Work\",\"col\":3}},{\"id\":\"Wqt9eCH99T\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Tj1lXB-MDQ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Projects by Status</b></span>\",\"col\":12}},{\"id\":\"hhn9Jp0hV_\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Pending Approval\",\"col\":3}},{\"id\":\"A0Llg9-rnP\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Drafts\",\"col\":3}},{\"id\":\"s6L4yiS2bs\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Rejected\",\"col\":3}},{\"id\":\"qYNU27sd_b\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Completed\",\"col\":3}},{\"id\":\"tDnqjKNg7W\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"-kQMyEnTAX\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Projects by Customer</b></span>\",\"col\":12}},{\"id\":\"cakHl2achK\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Газпром ПАО\",\"col\":6}},{\"id\":\"qlyjkpi9Xo\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Лукойл ПАО\",\"col\":6}},{\"id\":\"czxda7n-GK\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"BkA-1fvkJj\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters and Settings\",\"col\":6}},{\"id\":\"T3Jijh_N1a\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":6}},{\"id\":\"TzEYDz8wGY\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"YSP-bW-NgZ\",\"type\":\"card\",\"data\":{\"card_name\":\"Income and Expense Allocation\",\"col\":4}}]",
  "creation": "2026-02-07 13:31:04.328702",
  "custom_blocks": [],
  "docstatus": 0,
@@ -104,7 +104,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Распределение дохода и расхода",
+   "label": "Income and Expense Allocation",
    "link_count": 2,
    "link_type": "DocType",
    "onboard": 0,
@@ -113,7 +113,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Центр Затрат",
+   "label": "Cost Center",
    "link_count": 0,
    "link_to": "Cost Center",
    "link_type": "DocType",
@@ -123,7 +123,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Распределение Центров Затрат",
+   "label": "Cost Center Allocation",
    "link_count": 0,
    "link_to": "Cost Center Allocation",
    "link_type": "DocType",
@@ -133,7 +133,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Справочники и настройки",
+   "label": "Masters and Settings",
    "link_count": 9,
    "link_type": "DocType",
    "onboard": 0,
@@ -143,7 +143,7 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Шаблон проекта",
+   "label": "Project Template",
    "link_count": 0,
    "link_to": "Project Template",
    "link_type": "DocType",
@@ -154,7 +154,7 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Тип проекта",
+   "label": "Project Type",
    "link_count": 0,
    "link_to": "Project Type",
    "link_type": "DocType",
@@ -165,7 +165,7 @@
    "dependencies": "Project",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Обновление проекта",
+   "label": "Project Update",
    "link_count": 0,
    "link_to": "Project Update",
    "link_type": "DocType",
@@ -175,7 +175,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Проектные роли",
+   "label": "Project Roles",
    "link_count": 0,
    "link_to": "Project Role",
    "link_type": "DocType",
@@ -185,7 +185,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Уровни / грейды",
+   "label": "Levels / Grades",
    "link_count": 0,
    "link_to": "Cost Level",
    "link_type": "DocType",
@@ -195,7 +195,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Категории / тарифы",
+   "label": "Categories / Rates",
    "link_count": 0,
    "link_to": "Rate Category",
    "link_type": "DocType",
@@ -205,7 +205,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Тип оплаты",
+   "label": "Payment Type",
    "link_count": 0,
    "link_to": "Project Payment Scheme",
    "link_type": "DocType",
@@ -215,7 +215,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "СДЗ / МВЗ",
+   "label": "SDZ / MVZ",
    "link_count": 0,
    "link_to": "Cost Center",
    "link_type": "DocType",
@@ -225,7 +225,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Клиенты",
+   "label": "Customers",
    "link_count": 0,
    "link_to": "Customer",
    "link_type": "DocType",
@@ -235,7 +235,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Отчеты",
+   "label": "Reports",
    "link_count": 4,
    "link_type": "DocType",
    "onboard": 0,
@@ -244,7 +244,7 @@
   {
    "hidden": 0,
    "is_query_report": 1,
-   "label": "Контроль ставок по T&M Проектам",
+   "label": "T&M Project Rate Control",
    "link_count": 0,
    "link_to": "Контроль ставок по T&M проектам_V2",
    "link_type": "Report",
@@ -254,7 +254,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Статус по проектам",
+   "label": "Project Status",
    "link_count": 0,
    "link_to": "Статус по всем ком.проектам",
    "link_type": "Report",
@@ -265,7 +265,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Загрузка на проектах",
+   "label": "Projects Workload",
    "link_count": 0,
    "link_to": "Projects Workload Report",
    "link_type": "DocType",
@@ -275,7 +275,7 @@
   {
    "hidden": 0,
    "is_query_report": 1,
-   "label": "План-Факт-Прогноз Бюджета",
+   "label": "Budget Plan vs Forecast",
    "link_count": 0,
    "link_to": "Project Budget Plan vs Forecast",
    "link_type": "Report",
@@ -289,15 +289,15 @@
  "name": "My Projects",
  "number_cards": [
   {
-   "label": "Внепроектные работы",
+   "label": "Non-Project Work",
    "number_card_name": "Внепроектные работы"
   },
   {
-   "label": "Коммерческие ",
+   "label": "Commercial ",
    "number_card_name": "Коммерческие проекты"
   },
   {
-   "label": "Внутренние",
+   "label": "Internal",
    "number_card_name": "Внутренние проекты"
   },
   {
@@ -305,19 +305,19 @@
    "number_card_name": "Presale проекты"
   },
   {
-   "label": "На согласовании",
+   "label": "Pending Approval",
    "number_card_name": "Проекты на согласовании"
   },
   {
-   "label": "Черновики",
+   "label": "Drafts",
    "number_card_name": "Проекты-черновики"
   },
   {
-   "label": "Отклонены",
+   "label": "Rejected",
    "number_card_name": "Проекты отклонены"
   },
   {
-   "label": "Завершены",
+   "label": "Completed",
    "number_card_name": "Проекты завершены"
   }
  ],

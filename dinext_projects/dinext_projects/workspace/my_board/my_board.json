@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"A3l_fVVtUZ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Моя доска</span>\",\"col\":12}},{\"id\":\"9QHXpvhvWl\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"My Kanban\",\"col\":12}}]",
+ "content": "[{\"id\":\"A3l_fVVtUZ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">My Board</span>\",\"col\":12}},{\"id\":\"9QHXpvhvWl\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"My Kanban\",\"col\":12}}]",
  "creation": "2026-02-07 13:31:03.956750",
  "custom_blocks": [
   {

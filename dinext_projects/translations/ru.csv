@@ -1,303 +1,440 @@
-"% Utilization","% утилизации",""
-"% Utilization Target","% выполнения КУ",""
-"- {0} (row {1})","- {0} (строка {1})",""
-"- {0} (row {1}, role: {2})","- {0} (строка {1}, роль: {2})",""
-"- {0} (row {1}, virtual participant)","- {0} (строка {1}, виртуальный участник)",""
-"A virtual task cannot be linked to an Issue","Виртуальная задача не может быть привязана к Issue",""
-"Access granted for {0}","Доступ предоставлен для {0}",""
-"Account Table","Таблица счетов",""
-"Accounting Data","Учетные данные",""
-"Actions","Действия",""
-"Actual","Факт",""
-"Added access with {0} permissions for {1}","Добавлен доступ с правами {0} для {1}",""
-"Added read-only access for {0}","Добавлен доступ только для чтения для {0}",""
-"Additional Settings","Дополнительные настройки",""
-"Advertisement","Реклама",""
-"Agenda","Повестка",""
-"All Hours","Всего часов",""
-"Allow Approval","Разрешить согласование",""
-"Allow PSS","Разрешить доступ к СПП",""
-"Annual Revenue","Годовая выручка",""
-"Application For Leave","Заявка на отсутствие",""
-"Apply Selected","Выполнить выбранные",""
-"Approval Date","Дата согласования",""
-"Are you sure you want to save the event as public? Public events are visible to all system users.","Вы уверены, что хотите сохранить событие как общее? Общие события отображаются для всех пользователей системы.",""
-"Assignments","Поручения","Meeting Notes"
-"Author","Автор",""
-"Automatic assignment","Автоматическое назначение",""
-"Automatically create timesheets at the beginning of the period","Автоматически создавать таймшит в начале периода",""
-"Available Workflow Transitions","Доступные переходы по Воркфлоу",""
-"Base Rate","Базовая ставка",""
-"Briefly specify the reason for rejecting the application","Кратко укажите причину отклонения заявки",""
-"Buffer Days","Буфер (в днях)",""
-"Business Area","Бизнес-сфера",""
-"Campaign","Кампания",""
-"Campaign Name","Наименование Кампании",""
-"Campaign Type","Тип Кампании",""
-"Category","Категория",""
-"Changes applied: {0}","Выполнены изменения: {0}",""
-"Check all","Проверить все",""
-"Check the related task fields.","Проверьте поля связанной задачи.",""
-"Close","Закрыть",""
-"Code","Код",""
-"Cold Calling","Холодный звонок",""
-"Comment required","Требуется комментарий",""
-"Company Engl","Наименование на английском",""
-"Company Local","Локальное наименование",""
-"Company Name","Наименование компании",""
-"Company Short","Сокращенное наименование компании",""
-"Company type","Тип компании",""
-"Completed","Завершено",""
-"Completed Workflow Transition","Завершенный переход по Воркфлоу",""
-"Confirm","Подтверждение выполнения",""
-"Confirm creating a duplicate. Existing data: ","Подтвердите создание дубля. Уже существуют данные:",""
-"Connections","Связи",""
-"Contact Table","Таблица контактов",""
-"Contractor Report","Отчет для Подрядчиков",""
-"Cost Center Table","Таблица МВЗ",""
-"Cost Grade","Грейд",""
-"Cost Level","Ставка",""
-"Cost Rate","Ставка себестоимости",""
-"Create a Lead","Создать Лид",""
-"Create subtask","Создать подзадачу",""
-"Curr. End","Текущ. окончание",""
-"Curr. Start","Текущ. начало",""
-"current status","текущий статус",""
-"Customer Engl","Имя клиента (англ.)",""
-"Customer Local","Локальное наименование",""
-"Customer Short","Сокращенное наименование компании",""
-"Customer's Vendor","Поставщик Клиента",""
-"d.","дн.",""
-"Daily View","Отображение по дням",""
-"Data from the first nested email was moved into the issue description.","В описание запроса перенесены данные из первого вложенного письма.",""
-"Date","Дата",""
-"Date of Birth","Дата рождения",""
-"Date of dispatch","Дата отправки на согласование",""
-"Dates","Сроки",""
-"Dates are not set","Даты не заданы",""
-"Deadlines for sending","Сроки отправки на согласование",""
-"Decisions","Решения",""
-"Dependencies","Зависимости",""
-"Description","Описание",""
-"Description field is mandatory","Поле описания обязательно для заполнения",""
-"Designation","Должность",""
-"Directions","Направления",""
-"DocName","Наименование документа",""
-"DocType","Тип Документа",""
-"Doctype for Timesheet","Объекты для списания",""
-"Down the tree","По дереву вниз",""
-"Elapsed","Прошло",""
-"Estimate","Оценка",""
-"Estimations","Оценки",""
-"Excel","Эксель",""
-"Executor","Исполнитель",""
-"Executor Cost Center Costs","Затраты на МВЗ исполнителя",""
-"Exhibition","Выставка",""
-"Existing Customer","Существующий клиент",""
-"Expected resolution date","Планируемая дата завершения",""
-"Extension","Добавочный номер",""
-"Financial Entries","Фин. проводки",""
-"Financial Result","Финансовый результат",""
-"For the 'Time and Materials (T&M)' scheme, realization rate is required:","При схеме 'Время и затраты (T&M)' обязательно укажите ставку реализации:",""
-"For virtual participants, cost rate is required:","Для виртуальных участников обязательно укажите ставку себестоимости:",""
-"Fri","Пт",""
-"Fullname","Полное имя",""
-"Functional Group","Функциональная группа",""
-"Generate Contact Report","Сформировать отчет",""
-"Go to Rate Control Report","Перейти в отчет Контроль Ставок",""
-"Go to Timesheets","Перейти к Таймшитам",""
-"Grade","Оценка",""
-"Group","Группа",""
-"h.","ч.",""
-"Hol.","Вых.",""
-"Holidays and Working days","Выходные и рабочие дни",""
-"Hours","Часы",""
-"Hours On Date","Количество часов на дату",""
-"Idea","Идея",""
-"Identification","Идентификаторы",""
-"Include in the User Timesheet","Включить для списания в Таймшитах",""
-"Intersection","Пересечение",""
-"Invite To Events","Приглашать на мероприятия",""
-"is active","Активно",""
-"Issue is overdue! Urgently define and agree new resolution dates with the customer!","Запрос просрочен! Срочно определите и согласуйте с заказчиком новые сроки решения!",""
-"Issue Properties","Дополнительная информация",""
-"Issue Settings","Настройки запросов",""
-"Issue Type","Тип запроса",""
-"Issued by","Выдан кем",""
-"Issues by type","Запросы по типам",""
-"Jul","Июл",""
-"Jun","Июн",""
-"Limit Control","Контроль Лимитов",""
-"Limit Notifications","Уведомления по лимитам",""
-"Logics","Логика включения",""
-"Mandatory participant","Обязательный участник",""
-"Mandatory Planned Work Efforts","Обязательность плановых трудозатрат",""
-"Marketing Data","Маркетинговые данные",""
-"Marketing Segment","Маркетинговый Сегмент",""
-"Marketing Segment Group","Маркетинговая группа",""
-"Mass Mailing","Массовая Рассылка",""
-"Maximum hours for date","Максимум часов на дату",""
-"Meeting Notes","Протокол встречи",""
-"Middle Name","Отчество",""
-"Minimum hours for date","Минимум часов на дату",""
-"Mon","Пн",""
-"Monthly View","Отображение по месяцам",""
-"Monthly working hours fund","Месячный фонд рабочих часов",""
-"No Client","Без Клиента",""
-"No required changes found due to task dependency violations","Не выявлено необходимых изменений, вызванных нарушением зависимостей задач",""
-"No. of Employees","Количество сотрудников",""
-"Normalization Coefficient","Коэфф. нормализации",""
-"Not set","Не задано",""
-"Open tasks","Открыть задачи",""
-"Opening Time","Время открытия",""
-"Overdue Timesheets","Просроченные Таймшиты",""
-"P&L reporting","Отчетность P&L",""
-"Parent task","Родительская задача",""
-"Participant","Участник",""
-"Participant / Project","Участник / Проект",""
-"Participant type","Тип участника",""
-"Payment Scheme","Схема оплаты",""
-"Period date conflict","Конфликт дат периодов",""
-"Period Of Validity","Период действия",""
-"Permissible Deviation Minus","Допустимое отклонение минус",""
-"Permissible Deviation Plus","Допустимое отклонение в плюс",""
-"Phase","Фаза","Dinext.TaskType"
-"Plan","План",""
-"Plan / Forecast / Actual","План / прогноз / факт",""
-"Predecessor","Предшественник",""
-"Probability","Вероятность",""
-"Product Inquiry","Запрос Продукта",""
-"Profiles","Профили",""
-"Profitability","Рентабельность",""
-"Project","Проект",""
-"Project (ID)","Проект (ID)",""
-"Project Budget","Бюджет проекта",""
-"Project business area: percent sum check","Бизнес-сфера проекта: проверка суммы %",""
-"Project Name","Наименование проекта",""
-"Project Portfolio","Портфель Проекта",""
-"Project Rate Control","Контроль ставок по проектам",""
-"Project Role","Проектная роль",""
-"Project task list","Список задач проекта",""
-"Project task tree","Дерево задач проекта",""
-"Project Team","Команда Проекта",""
-"Project Timeline","Сроки проекта",""
-"Projects Workload Report","Загрузка на Проектах",""
-"Prop. End","Предл. окончание",""
-"Prop. Start","Предл. начало",""
-"Qarter","Квартал",""
-"Rate","Тариф",""
-"Rate Category","Тариф",""
-"Rate update","Обновление ставок",""
-"Realization Rate","Ставка реализации",""
-"Reasons","Причины",""
-"Reference","Ссылка",""
-"Rejection Reason","Причина Отклонения",""
-"Rejection reason is required","Необходимо указать причину Отклонения",""
-"Relations","Связи",""
-"Remind later","Напомнить позже",""
-"Reporting Period","Отчетный Период",""
-"Repost","Перепровести",""
-"Required changes to resolve task dependency violations","Необходимые изменения для устранения нарушений зависимостей задач",""
-"Required roles are missing from the project team: {0}","В команде проекта отсутствуют обязательные роли: {0}",""
-"Resolution Details","Подробности решения",""
-"Resources","Ресурсы",""
-"Revenue","Выручка",""
-"Revenue Currency","Валюта выручки",""
-"Risks","Риски",""
-"Role","Роль",""
-"Sales Forecasting","Прогноз продаж",""
-"Sat","Сб",""
-"Saving data","Сохранение данных",""
-"Scheduled Hours","Часов по расписанию",""
-"Significance","Значимость",""
-"Sole participant","Единственный участник",""
-"Source","Перевод",""
-"Sprint","Спринт","Dinext.TaskType"
-"Stage","Этап","Dinext.TaskType"
-"State","Состояние",""
-"Status","Статус",""
-"Status ABAP","Статус разработки",""
-"Sun","Вс",""
-"Supplier Reference","Рекомендация Поставщика",""
-"System verification rules","Правила системной проверки",""
-"T&M Project Rate Control V2","Контроль ставок по T&M проектам_V2",""
-"Task","Задача",""
-"Task (ID)","Задача (ID)",""
-"Task business area: percent sum check","Бизнес-сфера задачи: проверка суммы %",""
-"Task for ABAP","Задача для ABAP",""
-"Task Name","Наименование задачи",""
-"Task tree","Дерево задач",""
-"Tasks","Задачи",""
-"Tasks by assignee","Задачи по ответственным",""
-"Tasks by priority","Задачи по приоритетам",""
-"Tasks by status","Задачи по статусам",""
-"Tasks with invalid status","Задачи с некорректным статусом",""
-"Team","Команда",""
-"Teamlead","Тимлид",""
-"The Current Date","Текущая дата",""
-"The current project manager was set as approver","Действующий руководитель проекта назначен согласующим",""
-"The following errors were found:","Обнаружены следующие ошибки:",""
-"This meeting notes document has no created tasks yet.","В этом протоколе пока нет созданных задач.",""
-"Thu","Чт",""
-"Timesheet Author","Автор ТШ",""
-"Timesheet Report","Отчет по ТШ",""
-"Timesheet Statistics","Статистика по ТШ",""
-"Timesheet Template","Шаблон Таймшита",""
-"Tue","Вт",""
-"Type","Тип",""
-"Type of meeting","Тип встречи",""
-"Unable to change status","Невозможно изменить статус",""
-"Unable to save task from issue","Невозможно сохранить задачу из обращения",""
-"Union","Объединение",""
-"Unknown type","Неизвестный тип",""
-"Unload From","Выгрузить из",""
-"Up the tree","По дереву вверх",""
-"Updated permissions ({0}) for {1}","Обновлены права ({0}) для {1}",""
-"Upload Contacts","Выгрузить контакты",""
-"User","Пользователь",""
-"User Delegate","Замещение пользователя",""
-"User Group","Группы пользователей",""
-"User Timesheet","Таймшит Пользователя",""
-"User Timesheet Position","Позиция таймшита",""
-"Utilization","Утилизация",""
-"Utilization Plan Hours","План утилизации в часах",""
-"Utilization Report","Отчет по утилизации",""
-"Valid For","Действует по",""
-"Valid for","Действует по",""
-"Valid From","Действует с ",""
-"Valid from","Действует с",""
-"Validity period end date cannot be earlier than its start","Дата окончания периода действия не может быть раньше его начала",""
-"Virtual Participant","Виртуальный участник",""
-"Visible to everyone","Видны всем",""
-"Volume of Participation ","Процент участия",""
-"Walk In","Вошел",""
-"Warning! A duplicate member or group was found in the project team. If this is intentional, set different validity periods for the duplicates","Внимание! В команде проекта найден дублирующий участник или группа. Если это сделано намеренно, задайте разные периоды действия для дубликатов",""
-"Warning! Participant '{0}' is already assigned to role '{1}' in an overlapping period (rows {2} and {3})","Внимание! Участник '{0}' уже назначен на роль '{1}' в пересекающийся период (строки {2} и {3})",""
-"Warning! Virtual worker is already assigned to role '{0}' in an overlapping period (rows {1} and {2})","Внимание! Виртуальный работник уже назначен на роль '{0}' в пересекающийся период (строки {1} и {2})",""
-"Warning! Your project team already has a member or group with this role and validity period","Внимание! В команде проекта уже есть участник или группа с этой ролью и периодом действия",""
-"Wed","Ср",""
-"Weekly View","Отображение по неделям",""
-"Weekly working hours fund","Недельный фонд рабочих часов",""
-"Weighted Amount","Взвешенная сумма",""
-"When issued","Когда выдан",""
-"Work","Работы",""
-"Work Efforts","Трудозатраты",""
-"Worker","Исполнитель",""
-"Worker Level","Уровень Исполнителя",""
-"Working Days","Рабочие дни",""
-"Working hours fund","Фонд рабочих часов",""
-"Working Hours Fund","Фонд рабочих часов",""
-"Working Hours On Date","Справочник дат исключений",""
-"Workload","Загрузка",""
-"You have overdue timesheets. Fill them in and submit for approval urgently!","У вас есть просроченные Таймшиты. Срочно заполните их и отправьте на согласование!",""
-"You must select changes","Необходимо выбрать изменения",""
-"∑ Absence Hours","∑ часов отсутствий",""
-"∑ Counted Absence Hours","∑ часов учитываемых отсутствий",""
-"∑ Utilization Hours","∑ часов утилизации",""
-"∑ Worked Hours","∑ часов рабочих",""
-"My Projects","Мои проекты",""
-"My Tasks","Мои задачи",""
-"My Timesheets","Мои Таймшиты",""
-"My Board","Моя доска",""
-"Analytics","Аналитика",""
-"Financial Control","Фин. Контроль",""
+% Utilization,% утилизации,
+% Utilization Target,% выполнения КУ,
+- {0} (row {1}),- {0} (строка {1}),
+"- {0} (row {1}, role: {2})","- {0} (строка {1}, роль: {2})",
+"- {0} (row {1}, virtual participant)","- {0} (строка {1}, виртуальный участник)",
+A virtual task cannot be linked to an Issue,Виртуальная задача не может быть привязана к Issue,
+Access granted for {0},Доступ предоставлен для {0},
+Account Table,Таблица счетов,
+Accounting Data,Учетные данные,
+Actions,Действия,
+Active Projects,Действующие проекты,
+Actual,Факт,
+Added access with {0} permissions for {1},Добавлен доступ с правами {0} для {1},
+Added read-only access for {0},Добавлен доступ только для чтения для {0},
+Additional Settings,Дополнительные настройки,
+Advertisement,Реклама,
+Agenda,Повестка,
+All Hours,Всего часов,
+Allow Approval,Разрешить согласование,
+Allow PSS,Разрешить доступ к СПП,
+Analytics,Аналитика,
+Annual Revenue,Годовая выручка,
+Application For Leave,Заявка на отсутствие,
+Apply Selected,Выполнить выбранные,
+Approval Date,Дата согласования,
+Approvals,Согласования,
+Are you sure you want to save the event as public? Public events are visible to all system users.,"Вы уверены, что хотите сохранить событие как общее? Общие события отображаются для всех пользователей системы.",
+Assigned to me,Назначенные на меня,
+Assignments,Поручения,Meeting Notes
+Author,Автор,
+Automatic assignment,Автоматическое назначение,
+Automatically create timesheets at the beginning of the period,Автоматически создавать таймшит в начале периода,
+Available Workflow Transitions,Доступные переходы по Воркфлоу,
+Base Rate,Базовая ставка,
+Briefly specify the reason for rejecting the application,Кратко укажите причину отклонения заявки,
+Budget Plan vs Forecast,План-Факт-Прогноз Бюджета,
+Buffer Days,Буфер (в днях),
+Business Area,Бизнес-сфера,
+Calendar Data,Календарные данные,
+Campaign,Кампания,
+Campaign Name,Наименование Кампании,
+Campaign Type,Тип Кампании,
+Categories / Rates,Категории / тарифы,
+Category,Категория,
+Changes applied: {0},Выполнены изменения: {0},
+Check all,Проверить все,
+Check the related task fields.,Проверьте поля связанной задачи.,
+Close,Закрыть,
+Code,Код,
+Cold Calling,Холодный звонок,
+Comment required,Требуется комментарий,
+Commercial,Коммерческие ,
+Commercial Projects,Коммерческие проекты,
+Company Engl,Наименование на английском,
+Company Local,Локальное наименование,
+Company Name,Наименование компании,
+Company Short,Сокращенное наименование компании,
+Company type,Тип компании,
+Completed,Завершены,
+Completed Projects,Проекты завершены,
+Completed Tasks Pending Confirmation,Выполненные задачи на подтверждении,
+Completed Workflow Transition,Завершенный переход по Воркфлоу,
+Confirm,Подтверждение выполнения,
+Confirm creating a duplicate. Existing data: ,Подтвердите создание дубля. Уже существуют данные:,
+Connections,Связи,
+Contact Table,Таблица контактов,
+Contractor Report,Отчет для Подрядчиков,
+Contractors,Подрядчики,
+Cost Center,Центр Затрат,
+Cost Center Allocation,Распределение Центров Затрат,
+Cost Center Table,Таблица МВЗ,
+Cost Grade,Грейд,
+Cost Level,Ставка,
+Cost Rate,Ставка себестоимости,
+Create a Lead,Создать Лид,
+Create Issue,Создать запрос,
+Create subtask,Создать подзадачу,
+Create Task,Создать задачу,
+Created by me,Созданные мной,
+Curr. End,Текущ. окончание,
+Curr. Start,Текущ. начало,
+current status,текущий статус,
+Customer Engl,Имя клиента (англ.),
+Customer Local,Локальное наименование,
+Customer Short,Сокращенное наименование компании,
+Customer's Vendor,Поставщик Клиента,
+Customers,Клиенты,
+d.,дн.,
+Daily View,Отображение по дням,
+Data from the first nested email was moved into the issue description.,В описание запроса перенесены данные из первого вложенного письма.,
+Date,Дата,
+Date of Birth,Дата рождения,
+Date of dispatch,Дата отправки на согласование,
+Dates,Сроки,
+Dates are not set,Даты не заданы,
+Deadlines for sending,Сроки отправки на согласование,
+Decisions,Решения,
+Dependencies,Зависимости,
+Description,Описание,
+Description field is mandatory,Поле описания обязательно для заполнения,
+Designation,Должность,
+DiLike Space – a space to earn and exchange points for contributing to company growth,DiLike Space – пространство для накопления и обмена баллами за вклад в развитие компании,
+Directions,Направления,
+DocName,Наименование документа,
+DocType,Тип Документа,
+Doctype for Timesheet,Объекты для списания,
+Down the tree,По дереву вниз,
+Draft Projects,Проекты-черновики,
+Drafts,Черновики,
+Elapsed,Прошло,
+Estimate,Оценка,
+Estimations,Оценки,
+Excel,Эксель,
+Executor,Исполнитель,
+Executor Cost Center Costs,Затраты на МВЗ исполнителя,
+Exhibition,Выставка,
+Existing Customer,Существующий клиент,
+Expected resolution date,Планируемая дата завершения,
+Expense Claims,По Заявкам на расходы,
+Expense Claims Approved,из них согласовано,
+Expense Claims Approved by me,Расходы согласованные мной,
+Expense Claims Pending Approval,из них на согласовании,
+Expense Claims Pending my Approval,Расходы у меня на согласовании,
+Expense Claims Rejected,из них отклонено,
+Expenses,Расходы,
+Extension,Добавочный номер,
+Financial Control,Фин. Контроль,
+Financial Entries,Фин. проводки,
+Financial Result,Финансовый результат,
+"For the 'Time and Materials (T&M)' scheme, realization rate is required:",При схеме 'Время и затраты (T&M)' обязательно укажите ставку реализации:,
+"For virtual participants, cost rate is required:",Для виртуальных участников обязательно укажите ставку себестоимости:,
+Fri,Пт,
+Fullname,Полное имя,
+Functional Group,Функциональная группа,
+Generate Contact Report,Сформировать отчет,
+Go to Rate Control Report,Перейти в отчет Контроль Ставок,
+Go to Timesheets,Перейти к Таймшитам,
+Grade,Оценка,
+Group,Группа,
+h.,ч.,
+High Priority,Высокого приоритета,
+High Priority Issues,Запросы высокого приоритета,
+Hol.,Вых.,
+Holidays and Days Off,Праздники и выходные,
+Holidays and Working days,Выходные и рабочие дни,
+Hours,Часы,
+Hours On Date,Количество часов на дату,
+Idea,Идея,
+Identification,Идентификаторы,
+Include in the User Timesheet,Включить для списания в Таймшитах,
+Income and Expense Allocation,Распределение дохода и расхода,
+Income and Expenses,Доходы и расходы,
+Internal,Внутренние,
+Internal Projects,Внутренние проекты,
+Intersection,Пересечение,
+Invite To Events,Приглашать на мероприятия,
+is active,Активно,
+Issue is overdue! Urgently define and agree new resolution dates with the customer!,Запрос просрочен! Срочно определите и согласуйте с заказчиком новые сроки решения!,
+Issue Properties,Дополнительная информация,
+Issue Settings,Настройки запросов,
+Issue Type,Тип запроса,
+Issued by,Выдан кем,
+Issues,Запросы (Issue),
+Issues Assigned to me,"Запросы, назначенные на меня",
+Issues by type,Запросы по типам,
+Issues Created by me,"Запросы, созданные мной",
+Issues Liked by me,"Запросы, отмеченные мной",
+Jul,Июл,
+Jun,Июн,
+Leave Applications,По Заявкам на отсутствие,
+Leave Applications Approved,заявок согласовано,
+Leave Applications Approved by me,Заявки согласованные мной,
+Leave Applications Pending Approval,заявок на согласовании,
+Leave Applications Pending my Approval,Заявки у меня на согласовании,
+Leave Applications Rejected,заявок отклонено,
+Leave Calendar,Календарь отсутствий,
+Levels / Grades,Уровни / грейды,
+Liked by me,Отмеченные мной,
+Limit Control,Контроль Лимитов,
+Limit Notifications,Уведомления по лимитам,
+Logics,Логика включения,
+Mandatory participant,Обязательный участник,
+Mandatory Planned Work Efforts,Обязательность плановых трудозатрат,
+Marketing Data,Маркетинговые данные,
+Marketing Segment,Маркетинговый Сегмент,
+Marketing Segment Group,Маркетинговая группа,
+Mass Mailing,Массовая Рассылка,
+Masters and Settings,Справочники и настройки,
+Maximum hours for date,Максимум часов на дату,
+Meeting Notes,Протокол встречи,
+Middle Name,Отчество,
+Milestones,Вехи,
+Minimum hours for date,Минимум часов на дату,
+Mon,Пн,
+Monthly View,Отображение по месяцам,
+Monthly working hours fund,Месячный фонд рабочих часов,
+My Active Points,Мои активные баллы,
+My Approvals,Мои согласования:,
+My Approved Timesheets,Мои согласованные таймшиты,
+My Board,Моя доска,
+My Expense Claims,Мои Заявки на расходы,
+My Issues On Hold,Мои запросы на паузе,
+My Leave Applications,Мои Заявки на отсутствие,
+My Leave Applications Approved,Моих Заявок Согласовано,
+My Leave Applications Pending Approval,Моих Заявок на согласовании,
+My Leave Applications Rejected,Моих Заявок Отклонено,
+My Overdue Issues,Мои просроченные запросы,
+My Overdue Tasks,Мои просроченные задачи,
+My Overdue Timesheets,Мои просроченные таймшиты,
+My Projects,Мои проекты,
+My Received Ratings,Мои полученные оценки,
+My Rejected Timesheets,Мои отклоненные таймшиты,
+My Resolved Issues,Мои решенные запросы,
+My Spent Points,Мои истраченные баллы,
+My Tasks,Мои задачи,
+My Timesheet Entries,Мои списания по ТШ,
+My Timesheets,Мои Таймшиты,
+My Timesheets in Draft,Моих таймшитов на редактировании,
+My Timesheets Pending Approval,Моих таймшитов на согласовании,
+My Total Leave Applications,Моих Заявок всего,
+My Total Points,Моих баллов всего,
+My Total Timesheets,Моих Таймшитов всего,
+No Client,Без Клиента,
+No required changes found due to task dependency violations,"Не выявлено необходимых изменений, вызванных нарушением зависимостей задач",
+No. of Employees,Количество сотрудников,
+Non-Project Work,Внепроектные работы,
+Normalization Coefficient,Коэфф. нормализации,
+Not set,Не задано,
+On Hold on me,На паузе на мне,
+Open tasks,Открыть задачи,
+Opening Time,Время открытия,
+Overdue,Просроченные,
+Overdue Issues,Просроченные запросы,
+Overdue Milestones,Просроченные вехи,
+Overdue on me,Просроченные на мне,
+Overdue Tasks,Просроченные задачи,
+Overdue Timesheets,Просроченные Таймшиты,
+P&L reporting,Отчетность P&L,
+Parent task,Родительская задача,
+Participant,Участник,
+Participant / Project,Участник / Проект,
+Participant type,Тип участника,
+Payment Scheme,Схема оплаты,
+Payment Type,Тип оплаты,
+Pending Approval,На согласовании,
+Pending my Confirmation,У меня на подтверждении,
+Period date conflict,Конфликт дат периодов,
+Period Of Validity,Период действия,
+Permissible Deviation Minus,Допустимое отклонение минус,
+Permissible Deviation Plus,Допустимое отклонение в плюс,
+Phase,Фаза,Dinext.TaskType
+Plan,План,
+Plan / Forecast / Actual,План / прогноз / факт,
+Points Spent by me,"Баллы, потраченные мной",
+Predecessor,Предшественник,
+Presale Projects,Presale проекты,
+Probability,Вероятность,
+Product Inquiry,Запрос Продукта,
+Profiles,Профили,
+Profitability,Рентабельность,
+Project,Проект,
+Project (ID),Проект (ID),
+Project Budget,Бюджет проекта,
+Project business area: percent sum check,Бизнес-сфера проекта: проверка суммы %,
+Project Name,Наименование проекта,
+Project Portfolio,Портфель Проекта,
+Project Rate Control,Контроль ставок по проектам,
+Project Role,Проектная роль,
+Project Roles,Проектные роли,
+Project Status,Статус по проектам,
+Project task list,Список задач проекта,
+Project task tree,Дерево задач проекта,
+Project Team,Команда Проекта,
+Project Template,Шаблон проекта,
+Project Timeline,Сроки проекта,
+Project Type,Тип проекта,
+Project Update,Обновление проекта,
+Projects by Customer,Проекты по клиентам,
+Projects by Status,Проекты по статусам,
+Projects Pending Approval,Проекты на согласовании,
+Projects Workload,Загрузка на проектах,
+Projects Workload Report,Загрузка на Проектах,
+Prop. End,Предл. окончание,
+Prop. Start,Предл. начало,
+Qarter,Квартал,
+Rate,Тариф,
+Rate Category,Тариф,
+Rate update,Обновление ставок,
+Realization Rate,Ставка реализации,
+Reasons,Причины,
+Reference,Ссылка,
+Rejected,Отклонены,
+Rejected Projects,Проекты отклонены,
+Rejection Reason,Причина Отклонения,
+Rejection reason is required,Необходимо указать причину Отклонения,
+Relations,Связи,
+Remind later,Напомнить позже,
+Reporting,Отчетность,
+Reporting Period,Отчетный Период,
+Reports,Отчеты,
+Repost,Перепровести,
+Required changes to resolve task dependency violations,Необходимые изменения для устранения нарушений зависимостей задач,
+Required roles are missing from the project team: {0},В команде проекта отсутствуют обязательные роли: {0},
+Resolution Details,Подробности решения,
+Resources,Ресурсы,
+Revenue,Выручка,
+Revenue by Customer,Выручка по клиентам,
+Revenue Currency,Валюта выручки,
+Risks,Риски,
+Role,Роль,
+Sales Forecasting,Прогноз продаж,
+Sat,Сб,
+Saving data,Сохранение данных,
+Scheduled Hours,Часов по расписанию,
+SDZ / MVZ,СДЗ / МВЗ,
+Shortened Days,Соращенные дни,
+Significance,Значимость,
+Sole participant,Единственный участник,
+Source,Перевод,
+Specialists,Специалисты,
+Sprint,Спринт,Dinext.TaskType
+Stage,Этап,Dinext.TaskType
+State,Состояние,
+Status,Статус,
+Status ABAP,Статус разработки,
+Sun,Вс,
+Supplier Reference,Рекомендация Поставщика,
+System verification rules,Правила системной проверки,
+T&M Project Rate Control,Контроль ставок по T&M Проектам,
+T&M Project Rate Control V2,Контроль ставок по T&M проектам_V2,
+Task,Задача,
+Task (ID),Задача (ID),
+Task business area: percent sum check,Бизнес-сфера задачи: проверка суммы %,
+Task for ABAP,Задача для ABAP,
+Task Name,Наименование задачи,
+Task tree,Дерево задач,
+Tasks,Задачи (Task),
+Tasks by assignee,Задачи по ответственным,
+Tasks by priority,Задачи по приоритетам,
+Tasks by status,Задачи по статусам,
+Tasks Created by me,Созданные мной задачи,
+Tasks This Week,Задачи на эту неделю,
+Tasks Today,Задачи на сегодня,
+Tasks with invalid status,Задачи с некорректным статусом,
+Tasks without Due Date,Задачи без сроков,
+Team,Команда,
+Teamlead,Тимлид,
+The Current Date,Текущая дата,
+The current project manager was set as approver,Действующий руководитель проекта назначен согласующим,
+The following errors were found:,Обнаружены следующие ошибки:,
+"This is a special platform designed to encourage active work and employee initiative. Here you can award and receive DiLike for following standards, quality task delivery, initiative, and contribution to company growth. Results are summarized every quarter and once a year – top employees become winners! Join DiLike Space to build a culture of recognition and mutual support together!","Это специальная платформа, созданная для поощрения активной работы и инициативности сотрудников. Здесь вы можете начислять и получать DiLike за соблюдение стандартов, качественное выполнение задач, инициативность и вклад в развитие компании. Каждый квартал и раз в год подводятся итоги – лучшие сотрудники становятся победителями! Присоединяйтесь к DiLike Space, чтобы вместе создавать культуру признания и взаимной поддержки!",
+This meeting notes document has no created tasks yet.,В этом протоколе пока нет созданных задач.,
+Thu,Чт,
+Timesheet Author,Автор ТШ,
+Timesheet Report,Отчет по ТШ,
+Timesheet Reporting,Отчетность по ТШ,
+Timesheet Statistics,Статистика по ТШ,
+Timesheet Template,Шаблон Таймшита,
+Timesheets,По Таймшитам,
+Timesheets Approved,тш согласовано,
+Timesheets Approved by me,ТШ согласованные мной,
+Timesheets in Draft,тш на редактировании,
+Timesheets Overdue,тш просрочено,
+Timesheets Pending Approval,тш на согласовании,
+Timesheets Pending my Approval,ТШ у меня на согласовании,
+Timesheets Rejected,тш отклонено,
+Total Issues,Запросов всего,
+Total Leave Applications,заявок всего,
+Total Tasks,Задач всего,
+Total Timesheets,таймшитов всего,
+Tue,Вт,
+Type,Тип,
+Type of meeting,Тип встречи,
+Unable to change status,Невозможно изменить статус,
+Unable to save task from issue,Невозможно сохранить задачу из обращения,
+Unassigned,Без ответственных,
+Unassigned Issues,Запросы без ответственных,
+Unassigned Tasks,Задачи без ответственных,
+Union,Объединение,
+Unknown type,Неизвестный тип,
+Unload From,Выгрузить из,
+Up the tree,По дереву вверх,
+Upcoming Milestones,Ближайшие вехи,
+Updated permissions ({0}) for {1},Обновлены права ({0}) для {1},
+Upload Contacts,Выгрузить контакты,
+User,Пользователь,
+User Delegate,Замещение пользователя,
+User Group,Группы пользователей,
+User Timesheet,Таймшит Пользователя,
+User Timesheet Position,Позиция таймшита,
+Utilization,Утилизация,
+Utilization Plan Hours,План утилизации в часах,
+Utilization Report,Отчет по утилизации,
+Valid For,Действует по,
+Valid for,Действует по,
+Valid From,Действует с ,
+Valid from,Действует с,
+Validity period end date cannot be earlier than its start,Дата окончания периода действия не может быть раньше его начала,
+Virtual Participant,Виртуальный участник,
+Visible to everyone,Видны всем,
+Volume of Participation ,Процент участия,
+Walk In,Вошел,
+"Warning! A duplicate member or group was found in the project team. If this is intentional, set different validity periods for the duplicates","Внимание! В команде проекта найден дублирующий участник или группа. Если это сделано намеренно, задайте разные периоды действия для дубликатов",
+Warning! Participant '{0}' is already assigned to role '{1}' in an overlapping period (rows {2} and {3}),Внимание! Участник '{0}' уже назначен на роль '{1}' в пересекающийся период (строки {2} и {3}),
+Warning! Virtual worker is already assigned to role '{0}' in an overlapping period (rows {1} and {2}),Внимание! Виртуальный работник уже назначен на роль '{0}' в пересекающийся период (строки {1} и {2}),
+Warning! Your project team already has a member or group with this role and validity period,Внимание! В команде проекта уже есть участник или группа с этой ролью и периодом действия,
+Wed,Ср,
+Weekly View,Отображение по неделям,
+Weekly working hours fund,Недельный фонд рабочих часов,
+Weighted Amount,Взвешенная сумма,
+When issued,Когда выдан,
+Work,Работы,
+Work Efforts,Трудозатраты,
+Worker,Исполнитель,
+Worker Level,Уровень Исполнителя,
+Working Days,Рабочие дни,
+Working hours fund,Фонд рабочих часов,
+Working Hours Fund,Фонд рабочих часов,
+Working Hours On Date,Справочник дат исключений,
+Workload,Загрузка,
+You have overdue timesheets. Fill them in and submit for approval urgently!,У вас есть просроченные Таймшиты. Срочно заполните их и отправьте на согласование!,
+You must select changes,Необходимо выбрать изменения,
+∑ Absence Hours,∑ часов отсутствий,
+∑ Counted Absence Hours,∑ часов учитываемых отсутствий,
+∑ Utilization Hours,∑ часов утилизации,
+∑ Worked Hours,∑ часов рабочих,
+Agreed Scorecards,Согласованные оценки,
+Portfolio Analytics,Аналитика портфеля,
+Profiles and Criteria,Профили и критерии,
+Project Portfolios,Портфели проектов,
+Project Scorecards,Карточки оценки проектов,
+Project Scoring Summary,Сводка оценки проектов,
+Projects,Проекты,
+Projects with Scoring Profile,Проекты с профилем оценки,
+Projects without Scoring Profile,Проекты без профиля оценки,
+Report: Project Scoring,Отчет: оценка проектов,
+Scorecard Operations,Работа со картами оценки,
+Scorecards Failing Gate,Оценки с непрохождением ворот,
+Scorecards In Progress,Оценки в работе,
+Scorecards Under Review,Оценки на согласовании,

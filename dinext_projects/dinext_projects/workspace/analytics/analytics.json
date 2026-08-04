@@ -6,10 +6,10 @@
   },
   {
    "chart_name": "Выручка по клиентам",
-   "label": "Выручка по клиентам"
+   "label": "Revenue by Customer"
   }
  ],
- "content": "[{\"id\":\"eMtZ9Fy0gH\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Выручка\",\"col\":3}},{\"id\":\"N65ZHSyY7l\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Расходы\",\"col\":3}},{\"id\":\"TDPW86dFns\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Выручка по клиентам\",\"col\":6}},{\"id\":\"fbT-RKyGBj\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Profit and Loss\",\"col\":12}},{\"id\":\"xQCqDfrHL0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Analytics\",\"col\":4}},{\"id\":\"ErwPamfJwj\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Доходы и расходы\",\"col\":4}},{\"id\":\"E-tgoZrGYl\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Profitability Analysis\",\"col\":4}},{\"id\":\"b_mFAu3HHf\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"pNeqzFQcsg\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Коммерческие проекты\",\"col\":3}},{\"id\":\"R3LSYcG11t\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Клиенты\",\"col\":3}},{\"id\":\"EDwIvlztSt\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Подрядчики\",\"col\":3}},{\"id\":\"EknIsFC-Lf\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Специалисты\",\"col\":3}}]",
+ "content": "[{\"id\":\"eMtZ9Fy0gH\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Revenue\",\"col\":3}},{\"id\":\"N65ZHSyY7l\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Expenses\",\"col\":3}},{\"id\":\"TDPW86dFns\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Revenue by Customer\",\"col\":6}},{\"id\":\"fbT-RKyGBj\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Profit and Loss\",\"col\":12}},{\"id\":\"xQCqDfrHL0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Analytics\",\"col\":4}},{\"id\":\"ErwPamfJwj\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Income and Expenses\",\"col\":4}},{\"id\":\"E-tgoZrGYl\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Profitability Analysis\",\"col\":4}},{\"id\":\"b_mFAu3HHf\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"pNeqzFQcsg\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Commercial Projects\",\"col\":3}},{\"id\":\"R3LSYcG11t\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Customers\",\"col\":3}},{\"id\":\"EDwIvlztSt\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Contractors\",\"col\":3}},{\"id\":\"EknIsFC-Lf\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Specialists\",\"col\":3}}]",
  "creation": "2026-02-07 13:31:04.102966",
  "custom_blocks": [],
  "docstatus": 0,
@@ -28,27 +28,27 @@
  "name": "Analytics",
  "number_cards": [
   {
-   "label": "Выручка",
+   "label": "Revenue",
    "number_card_name": "Выручка"
   },
   {
-   "label": "Коммерческие проекты",
+   "label": "Commercial Projects",
    "number_card_name": "Коммерческие проекты"
   },
   {
-   "label": "Расходы",
+   "label": "Expenses",
    "number_card_name": "Расходы"
   },
   {
-   "label": "Клиенты",
+   "label": "Customers",
    "number_card_name": "Active Customers"
   },
   {
-   "label": "Специалисты",
+   "label": "Specialists",
    "number_card_name": "Специалисты"
   },
   {
-   "label": "Подрядчики",
+   "label": "Contractors",
    "number_card_name": "Active Suppliers"
   }
  ],
@@ -91,7 +91,7 @@
   {
    "color": "Grey",
    "doc_view": "List",
-   "label": "Доходы и расходы",
+   "label": "Income and Expenses",
    "link_to": "Profit and Loss Statement",
    "report_ref_doctype": "GL Entry",
    "type": "Report"
