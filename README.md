@@ -24,7 +24,7 @@
 
 ### Согласования
 
-- Workflow для согласования проектов, Expense Claim, Purchase Invoice, Sales Invoice (экспортируемые Workflow в fixtures).
+- Workflow для согласования проектов (Project Approval) и связанные Workflow State / Action Master — в fixtures этого приложения. Workflow для Expense Claim, Purchase Invoice, Sales Invoice и DocType Permission для Sales Invoice / Purchase Invoice / GL Entry экспортируются из `dinext_projects_pl`. DocType Permission для User Delegate — из `dinext_deputies`.
 - **Workflow Task** — задачи согласования с текущим/следующим состоянием, действием, назначенным пользователем и доступными переходами; создание/закрытие ToDo через Server Script.
 
 ### Проектное планирование и лимиты
@@ -58,7 +58,7 @@
 - **Meeting Notes** и **Assignments** — протоколы встреч с решениями и поручениями; автоматическое создание Task и ToDo из поручений (Server Script).
 - **Projects Email Mapping**, **Setting Table** — маппинг писем на клиента/проект и настройки.
 - **Issue Identification**, **Issue Estimations**, **Issue Participants**, **Project Issue Setting** — расширение работы с тикетами и настройками по проекту.
-- **User Delegate** — делегирование пользователей.
+- **User Delegate** — делегирование пользователей (DocType и DocType Permission — в `dinext_deputies`).
 - **Task Relation**, **Type Of Meeting**, **Business Area**, **Tax Id Code Type** и др. — вспомогательные справочники и связи.
 
 ---
@@ -72,7 +72,7 @@
    - кастомные DocType и дочерние таблицы проектов;
    - Custom Field (в т.ч. расширение Project, включая `custom_working_hours_on_date`);
    - Client Script и Server Script модуля «Dinext Projects»;
-   - Workflow для проектов и счетов;
+   - Workflow для проектов (счета и финансовые DocType Permission — в `dinext_projects_pl`);
    - роли projects (без `Dinext_UT_*`), Custom DocPerm (без parents таймшитов), Module Profile, Role Permission for Page and Report;
    - справочники проектов и shared `Working Hours On Date`;
    - Workspace, Number Card, Dashboard Chart, Notification.

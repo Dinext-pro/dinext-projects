@@ -7,9 +7,7 @@ app_license = "mit"
 
 fixtures = [
     "Project Payment Scheme",
-    "Issue Identification Type",    
-    "Workflow State",
-    "Workflow Action Master",    
+    "Issue Identification Type",
     {
         "doctype": "Role Profile",
         "filters": [
@@ -115,31 +113,47 @@ fixtures = [
         "filters": [
             ["name", "in", "Сокращенные рабочие дни РФ"]
         ]
-    },    
+    },
     {
         "doctype": "Workflow",
         "filters": [
-            ["document_type", "in", ["Project", "Expense Claim", "Purchase Invoice", "Sales Invoice"]],
-            ["is_active", "=", 1]            
+            ["document_type", "in", ["Project"]],
+            ["is_active", "=", 1],
         ]
-    },    
+    },
+    {
+        "doctype": "Workflow State",
+        "filters": [
+            ["workflow_state_name", "in", [
+                "Черновик",
+                "На согласовании",
+                "Согласовано",
+                "Отклонено",
+            ]],
+        ]
+    },
+    {
+        "doctype": "Workflow Action Master",
+        "filters": [
+            ["workflow_action_name", "in", [
+                "Передать на согласование",
+                "Согласовано",
+                "Не согласовано",
+                "Редактировать",
+            ]],
+        ]
+    },
     {
         "doctype": "DocType Permission",
         "filters": [
-            ["ref_doctype", "in", 
-                [
-                    "ToDo",
-                    "Sales Invoice",
-                    "Purchase Invoice",
-                    "Worker",
-                    "Task",
-                    "Issue",
-                    "User Delegate",
-                    "Meeting Notes",
-                    "GL Entry",
-                ]
-            ],
-            ["docstatus", "!=", 2]            
+            ["ref_doctype", "in", [
+                "ToDo",
+                "Worker",
+                "Task",
+                "Issue",
+                "Meeting Notes",
+            ]],
+            ["docstatus", "!=", 2],
         ]
     }
 ]
