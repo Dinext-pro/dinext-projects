@@ -8,15 +8,11 @@
  "field_order": [
   "pt_role",
   "worker_type",
-  "virtual_worker",
   "pt_participant_type",
   "pt_participant",
   "base_cost_level",
   "pt_valid_from",
-  "pt_valid_for",
-  "allow_approval",
-  "pt_allow_pss",
-  "notifications_on_limits"
+  "pt_valid_for"
  ],
  "fields": [
   {
@@ -37,14 +33,6 @@
    "label": "\u0422\u0438\u043f",
    "options": "\nEmployee\nSupplier",
    "read_only": 1
-  },
-  {
-   "columns": 1,
-   "default": "0",
-   "fieldname": "virtual_worker",
-   "fieldtype": "Check",
-   "in_list_view": 1,
-   "label": "\u0412\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u044b\u0439 \u0443\u0447\u0430\u0441\u0442\u043d\u0438\u043a"
   },
   {
    "columns": 1,
@@ -94,35 +82,13 @@
    "label": "Valid for",
    "print_width": "1",
    "width": "1"
-  },
-  {
-   "columns": 1,
-   "default": "0",
-   "fieldname": "allow_approval",
-   "fieldtype": "Check",
-   "in_list_view": 1,
-   "label": "Allow Approval",
-   "print_width": "1",
-   "width": "1"
-  },
-  {
-   "default": "0",
-   "fieldname": "pt_allow_pss",
-   "fieldtype": "Check",
-   "label": "Allow PSS"
-  },
-  {
-   "default": "0",
-   "fieldname": "notifications_on_limits",
-   "fieldtype": "Check",
-   "label": "\u0423\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f \u043f\u043e \u043b\u0438\u043c\u0438\u0442\u0430\u043c"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-08-10 00:50:00.000000",
+ "modified": "2026-08-10 01:30:00.000000",
  "modified_by": "Administrator",
  "module": "Dinext Projects",
  "name": "Project Team Details",
