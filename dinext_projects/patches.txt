@@ -5,3 +5,4 @@
 [post_model_sync]
 # Patches added in this section will be executed after doctypes are migrated
 dinext_projects.patches.v1_0.detach_optional_project_team_fields
+dinext_projects.patches.v1_0.detach_project_team_checkbox_fields
