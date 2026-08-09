@@ -6,7 +6,6 @@ app_email = "info@dinext.ru"
 app_license = "mit"
 
 fixtures = [
-    "Project Payment Scheme",
     "Issue Identification Type",
     {
         "doctype": "Role Profile",
@@ -87,7 +86,13 @@ fixtures = [
         "doctype": "Role",
         "filters": [
             ["name", "like", "%Dinext%"],
-            ["name", "not in", ["Dinext_UT_Full_Access", "Dinext_UTP_Appoval"]],
+            ["name", "not in", [
+                "Dinext_UT_Full_Access",
+                "Dinext_UTP_Appoval",
+                "Dinext_Financier",
+                "Dinext_Fin_Dir",
+                "Dinext_Budget_Approver",
+            ]],
             ["disabled", "=", 0]
         ]
     },
@@ -105,13 +110,9 @@ fixtures = [
                 "Working Hours Table",
                 "Doctype For Timesheet",
                 "User Projects",
+                "Worker",
+                "Working Hours On Date",
             ]],
-        ]
-    },
-    {
-        "doctype": "Working Hours On Date",
-        "filters": [
-            ["name", "in", "Сокращенные рабочие дни РФ"]
         ]
     },
     {
@@ -148,7 +149,6 @@ fixtures = [
         "filters": [
             ["ref_doctype", "in", [
                 "ToDo",
-                "Worker",
                 "Task",
                 "Issue",
                 "Meeting Notes",
@@ -179,7 +179,7 @@ fixtures = [
 # Apps
 # ------------------
 
-# required_apps = []
+required_apps = ["dinext_common", "doctype_permission", "erpnext"]
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [

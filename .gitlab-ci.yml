@@ -1,5 +1,6 @@
 # Managed by dinext_control_center — do not copy policy scripts into this repo.
 # Required MR jobs from /ci/dinext-app.yml: gitflow:mr-guard, app:smoke, app:unit
+# Canary: app:unit needs unittest-xml-reporting from control center main (fix-ci-unit-xmlrunner).
 include:
   - project: erpnext/dinext/dinext_control_center
     ref: main
