@@ -40,6 +40,7 @@
 "Customer's Vendor","Поставщик Клиента",""
 "Daily View","Отображение по дням",""
 "Date","Дата",""
+"Dates","Сроки",""
 "Date of Birth","Дата рождения",""
 "Date of dispatch","Дата отправки на согласование",""
 "Deadlines for sending","Сроки отправки на согласование",""
@@ -171,4 +172,5 @@
 "Working Days","Рабочие дни",""
 "Working hours fund","Фонд рабочих часов",""
 "Working Hours On Date","Справочник дат исключений",""
+"Work","Работы",""
 "Workload","Загрузка",""
