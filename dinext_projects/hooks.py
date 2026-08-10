@@ -339,6 +339,7 @@ doc_events = {
 		"before_insert": "dinext_projects.dinext_projects.user_timesheet.events.user_timesheet_position.before_insert",
 		"before_save": "dinext_projects.dinext_projects.user_timesheet.events.user_timesheet_position.before_save",
 		# Server Script "After Save" ≡ Document.on_update
+		# Layer 3 ISS-2026-03288: UTP→UT rollup + Task act_* (SS UTP_UT_Status_V3 disabled local)
 		"on_update": "dinext_projects.dinext_projects.user_timesheet.events.user_timesheet_position.on_update",
 		"on_trash": "dinext_projects.dinext_projects.user_timesheet.events.user_timesheet_position.on_trash",
 	},

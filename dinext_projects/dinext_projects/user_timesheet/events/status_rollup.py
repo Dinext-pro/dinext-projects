@@ -1,7 +1,7 @@
-"""UTP → User Timesheet status rollup + Task act dates (ISS-2026-00926 phase 2).
+"""UTP → User Timesheet status rollup + Task act dates.
 
-Port of demodev Server Script ``UTP_UT_Status_V3`` (After Save on
-User Timesheet Position). Tickets: ISS-2025-02143, ISS-2025-02606.
+Port of Server Script ``UTP_UT_Status_V3`` (After Save on User Timesheet Position).
+Tickets: ISS-2025-02143, ISS-2025-02606, ISS-2026-00926, ISS-2026-03288 (layer 3 cutover).
 """
 
 from __future__ import annotations
