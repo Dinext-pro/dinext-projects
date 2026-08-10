@@ -1,317 +1,331 @@
 # Dinext Projects
 
-## Обзор
+`dinext_projects` — Frappe-приложение для проектного управления в экосистеме Dinext.
+Оно устанавливается в существующий [Bench](https://github.com/frappe/bench)
+с Frappe и ERPNext и добавляет модуль **Dinext Projects**: проектные команды,
+роли, портфели, встречи, расширения Project/Task/Issue, workflow проектов,
+Desk-workspaces, отчёты и уведомления.
 
-**Dinext Projects** — приложение для платформы [Frappe](https://frappeframework.com/), расширяющее управление проектами, согласованиями и финансовым контролем. Оно не является самостоятельным продуктом: устанавливается в существующее окружение [Bench](https://github.com/frappe/bench) (Frappe/ERPNext) и добавляет модуль **Dinext Projects** с кастомными типами документов, рабочими процессами, отчётами, дашбордами и уведомлениями.
+Приложение является metadata-driven: большая часть поведения хранится в
+экспортируемых Frappe fixtures (DocType, Custom Field, Client Script, Server
+Script, Workflow и других метаданных). Python-код используется для контроллеров
+DocType, установки и миграционных патчей.
 
-Учёт времени вынесен в **[dinext_timesheets](https://dinext.gitlab.yandexcloud.net/erpnext/dinext/dinext-timesheets)** (`Worker`, `Working Hours On Date`, UT/AFL, workspace «Мои Таймшиты»). Финансовый контур — в **dinext_projects_pl** (ставки, ЦФО, P&L, «Фин. Контроль»). Плановые трудозатраты и утилизация — в **project_workload_assignment**.
+## Содержание
 
-`dinext_projects` сохраняет PM-контур: команды, роли, портфели, встречи, Issue/Task расширения. Значительная часть поведения задаётся экспортируемыми метаданными Frappe. Тонкий слой Python используется для whitelisted API.
+- [Обзор и границы ответственности](#обзор-и-границы-ответственности)
+- [Возможности](#возможности)
+- [Установка](#установка)
+- [Использование](#использование)
+- [Технологии](#технологии)
+- [Конфигурация и fixtures](#конфигурация-и-fixtures)
+- [Требования](#требования)
+- [Разработка и сопровождение](#разработка-и-сопровождение)
+- [Документация](#документация)
+- [История изменений](#история-изменений)
+- [Структура репозитория](#структура-репозитория)
+- [Схема взаимодействия](#схема-взаимодействия)
+- [Лицензия](#лицензия)
 
-Порядок установки: `dinext_projects` → `dinext_projects_pl` → `doctype_permission` → `dinext_timesheets` → `project_workload_assignment`.
+## 📖 Обзор и границы ответственности
 
----
+Приложение сохраняет PM-контур: состав проектной команды, роли и портфели,
+Meeting Notes и Assignments, расширения Project/Task/Issue, проектный workflow
+и связанную Desk-аналитику.
 
-## Возможности
+В экосистеме Dinext функциональность разделена между приложениями:
 
-### Границы ответственности
+| Приложение | Ответственность |
+| --- | --- |
+| `dinext_projects` | Project Team, Project Role, контакты и портфели, встречи, PM-расширения Project/Task/Issue, workflow Project, роль `Dinext_Worker`. |
+| `dinext_timesheets` | Учёт времени: `Worker`, `Working Hours On Date`, UT/AFL, `Project.custom_working_hours_on_date`, workspace «Мои Таймшиты» и роли `Dinext_UT*`. |
+| `dinext_projects_pl` | Ставки, ЦФО, схемы оплаты, P&L, финансовые поля Project/Task, роли `Dinext_Financier`, `Dinext_Fin_Dir`, `Dinext_Budget_Approver`, workspace «Фин. Контроль» и rate-control reports. |
+| `project_workload_assignment` | Плановые трудозатраты, `Project Work Efforts*`, `Limit Control`, utilisation tables, соответствующие UI и отчёты. |
+| `dinext_deputies` | Владеет DocType Permission для `User Delegate`. |
 
-- **dinext_timesheets**: `Worker`, `Working Hours On Date`, UT/AFL, `Project.custom_working_hours_on_date`, роли `Dinext_UT*`.
-- **dinext_projects_pl**: ставки/ЦФО/схемы оплаты, финансовые Project/Task fields, rate-control reports, роли `Dinext_Financier` / `Dinext_Fin_Dir` / `Dinext_Budget_Approver`, workspace «Фин. Контроль».
-- **project_workload_assignment**: `Project Work Efforts*`, `Limit Control`, utilization tables, workload reports/UI.
-- **dinext_projects**: Project Team, Project Role, портфели, встречи, Issue/Task PM-расширения; роль `Dinext_Worker`.
+`hooks.py` задаёт обязательные для установки приложения `dinext_common`,
+`doctype_permission` и `erpnext`. В эксплуатационной документации ранее
+указывался порядок установки полного проектного контура:
+`dinext_projects` → `dinext_projects_pl` → `doctype_permission` →
+`dinext_timesheets` → `project_workload_assignment`. Перед установкой на новый
+сайт сверяйте этот порядок с версиями и зависимостями конкретного окружения.
 
-### Согласования
+## ✨ Возможности
 
-- Workflow для согласования проектов (Project Approval) и связанные Workflow State / Action Master — в fixtures этого приложения. Workflow для Expense Claim, Purchase Invoice, Sales Invoice и DocType Permission для Sales Invoice / Purchase Invoice / GL Entry экспортируются из `dinext_projects_pl`. DocType Permission для User Delegate — из `dinext_deputies`.
-- **Workflow Task** — задачи согласования с текущим/следующим состоянием, действием, назначенным пользователем и доступными переходами; создание/закрытие ToDo через Server Script.
+### Проекты, команды и справочники
 
-### Проектное планирование
+- Расширения стандартных Project, Task и Issue через экспортируемые Custom Field,
+  Client Script, Server Script и Property Setter.
+- **Project Team Details**: проектные роли, участники, периоды действия, флаги
+  согласования и уведомлений.
+- **Project Role**, **Project Contact List** и **Project Portfolio** — роли,
+  контакты и портфель проектов.
+- **Meeting Notes** и **Assignments** — протоколы встреч, решения и поручения;
+  автоматическое создание Task и ToDo настраивается Server Script.
+- **Projects Email Mapping** и **Setting Table** — привязка входящей
+  коммуникации к клиенту и проекту, а также настройки.
+- **Issue Identification**, **Issue Estimations**, **Issue Participants**,
+  **Project Issue Setting**, **Task Relation**, **Type Of Meeting**,
+  **Business Area**, **Tax Id Code Type** и другие вспомогательные сущности.
 
-- **Project** расширен кастомными полями PM-контура: команда, портфель, контакты, настройки Issue/Task.
-- Плановые трудозатраты, лимиты и utilization tables принадлежат `project_workload_assignment`.
-- Ставки, ЦФО, схемы оплаты и P&L принадлежат `dinext_projects_pl`.
+### Согласования и автоматизации
 
-### Команды проекта и справочники PM
+- Project workflow и связанные Workflow State / Workflow Action Master
+  экспортируются этим приложением.
+- **Workflow Task** описывает задачи согласования: текущее и следующее
+  состояние, действие, назначенного пользователя и доступные переходы.
+- Уведомления **«Требуется согласование»** и **«Требуется исправление»**.
+- Автозаполнение Issue по входящей коммуникации, создание Task из Meeting Notes,
+  зеркалирование тегов Issue–Task и другие сценарии задаются Server Script в
+  fixtures.
 
-- **Project Team Details** — роли, участники, периоды действия, флаги согласования и уведомлений.
-- **Project Role**, **Project Contact List**, **Project Portfolio** — роли, контакты и портфель проектов.
+Workflow для Expense Claim, Purchase Invoice и Sales Invoice, а также разрешения
+для Sales Invoice, Purchase Invoice и GL Entry относятся к
+`dinext_projects_pl`, а не к этому приложению.
 
-### Отчёты и дашборды
+### Workspaces, отчёты и виджеты
 
-- **Статус по всем ком. проектам** — Report Builder отчёт projects.
-- Отчёты по контролю ставок и финансовые charts/cards — в `dinext_projects_pl`.
-- Отчёты по таймшитам и утилизации — в `dinext_timesheets` / PWA.
-- **Workspace**: «Мои проекты», «Мои задачи», «Аналитика», «DiLike».
+- Workspaces: **«Мои проекты»**, **«Мои задачи»**, **«Аналитика»** и **«DiLike»**.
+- Report Builder отчёт **«Статус по всем ком. проектам»**.
+- 37 Number Cards для статусов проектов, задач, Issue, согласований и DiLike.
+- Два Notification для ToDo присутствуют в module JSON, но в текущем состоянии
+  выключены (`enabled: 0`).
+- Workspaces, отчёт, Number Cards и Notifications поставляются как module JSON;
+  они не входят в список `fixtures` из `hooks.py`.
+- Локальных определений Dashboard Chart в репозитории нет: workspace
+  «Аналитика» ссылается на именованные charts и shortcuts ERPNext либо соседних
+  приложений.
+- Финансовые charts/cards и отчёты контроля ставок находятся в
+  `dinext_projects_pl`; таймшитные и utilisation-отчёты — в
+  `dinext_timesheets` и `project_workload_assignment`.
 
-### Уведомления и автоматизации
+### Интеграции с соседними контурами
 
-- **Требуется согласование** / **Требуется исправление** — уведомления по workflow-задачам.
-- Автозаполнение Issue по входящей коммуникации, создание Task из Meeting Notes, зеркалирование тегов Issue–Task и др. реализованы в Server Script (fixtures).
+Поля `pt_worker`, `pt_cost_level` и `pt_category` у `Project Team Details`
+сознательно принадлежат соседним приложениям: соответственно
+`dinext_timesheets` и `dinext_projects_pl`. Миграционный патч этого приложения
+снимает его владение этими полями, не удаляя колонки базы данных. При наличии
+`dinext_timesheets` интерфейс может использовать `pt_worker` как основной выбор
+участника и синхронизировать `Worker.wuser` с `pt_participant`.
 
-### Прочее
+## 🚀 Установка
 
-- **Meeting Notes** и **Assignments** — протоколы встреч с решениями и поручениями; автоматическое создание Task и ToDo из поручений (Server Script).
-- **Projects Email Mapping**, **Setting Table** — маппинг писем на клиента/проект и настройки.
-- **Issue Identification**, **Issue Estimations**, **Issue Participants**, **Project Issue Setting** — расширение работы с тикетами и настройками по проекту.
-- **User Delegate** — делегирование пользователей (DocType и DocType Permission — в `dinext_deputies`).
-- **Task Relation**, **Type Of Meeting**, **Business Area**, **Tax Id Code Type** и др. — вспомогательные справочники и связи.
+Приложение устанавливается в существующий Bench с Frappe и, как правило,
+ERPNext. Используйте фактический Git URL и ветку вашей поставки.
 
----
+```bash
+cd /path/to/your/bench
+bench get-app <git-url> --branch <branch>
+bench --site your-site.local install-app dinext_projects
+bench --site your-site.local migrate
+```
 
-## Архитектура
+При изменениях JavaScript, CSS или метаданных, затрагивающих Desk, при
+необходимости пересоберите assets и очистите кэш:
 
-Поведение приложения формируется двумя слоями:
+```bash
+bench build --app dinext_projects
+bench --site your-site.local clear-cache
+```
 
-1. **Метаданные Frappe (fixtures и DocType)**  
-   При установке и миграции приложение подтягивает из репозитория и синхронизирует с сайтом:
-   - кастомные DocType и дочерние таблицы проектов;
-   - Custom Field (в т.ч. расширение Project, включая `custom_working_hours_on_date`);
-   - Client Script и Server Script модуля «Dinext Projects»;
-   - Workflow для проектов (счета и финансовые DocType Permission — в `dinext_projects_pl`);
-   - роли projects (без `Dinext_UT_*`), Custom DocPerm (без parents таймшитов), Module Profile, Role Permission for Page and Report;
-   - справочники PM-контура projects;
-   - Workspace, Number Card, Dashboard Chart, Notification модуля projects.
+Для локальной разработки приложение можно клонировать в
+`apps/dinext_projects` и подключить как локальное app.
 
-2. **Минимальный Python-слой**  
-   - `dinext_projects/dinext_projects/permissions.py` — whitelisted-методы `has_permission`, `get_doc_permissions`, `get_users_with_role`.
-   - `dinext_projects/dinext_projects/model/workflow.py` — `get_transitions(doc, user, workflow)`.
+## 🛠️ Использование
 
-Итого: основная бизнес-логика проектов сосредоточена в Server Script и Client Script в `dinext_projects/fixtures/`. Логика таймшитов — в `dinext_timesheets`.
+После установки в Desk доступен модуль **Dinext Projects**.
 
----
+- **Мои проекты** — проекты по типам, статусам и клиентам, справочники и отчёты.
+- **Мои задачи** — задачи текущего пользователя.
+- **Аналитика** — PM-аналитика; финансовые показатели P&L, выручки, расходов и
+  выручки по клиентам требуют установленного `dinext_projects_pl`.
+- Workflow-задачи выполняются в стандартных формах Frappe посредством workflow и
+  Client/Server Script.
+- Учёт времени и workspace **«Мои таймшиты»** появляются после установки
+  `dinext_timesheets`.
 
-## Установка
+## 📦 Технологии
 
-Приложение устанавливается в существующий Bench (с Frappe и при необходимости ERPNext).
+- **Backend:** Python 3.10+, Frappe Framework и ERPNext.
+- **Frontend:** Frappe Desk, JavaScript в Client Script и в файлах отчётов.
+- **Данные:** MariaDB или PostgreSQL через Frappe ORM.
+- **Сборка пакета:** `flit_core`.
+- **Качество кода:** pre-commit, ruff, Prettier и ESLint.
 
-1. Перейти в корень bench:
-   ```bash
-   cd /path/to/your/bench
-   ```
+## 🔧 Конфигурация и fixtures
 
-2. Получить приложение (указать актуальный URL и ветку):
-   ```bash
-   bench get-app https://github.com/your-org/dinext_projects --branch develop
-   ```
-   Либо клонировать в `apps/dinext_projects` и подключить как локальное приложение.
+Главная конфигурация находится в `dinext_projects/hooks.py`.
 
-3. Установить приложение на сайт:
-   ```bash
-   bench --site your-site.local install-app dinext_projects
-   ```
+- `fixtures` экспортируют Role Profile, Project Type, Issue Priority, Custom
+  HTML Block, Issue Type, Task Type, Custom Field, Property Setter, Client
+  Script, Server Script, Web Page, роли, Custom DocPerm, Project workflow,
+  Workflow State, Workflow Action Master и часть DocType Permission.
+- Module JSON под `dinext_projects/dinext_projects/` поставляют custom DocType,
+  workspaces, Report Builder отчёт, Number Cards и Notifications отдельно от
+  fixture export.
+- `after_install` очищает стандартные ERPNext значения Project Type и Issue
+  Priority перед импортом значений приложения.
+- Список required apps: `dinext_common`, `doctype_permission`, `erpnext`.
+- На уровне app не включены глобальные JS/CSS, scheduler events, doc events или
+  overrides: соответствующие примеры в `hooks.py` закомментированы.
+- Переменные окружения и серверные параметры задаются стандартным механизмом
+  Bench/Frappe; этот репозиторий не объявляет собственных переменных окружения.
 
-4. Выполнить миграции при обновлении:
-   ```bash
-   bench --site your-site.local migrate
-   ```
+После изменения объектов, управляемых Frappe (например, Custom Field, Client
+Script, Server Script или Workflow), экспортируйте fixtures из Bench и добавьте
+обновлённые JSON в коммит:
 
-5. При необходимости пересобрать фронтенд:
-   ```bash
-   bench build --app dinext_projects
-   ```
+```bash
+bench --site your-site.local export-fixtures
+```
 
----
+Изменения в UI без последующего экспорта fixtures создают расхождение между
+сайтом и репозиторием.
 
-## Использование
+## ✅ Требования
 
-После установки в Desk появляется модуль **Dinext Projects**. Основные точки входа:
+- [Bench](https://github.com/frappe/bench) с Frappe и ERPNext.
+- Python **>= 3.10** (закреплено в `pyproject.toml`).
+- Совместимые версии Frappe/ERPNext для используемой поставки Dinext.
+- Для разработки JS/CSS: Node.js и yarn, используемые вашим Bench.
+- Для локальных проверок: pre-commit.
 
-- **Мои проекты** — список и дашборд проектов (по типам, статусам, клиентам), справочники и отчёты.
-- **Мои задачи** — задачи пользователя.
-- **Аналитика** — выручка, расходы, графики P&amp;L, выручка по клиентам.
-- Финансовый workspace и rate-control reports — в `dinext_projects_pl` («Фин. Контроль»).
+## 🤝 Разработка и сопровождение
 
-Учёт времени и workspace «Мои таймшиты» доступны после установки `dinext_timesheets`. Workflow-задачи проектов выполняются через стандартные формы Frappe с Client/Server Script и Workflow.
+### Рабочий процесс
 
----
+1. Создайте отдельную ветку.
+2. Для любого изменения сначала пройдите обязательный OpenSpec lifecycle из
+   [AGENTS.md](AGENTS.md); proposal, design, tasks и specs хранятся в central
+   Store `dinext-docs`.
+3. Вносите изменения в код и metadata только в соответствии с готовыми задачами
+   change.
+4. При изменении metadata экспортируйте fixtures.
+5. Запустите проверки и обновите README, если меняется его фактическое
+   содержание.
 
-## Технологии
-
-- **Backend:** Python 3.10+, Frappe Framework (управление метаданными, ORM, API, планировщик).
-- **Frontend:** JavaScript в рамках Frappe Desk; клиентская логика в основном в Client Script (fixtures) и в JS-файлах отчётов (`report/*/*.js`).
-- **Данные:** MariaDB/PostgreSQL (через Frappe).
-- **Сборка и качество кода:** ruff, eslint, prettier, pre-commit.
-
----
-
-## Конфигурация
-
-- Конфигурация приложения задаётся в `dinext_projects/hooks.py` (в т.ч. список `fixtures`). Менять поведение установки без правки кода можно только в рамках возможностей Frappe (сайт, DocType, скрипты в UI).
-- Переменные окружения и параметры сервера — стандартные для Bench/Frappe (см. документацию [Frappe](https://frappeframework.com/docs)).
-- Роли и права экспортируются в fixtures: роли `Dinext_%` кроме timesheets-ролей; Custom DocPerm с исключением parents таймшитов. После изменения прав в системе — `bench export-fixtures` и коммит JSON.
-
----
-
-## Требования
-
-- [Bench](https://github.com/frappe/bench) с установленными Frappe (и при необходимости ERPNext).
-- Python **>= 3.10** (указано в `pyproject.toml`).
-- Соответствие версий Frappe/ERPNext, с которыми разрабатывалось приложение (уточняйте по репозиторию/релизам).
-- Для разработки: Node.js и yarn для сборки фронтенда; pre-commit для проверок (см. раздел «Разработка и сопровождение»).
-
----
-
-## Разработка и сопровождение
-
-### Где находится логика
-
-- **Метаданные и автоматизации:** основная логика — в DocType (JSON), Custom Field, Client Script, Server Script, Workflow, Report, Workspace, Notification. Они экспортируются в `dinext_projects/fixtures/` и при установке/миграции подтягиваются на сайт. Изменения в системе (через UI или API) нужно при необходимости экспортировать командой `bench export-fixtures` (см. AGENTS.md).
-- **Python:** только обёртки прав и workflow (`permissions.py`, `model/workflow.py`), Script Report в `report/*/`, контекст уведомлений в `notification/*/*.py`. Контроллеры DocType создаются/расширяются только при явной необходимости (см. AGENTS.md).
-- **Клиентский код:** в основном в Client Script (fixtures) и в JS-файлах отчётов в `dinext_projects/dinext_projects/report/`.
-
-### Fixtures как основа приложения
-
-Приложение в значительной степени **metadata-driven**: поведение форм, расчёты, согласования и отчёты задаются экспортируемыми объектами Frappe. Редактирование Client Script, Server Script, Custom Field, Workflow в системе без последующего экспорта фикстур приводит к расхождению репозитория и установленной инстанции. Рекомендуется после изменений таких объектов выполнять `bench export-fixtures` и коммитить обновлённые JSON (при этом список экспортируемых DocType в `hooks.py` должен соответствовать ожидаемому набору).
-
-### Проверка кода (pre-commit)
-
-В репозитории настроен [pre-commit](https://pre-commit.com/). Перед коммитами рекомендуется установить хуки:
+### Локальные проверки
 
 ```bash
 cd apps/dinext_projects
 pre-commit install
+pre-commit run --all-files
 ```
 
-Используются:
+Настроенные hooks проверяют Python (`ruff` и форматирование), JavaScript
+(`eslint`), JavaScript/Vue/SCSS (`prettier`), а также пробелы, merge conflict
+маркеры, AST, JSON, TOML, YAML и debug-выражения.
 
-- **ruff** — линтер и форматтер Python (в т.ч. сортировка импортов).
-- **eslint** — проверка JavaScript (исключены папки с библиотеками и сборками).
-- **prettier** — форматирование JS/Vue/SCSS.
-- **pre-commit-hooks** — проверка пробелов, merge conflicts, AST, JSON/TOML/YAML, debug-выражений.
+### Где искать логику
 
-Конфигурация: `.pre-commit-config.yaml`, `.eslintrc`, `.editorconfig`; настройки ruff — в `pyproject.toml`.
+- `fixtures/` — основная часть поведения и экспортируемых метаданных.
+- `dinext_projects/doctype/` — JSON-описания и контроллеры custom DocType.
+- `dinext_projects/report/` — в текущей версии единственный Report Builder JSON
+  «Статус по всем ком. проектам»; Script Report при добавлении будет содержать
+  Python для колонок/данных и JavaScript для фильтров.
+- `dinext_projects/workspace/` — конфигурация Desk-workspaces.
+- `dinext_projects/number_card/` — KPI-карточки; локальных определений
+  Dashboard Chart нет.
+- `dinext_projects/notification/` — шаблоны уведомлений и их Python-контекст;
+  текущие два Notification отключены.
+- `install.py` — обработчик `after_install`.
+- `patches/` — миграционные патчи.
 
-### Документация для разработчиков
+Не используйте README как замену инженерному контракту: navigation stub
+[AGENTS.md](AGENTS.md) ведёт к каноническим правилам Frappe и Dinext.
 
-Подробное руководство по разработке в рамках Frappe (DocType, контроллеры, fixtures, миграции, тесты, MCP и т.д.) — в файле **[AGENTS.md](AGENTS.md)** в корне репозитория. Используйте его как основной инженерный гайд при доработке приложения.
+## 📄 Документация
 
----
-
-## Участие в разработке
-
-1. Форк или ветка репозитория, изменения в отдельной ветке.
-2. Установка pre-commit и прохождение проверок (см. выше).
-3. Соответствие стилю кода (ruff, eslint, prettier).
-4. Для изменений в метаданных (скрипты, поля, workflow) — при необходимости экспорт фикстур и коммит обновлённых файлов.
-5. Коммиты с осмысленными сообщениями; при необходимости — обновление раздела «Changelog» в README.
-
----
-
-## Документация
-
-- [Frappe Framework](https://frappeframework.com/docs) — общая документация платформы.
+- [AGENTS.md](AGENTS.md) — вход в central Dinext guidance и обязательный
+  OpenSpec workflow.
+- [Frappe Framework](https://frappeframework.com/docs) — документация платформы.
 - [Bench](https://github.com/frappe/bench) — установка и управление окружением.
-- **[AGENTS.md](AGENTS.md)** — внутренний гайд по разработке и сопровождению приложения (DocType, fixtures, миграции, тесты, лучшие практики).
 
----
+## ❤️ Благодарности
 
-## Благодарности
+- [Frappe Technologies](https://frappe.io/) — Frappe и экосистема.
+- Dinext — разработка и поддержка приложения (`info@dinext.ru`).
 
-- [Frappe Technologies](https://frappe.io/) — платформа Frappe и экосистема.
-- Dinext — издатель и поддержка приложения (info@dinext.ru).
+## 📝 История изменений
 
----
+Краткая историческая сводка по commit history:
 
-## Changelog
+- Контуры были разделены: timesheets — в `dinext_timesheets`, финансы — в
+  `dinext_projects_pl`, трудозатраты и utilisation — в
+  `project_workload_assignment`; `dinext_projects` оставляет PM-функции и
+  скорректированные fixture filters.
+- Удалены устаревшие файлы и конфигурации, связанные с бюджетом проектов,
+  риск-менеджментом (категории, уровни, воздействия, стратегии, приоритеты и
+  вероятности), назначением рабочей нагрузки, а также устаревшие Server Script
+  и Client Script.
+- Дорабатывались task dashboard, Project-planning UI, P&L-отчёты и стили
+  элементов бюджета; для действий P&L добавлялось выпадающее меню.
+- Обновлялись роли и права, включая возврат `Dinext_Support_Dispatcher`,
+  Custom Field, fixtures, notifications, workspace DiLike и метаданные модуля;
+  менялись видимость полей и название модуля (Dinext Risk Management → Dinext
+  Projects).
+- Удалены неиспользуемые изображения, темы, настройки навигации, CSS и
+  JS-библиотеки (включая Gantt, ECharts, Frappe DataTable и HyperList).
 
-Краткая сводка последних изменений по истории коммитов:
+За полным журналом обращайтесь к истории Git конкретной ветки.
 
-- **Semantic split:** timesheets → `dinext_timesheets` (`Worker`, `Working Hours On Date`); finance → `dinext_projects_pl`; workload/utilization → `project_workload_assignment`; projects оставляет PM-контур и скорректированные fixture filters.
-- **Удаление устаревшего кода:** удалены deprecated файлы и конфигурации, связанные с бюджетом проектов, управлением рисками (категории, уровни, воздействия, стратегии, приоритеты, вероятности), назначением рабочей нагрузки, устаревшими Server Script и Client Script; упрощение структуры и улучшение сопровождаемости.
-- **Дашборды и P&amp;L:** доработка дашборда задач по проектам (client_script), улучшение отображения графиков и элементов; добавлено выпадающее меню для действий P&amp;L в планировании проектов, правки стилей элементов бюджета.
-- **Рефакторинг проектной части:** обновление JS/JSON для планирования проектов, кастомных полей и типов; улучшение UI отчётов по прибыли и убыткам; приведение имён и типов полей в соответствие с требованиями; удаление устаревших полей и скриптов.
-- **Роли и права:** возврат роли Dinext_Support_Dispatcher, обновление custom fields и ролей в fixtures; настройка прав доступа к страницам и отчётам.
-- **Метаданные и модули:** переименование модуля в конфигурации (Dinext Risk Management → Dinext Projects), правки видимости полей; обновление уведомлений (статус enabled, формат сообщений); правки workspace DiLike и ролей.
-- **Очистка ресурсов:** удаление неиспользуемых изображений, тем, настроек навигации, CSS/JS (в т.ч. Gantt, ECharts, Frappe DataTable, HyperList) для уменьшения размера кодовой базы.
+## 🗂️ Структура репозитория
 
----
-
-## Структура репозитория
-
-```
+```text
 dinext_projects/
-├── dinext_projects/                 # Пакет приложения (Python-модуль)
-│   ├── __init__.py                  # Версия приложения (__version__)
-│   ├── hooks.py                     # Конфигурация приложения, список fixtures
-│   ├── modules.txt                  # Имя модуля в Desk: "Dinext Projects"
-│   ├── patches.txt                  # Патчи миграций (pre/post model sync)
-│   ├── fixtures/                    # Экспорт метаданных Frappe (JSON)
-│   │   ├── client_script.json
-│   │   ├── server_script.json
-│   │   ├── custom_field.json
-│   │   ├── workflow.json
-│   │   ├── role.json
-│   │   ├── custom_docperm.json
-│   │   ├── working_hours_on_date.json
-│   │   └── ...
-│   ├── dinext_projects/              # Модуль "Dinext Projects"
-│   │   ├── permissions.py           # Whitelisted: has_permission, get_doc_permissions, get_users_with_role
-│   │   ├── model/
-│   │   │   └── workflow.py          # Whitelisted: get_transitions
-│   │   ├── doctype/                  # Кастомные DocType (JSON + при необходимости .py/.js)
-│   │   │   ├── worker/
-│   │   │   ├── working_hours_on_date/
-│   │   │   ├── workflow_task/
-│   │   │   ├── project_team_details/
-│   │   │   ├── project_work_efforts/
-│   │   │   ├── meeting_notes/
-│   │   │   └── ... (остальные DocType проектов)
-│   │   ├── report/
-│   │   ├── workspace/                # Мои проекты, Мои задачи, Аналитика, DiLike
-│   │   ├── number_card/
-│   │   ├── dashboard_chart/
-│   │   ├── notification/
-│   │   └── custom/
-│   ├── public/
-│   ├── templates/
-│   └── translations/
-│       └── ru.csv
-├── pyproject.toml
-├── README.md
-└── AGENTS.md                        # stub → центральные инструкции в dinext-docs
+├── AGENTS.md                         # Navigation stub → central dinext-docs guidance
+├── README.md                         # Этот документ
+├── license.txt                       # Лицензия MIT
+├── pyproject.toml                    # Метаданные пакета, Python и ruff
+├── .pre-commit-config.yaml           # Локальные проверки
+├── openspec/config.yaml              # Указатель на Store dinext-docs
+└── dinext_projects/
+    ├── __init__.py                   # Версия приложения
+    ├── hooks.py                      # App configuration, dependencies и fixtures
+    ├── install.py                    # after_install hook
+    ├── modules.txt                   # Имя Desk-модуля
+    ├── patches.txt                   # Список миграционных патчей
+    ├── patches/                      # Реализация миграций
+    ├── fixtures/                     # Экспортированные Frappe metadata (JSON)
+    ├── translations/ru.csv           # Русские переводы
+    ├── public/                       # Public assets приложения
+    ├── templates/                    # Frappe templates
+    └── dinext_projects/
+        ├── doctype/                  # Custom DocType: JSON, controllers, tests, JS
+        ├── report/                   # Frappe reports
+        ├── workspace/                # Мои проекты, Мои задачи, Аналитика, DiLike
+        ├── number_card/              # KPI-карточки
+        └── notification/             # Notifications и Python-контекст
 ```
 
-Таймшитные DocType, отчёты, workspace «Мои таймшиты» и связанные уведомления находятся в приложении `dinext_timesheets`.
+Соседние приложения предоставляют таймшитные DocType и workspace
+«Мои таймшиты», финансовые P&L-объекты и планирование нагрузки; они не входят в
+это дерево.
 
-**Назначение ключевых каталогов:**
-
-| Каталог / файл | Назначение |
-|-----------------|------------|
-| `dinext_projects/hooks.py` | Точка входа конфигурации приложения; список fixtures определяет, какие метаданные подтягиваются при установке/миграции. |
-| `dinext_projects/fixtures/` | Экспортированные метаданные (Client/Server Script, Custom Field, Workflow, роли, справочники и т.д.). Источник истины для воспроизводимой установки. |
-| `dinext_projects/dinext_projects/doctype/` | Определения кастомных DocType и дочерних таблиц. |
-| `dinext_projects/dinext_projects/report/` | Определения отчётов; для Script Report — .py (колонки и данные) и .js (фильтры). |
-| `dinext_projects/dinext_projects/workspace/` | Конфигурация рабочих пространств в Desk. |
-| `dinext_projects/dinext_projects/number_card/`, `dashboard_chart/` | Виджеты дашбордов (KPI и графики). |
-| `dinext_projects/dinext_projects/notification/` | Шаблоны уведомлений и Python-контекст для них. |
-| `dinext_projects/dinext_projects/custom/` | Расширения стандартных DocType (например, project.json для Project). |
-| `AGENTS.md` | Подробное руководство по разработке в рамках Frappe. |
-
----
-
-## Схема взаимодействия компонентов
+## 🔗 Схема взаимодействия
 
 ```mermaid
 flowchart LR
-  Bench[Bench / Frappe] --> App[Dinext Projects App]
-  App --> Hooks[hooks.py + fixtures]
-  Hooks --> Meta[DocTypes, Custom Fields, Workflows]
-  Meta --> Desk[Workspaces, Reports, Notifications]
-  Meta --> Automation[Client Scripts, Server Scripts]
-  Automation --> CoreDocs[Project, Task, Issue, Worker]
-  CoreDocs --> PM[Project Team / Portfolio / Meetings]
-  Shared --> TimesheetsApp[dinext_timesheets]
-  CoreDocs --> Analytics[Reports, Number Cards, Charts]
-  CoreDocs --> Approval[Workflow Tasks, Approvals]
-  permissions[permissions.py] --> CoreDocs
-  workflow_model[model/workflow.py] --> Approval
+  Bench[Bench / Frappe / ERPNext] --> App[dinext_projects]
+  App --> Hooks[hooks.py]
+  Hooks --> Install[after_install]
+  Hooks --> Fixtures[fixtures]
+  Fixtures --> Metadata[DocTypes, Custom Fields, Workflows]
+  Metadata --> Desk[Workspaces, Reports, Number Cards, Notifications]
+  Metadata --> Automation[Client Scripts and Server Scripts]
+  Automation --> Core[Project, Task, Issue]
+  Core --> PM[Teams, Portfolios, Meetings]
+  App --> Patches[Migration patches]
+  PM -. shared boundaries .-> Timesheets[dinext_timesheets]
+  PM -. financial boundaries .-> Finance[dinext_projects_pl]
+  PM -. workload boundaries .-> Workload[project_workload_assignment]
 ```
 
-Упрощённо: Bench загружает приложение; `hooks.py` задаёт набор fixtures PM-контура. Метаданные формируют структуру данных и сценарии согласований для Project/Task/Issue. Timesheets/Finance/Workload живут в соседних приложениях. Тонкие Python-модули `permissions.py` и `model/workflow.py` предоставляют API для проверки прав и переходов workflow.
+Bench загружает `hooks.py`; fixtures формируют Frappe metadata и сценарии Desk,
+а `after_install` и миграционные патчи поддерживают корректное состояние сайта.
+Смежные контуры остаются в отдельных приложениях и интегрируются через
+согласованные Frappe-сущности.
 
----
+## 📜 Лицензия
 
-## Лицензия
-
-MIT. См. [license.txt](license.txt).
+[MIT](license.txt).
