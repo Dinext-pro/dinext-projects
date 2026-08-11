@@ -256,6 +256,7 @@ required_apps = ["dinext_common", "doctype_permission", "erpnext"]
 
 # before_install = "dinext_projects.install.before_install"
 after_install = "dinext_projects.install.after_install"
+after_migrate = "dinext_projects.install.after_migrate"
 
 # Uninstallation
 # ------------

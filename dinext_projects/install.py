@@ -16,6 +16,15 @@ _STANDARD_ISSUE_PRIORITY_MSGIDS = ("Low", "Medium", "High")
 
 def after_install():
 	clear_standard_project_type_and_issue_priority()
+	from dinext_projects.setup.dinext_hub import register_dinext_hub_items
+
+	register_dinext_hub_items()
+
+
+def after_migrate():
+	from dinext_projects.setup.dinext_hub import register_dinext_hub_items
+
+	register_dinext_hub_items()
 
 
 def clear_standard_project_type_and_issue_priority():
