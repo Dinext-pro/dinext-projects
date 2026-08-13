@@ -114,6 +114,34 @@ class TestActDates(unittest.TestCase):
 		_update_task_act_dates(_Doc(document_name="TASK-1"))
 		task.save.assert_not_called()
 
+	@patch("dinext_projects.dinext_projects.user_timesheet.events.status_rollup.frappe.get_meta")
+	@patch("dinext_projects.dinext_projects.user_timesheet.events.status_rollup.frappe.db.get_value")
+	@patch("dinext_projects.dinext_projects.user_timesheet.events.status_rollup.frappe.get_doc")
+	@patch("dinext_projects.dinext_projects.user_timesheet.events.status_rollup.frappe.get_all")
+	def test_sla_resolution_widens_act_end(self, get_all, get_doc, db_get_value, get_meta):
+		get_all.return_value = [SimpleNamespace(name="UTP-1")]
+		utp = MagicMock()
+		utp.get.return_value = [SimpleNamespace(date="2026-08-05", hours=2)]
+		task = MagicMock()
+		task.act_start_date = None
+		task.act_end_date = None
+		task.completed_on = None
+		task.get.side_effect = lambda k, d=None: (
+			"Issue" if k == "type" else "ISS-1" if k == "custom_linked_issue" else None
+		)
+		get_doc.side_effect = [utp, task]
+		meta = MagicMock()
+		meta.has_field.side_effect = lambda name: name == "sla_resolution_date"
+		get_meta.return_value = meta
+		db_get_value.return_value = {
+			"opening_date": "2026-08-01",
+			"sla_resolution_date": "2026-08-20",
+		}
+
+		_update_task_act_dates(_Doc(document_name="TASK-1"))
+		self.assertEqual(getdate(task.act_end_date), getdate("2026-08-20"))
+		task.save.assert_called_once()
+
 
 if __name__ == "__main__":
 	unittest.main()

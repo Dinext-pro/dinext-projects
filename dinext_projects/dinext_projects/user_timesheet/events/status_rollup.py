@@ -125,6 +125,7 @@ def _update_task_act_dates(doc) -> None:
 	new_end = act_end_date
 	protected_curr_start = curr_start
 	protected_curr_end = curr_end
+	issue_end = None
 
 	if task_doc.get("type") == "Issue" and task_doc.get("custom_linked_issue"):
 		issue_meta = frappe.get_meta("Issue")
@@ -167,6 +168,12 @@ def _update_task_act_dates(doc) -> None:
 				protected_curr_start = None
 				protected_curr_end = None
 
+	if issue_end:
+		issue_end_date = getdate(issue_end)
+		if act_end_date is None or issue_end_date > act_end_date:
+			act_end_date = issue_end_date
+			new_end = act_end_date
+
 	allow_act_update = False
 	if (not new_start) and (not new_end):
 		allow_act_update = False
@@ -189,6 +196,8 @@ def _update_task_act_dates(doc) -> None:
 	if allow_act_update and (
 		current_act_start != next_act_start or current_act_end != next_act_end
 	):
-		task_doc.act_start_date = new_start
-		task_doc.act_end_date = new_end
+		if new_start is not None:
+			task_doc.act_start_date = new_start
+		if new_end is not None:
+			task_doc.act_end_date = new_end
 		task_doc.save(ignore_permissions=True)
