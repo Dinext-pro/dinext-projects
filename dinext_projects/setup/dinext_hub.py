@@ -60,6 +60,9 @@ HUB_DOCTYPE_ITEMS = (
 			["Issue", "status", "in", ["Open", "Replied", "On Hold"], False],
 			["Issue", "custom_is_overdue", "=", 1, False],
 		],
+		"list_filter": [
+			["Issue", "status", "in", ["Open", "Replied", "On Hold"], False],
+		],
 	},
 	{
 		"section": "My Work",
@@ -73,26 +76,34 @@ HUB_DOCTYPE_ITEMS = (
 			["Task", "status", "=", "Overdue", False],
 			["Task", "type", "!=", "Issue", False],
 		],
+		"list_filter": [
+			["Task", "type", "!=", "Issue", False],
+			["Task", "status", "not in", ["Completed", "Cancelled"], False],
+		],
 	},
 	{
 		"section": "Project Management",
 		"document_type": "Project",
-		"show_quick_create": 0,
+		"show_quick_create": 1,
 		"show_recently_opened": 1,
-		"show_assigned": 0,
+		"show_assigned": 1,
 		"show_liked": 0,
 		"show_attention": 1,
 		"attention_filter": [["Project", "workflow_state", "=", "На согласовании", False]],
+		"list_filter": [
+			["Project", "status", "not in", ["Completed", "Cancelled"], False],
+		],
 	},
 	{
 		"section": "Project Management",
 		"document_type": "Project Portfolio",
 		"show_quick_create": 1,
 		"show_recently_opened": 1,
-		"show_assigned": 0,
+		"show_assigned": 1,
 		"show_liked": 0,
 		"show_attention": 0,
 		"attention_filter": [],
+		"list_filter": [["Project Portfolio", "status", "=", "Активный", False]],
 	},
 )
 
