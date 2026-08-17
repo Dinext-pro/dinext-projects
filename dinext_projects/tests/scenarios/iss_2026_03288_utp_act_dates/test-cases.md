@@ -7,14 +7,15 @@
 - owner_app: `dinext_projects`
 - dependent_apps:
   - `erpnext`
+  - `dinext_timesheets` (UTP rollup / `status_rollup`)
   - `dinext_project_tasks_gantt` (live-site: `Task.save()` из rollup нормализует `exp_*` слоем 2)
 - primary_surface: `Python`
 - secondary_surfaces: []
 - scenario_dir: `frappe-bench/apps/dinext_projects/dinext_projects/tests/scenarios/iss_2026_03288_utp_act_dates`
 - data_helper: `data_setup.py`
 - source_of_truth:
-  - `dinext_projects/dinext_projects/user_timesheet/events/status_rollup.py`
-  - `dinext_projects/hooks.py` → User Timesheet Position `on_update`
+  - `dinext_timesheets/dinext_timesheets/user_timesheet/events/status_rollup.py`
+  - `dinext_timesheets/hooks.py` → User Timesheet Position `on_update`
 - sync_required: `no`
 - run_targets:
   - `dinext_projects.tests.scenarios.iss_2026_03288_utp_act_dates.test_utp_act_dates`
