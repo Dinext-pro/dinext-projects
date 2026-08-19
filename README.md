@@ -39,7 +39,7 @@ Meeting Notes и Assignments, расширения Project/Task/Issue, прое�
 | --- | --- |
 | `dinext_projects` | Project Team, Project Role, контакты и портфели, встречи, PM-расширения Project/Task/Issue, workflow Project, роль `Dinext_Worker`. |
 | `dinext_timesheets` | Учёт времени: `Worker`, `Working Hours On Date`, UT/AFL, `Project.custom_working_hours_on_date`, workspace «Мои Таймшиты» и роли `Dinext_UT*`. |
-| `dinext_projects_pl` | Ставки, ЦФО, схемы оплаты, P&L, финансовые поля Project/Task, роли `Dinext_Financier`, `Dinext_Fin_Dir`, `Dinext_Budget_Approver`, workspace «Фин. Контроль» и rate-control reports. |
+| `dinext_projects_pl` | Ставки, ЦФО, схемы оплаты, P&L, финансовые поля Project/Task, роли `Dinext_Financier`, `Dinext_Fin_Dir`, `Dinext_Budget_Approver`, workspaces «Фин. Контроль» и «Аналитика», Number Card «Коммерческие проекты» и rate-control reports. |
 | `project_workload_assignment` | Плановые трудозатраты, `Project Work Efforts*`, `Limit Control`, utilisation tables, соответствующие UI и отчёты. |
 | `dinext_deputies` | Владеет DocType Permission для `User Delegate`. |
 
@@ -85,19 +85,18 @@ Workflow для Expense Claim, Purchase Invoice и Sales Invoice, а также 
 
 ### Workspaces, отчёты и виджеты
 
-- Workspaces: **«Мои проекты»**, **«Мои задачи»**, **«Аналитика»** и **«DiLike»**.
+- Workspaces: **«Мои проекты»**, **«Мои задачи»** и **«DiLike»**.
 - Report Builder отчёт **«Статус по всем ком. проектам»**.
-- 37 Number Cards для статусов проектов, задач, Issue, согласований и DiLike.
+- 35 Number Cards для статусов проектов, задач, Issue, согласований и DiLike.
 - Два Notification для ToDo присутствуют в module JSON, но в текущем состоянии
   выключены (`enabled: 0`).
 - Workspaces, отчёт, Number Cards и Notifications поставляются как module JSON;
   они не входят в список `fixtures` из `hooks.py`.
-- Локальных определений Dashboard Chart в репозитории нет: workspace
-  «Аналитика» ссылается на именованные charts и shortcuts ERPNext либо соседних
-  приложений.
-- Финансовые charts/cards и отчёты контроля ставок находятся в
-  `dinext_projects_pl`; таймшитные и utilisation-отчёты — в
-  `dinext_timesheets` и `project_workload_assignment`.
+- Локальных определений Dashboard Chart в репозитории нет.
+- Workspace **«Аналитика»**, Number Card **«Коммерческие проекты»**, финансовые
+  charts/cards и отчёты контроля ставок находятся в `dinext_projects_pl`;
+  таймшитные и utilisation-отчёты — в `dinext_timesheets` и
+  `project_workload_assignment`.
 
 ### Интеграции с соседними контурами
 
@@ -137,8 +136,8 @@ bench --site your-site.local clear-cache
 
 - **Мои проекты** — проекты по типам, статусам и клиентам, справочники и отчёты.
 - **Мои задачи** — задачи текущего пользователя.
-- **Аналитика** — PM-аналитика; финансовые показатели P&L, выручки, расходов и
-  выручки по клиентам требуют установленного `dinext_projects_pl`.
+- Workspace **«Аналитика»** (вложенный под «Мои проекты») появляется после
+  установки `dinext_projects_pl`.
 - Workflow-задачи выполняются в стандартных формах Frappe посредством workflow и
   Client/Server Script.
 - Учёт времени и workspace **«Мои таймшиты»** появляются после установки
@@ -293,8 +292,8 @@ dinext_projects/
     └── dinext_projects/
         ├── doctype/                  # Custom DocType: JSON, controllers, tests, JS
         ├── report/                   # Frappe reports
-        ├── workspace/                # Мои проекты, Мои задачи, Аналитика, DiLike
-        ├── number_card/              # KPI-карточки
+        ├── workspace/                # Мои проекты, Мои задачи, DiLike
+        ├── number_card/              # KPI-карточки PM/Issue/DiLike
         └── notification/             # Notifications и Python-контекст
 ```
 
