@@ -224,6 +224,7 @@ required_apps = ["dinext_common", "doctype_permission", "erpnext"]
 # Work Efforts UI → project_workload_assignment (ISS-2026-00002)
 doctype_js = {
 	"Project": "public/js/project_stakeholder_matrix.js",
+	"Application For Leave": "public/js/application_for_leave_approvals.js",
 }
 doctype_list_js = {"Project": "public/js/project_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -319,13 +320,11 @@ after_migrate = "dinext_projects.install.after_migrate"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Application For Leave": {
+		"validate": "dinext_projects.application_for_leave.validate_application_for_leave",
+	},
+}
 
 # Scheduled Tasks
 # ---------------

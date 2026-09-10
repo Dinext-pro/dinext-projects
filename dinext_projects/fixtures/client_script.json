@@ -222,17 +222,6 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
-  "dt": "Workflow Task",
-  "enabled": 1,
-  "modified": "2025-11-25 10:10:06.346692",
-  "module": "Dinext Projects",
-  "name": "Workflow_Task_Route",
-  "script": "frappe.ui.form.on('Workflow Task', {\r\n    onload(frm) {\r\n        //console.log('ONLOAD - Current doc:', frm.doc);\r\n        \r\n        // Проверяем корректные поля для перенаправления\r\n        if (frm.doc.doc && frm.doc.wt_docname) {\r\n            console.log('Redirecting to:', frm.doc.doc, 'with name:', frm.doc.wt_docname);\r\n            \r\n            //setTimeout(() => {\r\n                // Перенаправляем на форму документа\r\n                history.replaceState(null, null, frappe.router.make_url( frappe.get_prev_route() ) );\r\n                frappe.set_route('form', frm.doc.doc.toLowerCase(), frm.doc.wt_docname);\r\n            //}, 100); // Увеличиваем задержку для надёжности\r\n        }\r\n    }\r\n});",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
   "dt": "Project",
   "enabled": 1,
   "modified": "2025-11-25 10:05:33.512593",

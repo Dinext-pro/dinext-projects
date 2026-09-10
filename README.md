@@ -72,9 +72,13 @@ Meeting Notes и Assignments, расширения Project/Task/Issue, прое�
 
 - Project workflow и связанные Workflow State / Workflow Action Master
   экспортируются этим приложением.
-- **Workflow Task** описывает задачи согласования: текущее и следующее
-  состояние, действие, назначенного пользователя и доступные переходы.
-- Уведомления **«Требуется согласование»** и **«Требуется исправление»**.
+- **Workflow Task** — общий ledger параллельного согласования в
+  `dinext_common`. Это приложение не владеет DocType и не шлёт legacy
+  Notification «Требуется согласование» / «Требуется исправление».
+- **Application For Leave** как DocType живёт в `dinext_timesheets`. Здесь —
+  `validate_application_for_leave` / `configure_application_for_leave` и form
+  JS: даты плюс `get_pending_approvers`, если в boot включён
+  `enable_parallel_workflow_approval`.
 - Автозаполнение Issue по входящей коммуникации, создание Task из Meeting Notes,
   зеркалирование тегов Issue–Task и другие сценарии задаются Server Script в
   fixtures.
@@ -138,8 +142,9 @@ bench --site your-site.local clear-cache
 - **Мои задачи** — задачи текущего пользователя.
 - Workspace **«Аналитика»** (вложенный под «Мои проекты») появляется после
   установки `dinext_projects_pl`.
-- Workflow-задачи выполняются в стандартных формах Frappe посредством workflow и
-  Client/Server Script.
+- Согласование идёт через общий engine `dinext_common.workflow_approval`, когда
+  включён `enable_parallel_workflow_approval`. Очередь и история — workspace
+  «Мои согласования».
 - Учёт времени и workspace **«Мои таймшиты»** появляются после установки
   `dinext_timesheets`.
 
@@ -165,8 +170,10 @@ bench --site your-site.local clear-cache
 - `after_install` очищает стандартные ERPNext значения Project Type и Issue
   Priority перед импортом значений приложения.
 - Список required apps: `dinext_common`, `doctype_permission`, `erpnext`.
-- На уровне app не включены глобальные JS/CSS, scheduler events, doc events или
-  overrides: соответствующие примеры в `hooks.py` закомментированы.
+- `doctype_js` подключает `public/js/application_for_leave_approvals.js` к
+  форме `Application For Leave`. Глобальные `app_include_*` не включены.
+- `doc_events` формы AFL вызывает
+  `dinext_projects.application_for_leave.validate_application_for_leave`.
 - Переменные окружения и серверные параметры задаются стандартным механизмом
   Bench/Frappe; этот репозиторий не объявляет собственных переменных окружения.
 
@@ -249,6 +256,14 @@ pre-commit run --all-files
 
 Краткая историческая сводка по commit history:
 
+### 2026-09-10
+
+- Параллельное согласование вынесено в `dinext_common`. Удалены Notification
+  «Требуется согласование» и «Требуется исправление».
+- AFL: validate/configure и form JS (`application_for_leave_approvals.js`)
+  остаются в этом приложении; очередь согласующих читается из
+  `dinext_common.workflow_approval.api.get_pending_approvers`.
+
 - Контуры были разделены: timesheets — в `dinext_timesheets`, финансы — в
   `dinext_projects_pl`, трудозатраты и utilisation — в
   `project_workload_assignment`; `dinext_projects` оставляет PM-функции и
@@ -281,13 +296,14 @@ dinext_projects/
 └── dinext_projects/
     ├── __init__.py                   # Версия приложения
     ├── hooks.py                      # App configuration, dependencies и fixtures
+    ├── application_for_leave.py      # Validate/configure AFL
     ├── install.py                    # after_install hook
     ├── modules.txt                   # Имя Desk-модуля
     ├── patches.txt                   # Список миграционных патчей
     ├── patches/                      # Реализация миграций
     ├── fixtures/                     # Экспортированные Frappe metadata (JSON)
     ├── translations/ru.csv           # Русские переводы
-    ├── public/                       # Public assets приложения
+    ├── public/js/                    # AFL form: даты и pending approvers
     ├── templates/                    # Frappe templates
     └── dinext_projects/
         ├── doctype/                  # Custom DocType: JSON, controllers, tests, JS
@@ -318,12 +334,15 @@ flowchart LR
   PM -. shared boundaries .-> Timesheets[dinext_timesheets]
   PM -. financial boundaries .-> Finance[dinext_projects_pl]
   PM -. workload boundaries .-> Workload[project_workload_assignment]
+  AFLJs[application_for_leave_approvals.js] --> CommonEngine[dinext_common.workflow_approval]
+  AFLJs --> AFLDoc[Application For Leave]
 ```
 
 Bench загружает `hooks.py`; fixtures формируют Frappe metadata и сценарии Desk,
 а `after_install` и миграционные патчи поддерживают корректное состояние сайта.
 Смежные контуры остаются в отдельных приложениях и интегрируются через
-согласованные Frappe-сущности.
+согласованные Frappe-сущности. AFL-форма читает pending approvers из
+`dinext_common`, сам DocType остаётся в `dinext_timesheets`.
 
 ## 📜 Лицензия
 

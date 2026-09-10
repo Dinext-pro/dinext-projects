@@ -22,9 +22,13 @@ def after_install():
 
 
 def after_migrate():
+	from dinext_projects.application_for_leave import (
+		configure_application_for_leave,
+	)
 	from dinext_projects.setup.dinext_hub import register_dinext_hub_items
 
 	register_dinext_hub_items()
+	configure_application_for_leave()
 
 
 def clear_standard_project_type_and_issue_priority():
