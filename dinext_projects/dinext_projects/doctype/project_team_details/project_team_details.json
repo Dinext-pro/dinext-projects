@@ -29,7 +29,7 @@
    "columns": 1,
    "fieldname": "worker_type",
    "fieldtype": "Select",
-   "label": "\u0422\u0438\u043f",
+   "label": "Type",
    "options": "\nEmployee\nSupplier",
    "read_only": 1
   },
