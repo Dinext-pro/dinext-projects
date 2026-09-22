@@ -1357,7 +1357,7 @@
   "property": "description",
   "property_type": "Text",
   "row_name": null,
-  "value": "Структура заполнения: <br>\n1. Открытые вопросы и развилки <br>\n2. Планы на ближайший период <br>\n3. Статус на сегодня"
+  "value": "Fill-in structure: <br>1. Open questions and forks <br>2. Plans for the upcoming period <br>3. Status as of today"
  },
  {
   "default_value": null,
