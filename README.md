@@ -274,7 +274,7 @@ pre-commit run --all-files
 dinext_projects/
 ├── AGENTS.md                         # Navigation stub → central dinext-docs guidance
 ├── README.md                         # Этот документ
-├── license.txt                       # Лицензия MIT
+├── license.txt                       # Лицензия GPL-3
 ├── pyproject.toml                    # Метаданные пакета, Python и ruff
 ├── .pre-commit-config.yaml           # Локальные проверки
 ├── openspec/config.yaml              # Указатель на Store dinext-docs
@@ -327,4 +327,4 @@ Bench загружает `hooks.py`; fixtures формируют Frappe metadata
 
 ## 📜 Лицензия
 
-[MIT](license.txt).
+[GNU GPL v3](license.txt).
