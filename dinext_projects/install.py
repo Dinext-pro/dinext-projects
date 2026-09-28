@@ -1,4 +1,4 @@
-# Copyright (c) Dinext, MIT
+# Copyright (c) Dinext. License: GNU GPL v3. See license.txt
 
 """App install hooks.
 
