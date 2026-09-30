@@ -110,6 +110,11 @@ fixtures = [
                 "User Projects",
                 "Worker",
                 "Working Hours On Date",
+                "Project Payment Scheme",
+                "Cost Level",
+                "Rate Category",
+                "Business Area",
+                "Project Budget",
             ]],
         ]
     },
