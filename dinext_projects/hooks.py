@@ -57,9 +57,11 @@ fixtures = [
         ]
     },
     {
+        # Customize Form recreates field_order without module; keep it exported by name.
         "doctype": "Property Setter",
-        "filters": [
-            ["module", "in", ["Dinext Projects"]]
+        "or_filters": [
+            ["module", "in", ["Dinext Projects"]],
+            ["name", "in", ["Project-main-field_order"]],
         ]
     },
     {
@@ -110,6 +112,11 @@ fixtures = [
                 "User Projects",
                 "Worker",
                 "Working Hours On Date",
+                "Project Payment Scheme",
+                "Cost Level",
+                "Rate Category",
+                "Business Area",
+                "Project Budget",
             ]],
         ]
     },
