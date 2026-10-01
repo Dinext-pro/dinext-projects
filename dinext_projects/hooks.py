@@ -115,6 +115,8 @@ fixtures = [
                 "Rate Category",
                 "Business Area",
                 "Project Budget",
+                "Expense Claim",
+                "Expense Claim Type",
             ]],
         ]
     },

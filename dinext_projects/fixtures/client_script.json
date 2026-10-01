@@ -288,17 +288,6 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
-  "dt": "Expense Claim",
-  "enabled": 1,
-  "modified": "2025-11-25 10:04:47.125949",
-  "module": "Dinext Projects",
-  "name": "Expense_Claim_Auto_Approver",
-  "script": "frappe.ui.form.on('Expense Claim', {\r\n    project(frm) {\r\n        if (frm.doc.project && !frm.doc.expense_approver) {\r\n            frappe.call({\r\n                method: 'frappe.client.get',\r\n                args: {\r\n                    doctype: 'Project',\r\n                    name: frm.doc.project\r\n                },\r\n                callback: function(r) {\r\n                    if (r.message) {\r\n                        const project = r.message;\r\n                        const today = frappe.datetime.nowdate(); // Стандартный метод получения текущей даты\r\n                        \r\n                        // Ищем действующего руководителя проекта\r\n                        const manager = project.custom_ts_details.find(item => {\r\n                            if (item.pt_role === 'Руководитель проекта') {\r\n                                const fromValid = !item.pt_valid_from || item.pt_valid_from <= today;\r\n                                const toValid = !item.pt_valid_for || item.pt_valid_for >= today;\r\n                                return fromValid && toValid;\r\n                            }\r\n                            return false;\r\n                        });\r\n                        \r\n                        if (manager) {\r\n                            frm.set_value('expense_approver', manager.pt_participant);\r\n                            frappe.show_alert({\r\n                                message: __('Действующий руководитель проекта назначен согласующим'),\r\n                                indicator: 'green'\r\n                            }, 3);\r\n                        }\r\n                    }\r\n                }\r\n            });\r\n        }\r\n    }\r\n});\r\n\r\n",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
   "dt": "Project",
   "enabled": 1,
   "modified": "2025-11-25 10:05:33.463295",
