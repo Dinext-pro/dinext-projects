@@ -8,6 +8,8 @@
  "field_order": [
   "contact",
   "project_role",
+  "influence",
+  "interest",
   "comments"
  ],
  "fields": [
@@ -25,6 +27,24 @@
    "in_list_view": 1,
    "label": "Project Role",
    "options": "Project Role"
+  },
+  {
+   "columns": 1,
+   "description": "1–10",
+   "fieldname": "influence",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Influence",
+   "non_negative": 1
+  },
+  {
+   "columns": 1,
+   "description": "1–10",
+   "fieldname": "interest",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Interest",
+   "non_negative": 1
   },
   {
    "fieldname": "comments",
