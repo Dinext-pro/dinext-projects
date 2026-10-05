@@ -222,7 +222,9 @@ required_apps = ["dinext_common", "doctype_permission", "erpnext"]
 
 # include js in doctype views
 # Work Efforts UI → project_workload_assignment (ISS-2026-00002)
-# doctype_js = {}
+doctype_js = {
+	"Project": "public/js/project_stakeholder_matrix.js",
+}
 doctype_list_js = {"Project": "public/js/project_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}

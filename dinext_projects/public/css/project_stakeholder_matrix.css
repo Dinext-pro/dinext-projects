@@ -1,0 +1,5 @@
+/* Height matches HOST_HEIGHT in project_stakeholder_matrix.js. */
+.stakeholder-matrix-host {
+	width: 100%;
+	height: 480px;
+}
