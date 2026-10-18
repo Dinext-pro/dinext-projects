@@ -20,11 +20,12 @@ from dinext_projects.application_for_leave import (
 class LeaveDocument(frappe._dict):
 	def __init__(self, **values):
 		super().__init__(values)
-		self.clear_calls = 0
+		self.set_calls = []
 
-	def clear(self, fieldname: str) -> None:
-		self.clear_calls += 1
-		self[fieldname] = []
+	def set(self, fieldname: str, value) -> None:
+		recorded = list(value) if isinstance(value, list) else value
+		self.set_calls.append((fieldname, recorded))
+		self[fieldname] = value
 
 	def append(self, fieldname: str, value: dict) -> None:
 		self.setdefault(fieldname, []).append(frappe._dict(value))
@@ -249,7 +250,7 @@ class TestApplicationForLeave(TestCase):
 		):
 			rebuild_user_projects(doc)
 
-		self.assertEqual(doc.clear_calls, 1)
+		self.assertEqual(doc.set_calls, [("user_projects", [])])
 		self.assertEqual(
 			[row.project for row in doc.user_projects],
 			["PROJ-1", "PROJ-2"],

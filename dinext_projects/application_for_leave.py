@@ -191,7 +191,7 @@ def rebuild_user_projects(doc: Document) -> None:
 		):
 			project_names.add(project.name)
 
-	doc.clear("user_projects")
+	doc.set("user_projects", [])
 	for project_name in sorted(project_names):
 		doc.append("user_projects", {"project": project_name})
 
