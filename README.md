@@ -1,116 +1,118 @@
+[Русский](README.ru.md)
+
 # Dinext Projects
 
-`dinext_projects` — Frappe-приложение для проектного управления в экосистеме Dinext.
-Оно устанавливается в существующий [Bench](https://github.com/frappe/bench)
-с Frappe и ERPNext и добавляет модуль **Dinext Projects**: проектные команды,
-роли, портфели, встречи, расширения Project/Task/Issue, workflow проектов,
-Desk-workspaces, отчёты и уведомления.
+`dinext_projects` is a Frappe application for project management in the Dinext ecosystem.
+It is installed into an existing [Bench](https://github.com/frappe/bench)
+with Frappe and ERPNext and adds the **Dinext Projects** module: project teams,
+roles, portfolios, meetings, Project/Task/Issue extensions, project workflows,
+Desk workspaces, reports and notifications.
 
-Приложение является metadata-driven: большая часть поведения хранится в
-экспортируемых Frappe fixtures (DocType, Custom Field, Client Script, Server
-Script, Workflow и других метаданных). Python-код используется для контроллеров
-DocType, установки и миграционных патчей.
+The application is metadata-driven: most behavior is stored in
+exported Frappe fixtures (DocType, Custom Field, Client Script, Server
+Script, Workflow and other metadata). Python code is used for
+DocType controllers, installation and migration patches.
 
-## Содержание
+## Contents
 
-- [Обзор и границы ответственности](#обзор-и-границы-ответственности)
-- [Возможности](#возможности)
-- [Установка](#установка)
-- [Использование](#использование)
-- [Технологии](#технологии)
-- [Конфигурация и fixtures](#конфигурация-и-fixtures)
-- [Требования](#требования)
-- [Разработка и сопровождение](#разработка-и-сопровождение)
-- [Документация](#документация)
-- [История изменений](#история-изменений)
-- [Структура репозитория](#структура-репозитория)
-- [Схема взаимодействия](#схема-взаимодействия)
-- [Лицензия](#лицензия)
+- [Overview and responsibilities](#-overview-and-responsibilities)
+- [Features](#-features)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Technologies](#-technologies)
+- [Configuration and fixtures](#-configuration-and-fixtures)
+- [Requirements](#-requirements)
+- [Development and maintenance](#-development-and-maintenance)
+- [Documentation](#-documentation)
+- [Changelog](#-changelog)
+- [Repository structure](#-repository-structure)
+- [Interaction diagram](#-interaction-diagram)
+- [License](#-license)
 
-## 📖 Обзор и границы ответственности
+## 📖 Overview and responsibilities
 
-Приложение сохраняет PM-контур: состав проектной команды, роли и портфели,
-Meeting Notes и Assignments, расширения Project/Task/Issue, проектный workflow
-и связанную Desk-аналитику.
+The application retains the project management domain: project team membership, roles and portfolios,
+Meeting Notes and Assignments, Project/Task/Issue extensions, project workflows
+and related Desk analytics.
 
-В экосистеме Dinext функциональность разделена между приложениями:
+Functionality is divided among applications in the Dinext ecosystem:
 
-| Приложение | Ответственность |
+| Application | Responsibility |
 | --- | --- |
-| `dinext_projects` | Project Team, Project Role, контакты и портфели, встречи, PM-расширения Project/Task/Issue, workflow Project, роль `Dinext_Worker`. |
-| `dinext_timesheets` | Учёт времени: `Worker`, `Working Hours On Date`, UT/AFL, `Project.custom_working_hours_on_date`, workspace «Мои Таймшиты» и роли `Dinext_UT*`. |
-| `dinext_projects_pl` | Ставки, ЦФО, схемы оплаты, P&L, финансовые поля Project/Task, роли `Dinext_Financier`, `Dinext_Fin_Dir`, `Dinext_Budget_Approver`, workspaces «Фин. Контроль» и «Аналитика», Number Card «Коммерческие проекты» и rate-control reports. |
-| `project_workload_assignment` | Плановые трудозатраты, `Project Work Efforts*`, `Limit Control`, utilisation tables, соответствующие UI и отчёты. |
-| `dinext_deputies` | Владеет DocType Permission для `User Delegate`. |
+| `dinext_projects` | Project Team, Project Role, contacts and portfolios, meetings, PM extensions for Project/Task/Issue, Project workflow, the `Dinext_Worker` role. |
+| `dinext_timesheets` | Time tracking: `Worker`, `Working Hours On Date`, UT/AFL, `Project.custom_working_hours_on_date`, the My Timesheets workspace and `Dinext_UT*` roles. |
+| `dinext_projects_pl` | Rates, cost centers, payment schemes, P&L, Project/Task financial fields, the `Dinext_Financier`, `Dinext_Fin_Dir`, `Dinext_Budget_Approver` roles, Financial Control and Analytics workspaces, the Commercial Projects Number Card and rate-control reports. |
+| `project_workload_assignment` | Planned work effort, `Project Work Efforts*`, `Limit Control`, utilization tables, and related UI and reports. |
+| `dinext_deputies` | Owns DocType Permission for `User Delegate`. |
 
-`hooks.py` задаёт обязательные для установки приложения `dinext_common`,
-`doctype_permission` и `erpnext`. В эксплуатационной документации ранее
-указывался порядок установки полного проектного контура:
+`hooks.py` declares the required applications `dinext_common`,
+`doctype_permission` and `erpnext`. Earlier operational documentation
+specified the following installation order for the full project domain:
 `dinext_projects` → `dinext_projects_pl` → `doctype_permission` →
-`dinext_timesheets` → `project_workload_assignment`. Перед установкой на новый
-сайт сверяйте этот порядок с версиями и зависимостями конкретного окружения.
+`dinext_timesheets` → `project_workload_assignment`. Before installing on a new
+site, check this order against the versions and dependencies of the actual environment.
 
-## ✨ Возможности
+## ✨ Features
 
-### Проекты, команды и справочники
+### Projects, teams and reference data
 
-- Расширения стандартных Project, Task и Issue через экспортируемые Custom Field,
-  Client Script, Server Script и Property Setter.
-- **Project Team Details**: проектные роли, участники, периоды действия, флаги
-  согласования и уведомлений.
-- **Project Role**, **Project Contact List** и **Project Portfolio** — роли,
-  контакты и портфель проектов.
-- **Meeting Notes** и **Assignments** — протоколы встреч, решения и поручения;
-  автоматическое создание Task и ToDo настраивается Server Script.
-- **Projects Email Mapping** и **Setting Table** — привязка входящей
-  коммуникации к клиенту и проекту, а также настройки.
+- Extensions to standard Project, Task and Issue through exported Custom Field,
+  Client Script, Server Script and Property Setter records.
+- **Project Team Details**: project roles, participants, effective periods, approval
+  and notification flags.
+- **Project Role**, **Project Contact List** and **Project Portfolio** — roles,
+  contacts and the project portfolio.
+- **Meeting Notes** and **Assignments** — meeting minutes, decisions and action items;
+  automatic Task and ToDo creation is configured through Server Script.
+- **Projects Email Mapping** and **Setting Table** — mapping incoming
+  communications to a customer and project, plus settings.
 - **Issue Identification**, **Issue Estimations**, **Issue Participants**,
   **Project Issue Setting**, **Task Relation**, **Type Of Meeting**,
-  **Business Area**, **Tax Id Code Type** и другие вспомогательные сущности.
+  **Business Area**, **Tax Id Code Type** and other supporting entities.
 
-### Согласования и автоматизации
+### Approvals and automation
 
-- Project workflow и связанные Workflow State / Workflow Action Master
-  экспортируются этим приложением.
-- **Workflow Task** описывает задачи согласования: текущее и следующее
-  состояние, действие, назначенного пользователя и доступные переходы.
-- Уведомления **«Требуется согласование»** и **«Требуется исправление»**.
-- Автозаполнение Issue по входящей коммуникации, создание Task из Meeting Notes,
-  зеркалирование тегов Issue–Task и другие сценарии задаются Server Script в
+- Project workflow and related Workflow State / Workflow Action Master records
+  are exported by this application.
+- **Workflow Task** describes approval tasks: current and next
+  states, action, assigned user and available transitions.
+- **Approval Required** and **Correction Required** notifications.
+- Populating Issue from incoming communications, creating Task from Meeting Notes,
+  mirroring Issue–Task tags and other workflows are configured by Server Script in
   fixtures.
 
-Workflow для Expense Claim, Purchase Invoice и Sales Invoice, а также разрешения
-для Sales Invoice, Purchase Invoice и GL Entry относятся к
-`dinext_projects_pl`, а не к этому приложению.
+Workflows for Expense Claim, Purchase Invoice and Sales Invoice, and permissions
+for Sales Invoice, Purchase Invoice and GL Entry belong to
+`dinext_projects_pl`, rather than this application.
 
-### Workspaces, отчёты и виджеты
+### Workspaces, reports and widgets
 
-- Workspaces: **«Мои проекты»**, **«Мои задачи»** и **«DiLike»**.
-- Report Builder отчёт **«Статус по всем ком. проектам»**.
-- 35 Number Cards для статусов проектов, задач, Issue, согласований и DiLike.
-- Два Notification для ToDo присутствуют в module JSON, но в текущем состоянии
-  выключены (`enabled: 0`).
-- Workspaces, отчёт, Number Cards и Notifications поставляются как module JSON;
-  они не входят в список `fixtures` из `hooks.py`.
-- Локальных определений Dashboard Chart в репозитории нет.
-- Workspace **«Аналитика»**, Number Card **«Коммерческие проекты»**, финансовые
-  charts/cards и отчёты контроля ставок находятся в `dinext_projects_pl`;
-  таймшитные и utilisation-отчёты — в `dinext_timesheets` и
+- Workspaces: **My Projects**, **My Tasks** and **DiLike**.
+- The **Status of All Commercial Projects** Report Builder report.
+- 35 Number Cards for project, task, Issue, approval and DiLike statuses.
+- Two ToDo Notifications exist in the module JSON but are currently
+  disabled (`enabled: 0`).
+- Workspaces, the report, Number Cards and Notifications are supplied as module JSON;
+  they are not included in the `fixtures` list in `hooks.py`.
+- There are no local Dashboard Chart definitions in the repository.
+- The **Analytics** workspace, **Commercial Projects** Number Card, financial
+  charts/cards and rate-control reports are in `dinext_projects_pl`;
+  timesheet and utilization reports are in `dinext_timesheets` and
   `project_workload_assignment`.
 
-### Интеграции с соседними контурами
+### Integrations with related domains
 
-Поля `pt_worker`, `pt_cost_level` и `pt_category` у `Project Team Details`
-сознательно принадлежат соседним приложениям: соответственно
-`dinext_timesheets` и `dinext_projects_pl`. Миграционный патч этого приложения
-снимает его владение этими полями, не удаляя колонки базы данных. При наличии
-`dinext_timesheets` интерфейс может использовать `pt_worker` как основной выбор
-участника и синхронизировать `Worker.wuser` с `pt_participant`.
+The `pt_worker`, `pt_cost_level` and `pt_category` fields on `Project Team Details`
+are deliberately owned by related applications: respectively,
+`dinext_timesheets` and `dinext_projects_pl`. This application's migration patch
+relinquishes ownership of these fields without deleting the database columns. When
+`dinext_timesheets` is present, the interface can use `pt_worker` as the primary
+participant selection and synchronize `Worker.wuser` with `pt_participant`.
 
-## 🚀 Установка
+## 🚀 Installation
 
-Приложение устанавливается в существующий Bench с Frappe и, как правило,
-ERPNext. Используйте фактический Git URL и ветку вашей поставки.
+The application is installed into an existing Bench with Frappe and usually
+ERPNext. Use the actual Git URL and branch of your distribution.
 
 ```bash
 cd /path/to/your/bench
@@ -119,91 +121,90 @@ bench --site your-site.local install-app dinext_projects
 bench --site your-site.local migrate
 ```
 
-При изменениях JavaScript, CSS или метаданных, затрагивающих Desk, при
-необходимости пересоберите assets и очистите кэш:
+After changes to JavaScript, CSS or metadata affecting Desk, rebuild
+assets and clear the cache if necessary:
 
 ```bash
 bench build --app dinext_projects
 bench --site your-site.local clear-cache
 ```
 
-Для локальной разработки приложение можно клонировать в
-`apps/dinext_projects` и подключить как локальное app.
+For local development, the application can be cloned into
+`apps/dinext_projects` and connected as a local app.
 
-## 🛠️ Использование
+## 🛠️ Usage
 
-После установки в Desk доступен модуль **Dinext Projects**.
+After installation, the **Dinext Projects** module is available in Desk.
 
-- **Мои проекты** — проекты по типам, статусам и клиентам, справочники и отчёты.
-- **Мои задачи** — задачи текущего пользователя.
-- Workspace **«Аналитика»** (вложенный под «Мои проекты») появляется после
-  установки `dinext_projects_pl`.
-- Workflow-задачи выполняются в стандартных формах Frappe посредством workflow и
+- **My Projects** — projects by type, status and customer, reference data and reports.
+- **My Tasks** — the current user's tasks.
+- The **Analytics** workspace (nested under My Projects) appears after
+  installing `dinext_projects_pl`.
+- Workflow tasks are performed in standard Frappe forms through workflows and
   Client/Server Script.
-- Учёт времени и workspace **«Мои таймшиты»** появляются после установки
+- Time tracking and the **My Timesheets** workspace appear after installing
   `dinext_timesheets`.
 
-## 📦 Технологии
+## 📦 Technologies
 
-- **Backend:** Python 3.10+, Frappe Framework и ERPNext.
-- **Frontend:** Frappe Desk, JavaScript в Client Script и в файлах отчётов.
-- **Данные:** MariaDB или PostgreSQL через Frappe ORM.
-- **Сборка пакета:** `flit_core`.
-- **Качество кода:** pre-commit, ruff, Prettier и ESLint.
+- **Backend:** Python 3.10+, Frappe Framework and ERPNext.
+- **Frontend:** Frappe Desk, JavaScript in Client Scripts and report files.
+- **Data:** MariaDB or PostgreSQL through the Frappe ORM.
+- **Package build:** `flit_core`.
+- **Code quality:** pre-commit, ruff, Prettier and ESLint.
 
-## 🔧 Конфигурация и fixtures
+## 🔧 Configuration and fixtures
 
-Главная конфигурация находится в `dinext_projects/hooks.py`.
+The main configuration is in `dinext_projects/hooks.py`.
 
-- `fixtures` экспортируют Role Profile, Project Type, Issue Priority, Custom
+- `fixtures` export Role Profile, Project Type, Issue Priority, Custom
   HTML Block, Issue Type, Task Type, Custom Field, Property Setter, Client
-  Script, Server Script, Web Page, роли, Custom DocPerm, Project workflow,
-  Workflow State, Workflow Action Master и часть DocType Permission.
-- Module JSON под `dinext_projects/dinext_projects/` поставляют custom DocType,
-  workspaces, Report Builder отчёт, Number Cards и Notifications отдельно от
+  Script, Server Script, Web Page, roles, Custom DocPerm, Project workflow,
+  Workflow State, Workflow Action Master and some DocType Permission records.
+- Module JSON under `dinext_projects/dinext_projects/` supplies custom DocTypes,
+  workspaces, the Report Builder report, Number Cards and Notifications separately from
   fixture export.
-- `after_install` очищает стандартные ERPNext значения Project Type и Issue
-  Priority перед импортом значений приложения.
-- Список required apps: `dinext_common`, `doctype_permission`, `erpnext`.
-- На уровне app не включены глобальные JS/CSS, scheduler events, doc events или
-  overrides: соответствующие примеры в `hooks.py` закомментированы.
-- Переменные окружения и серверные параметры задаются стандартным механизмом
-  Bench/Frappe; этот репозиторий не объявляет собственных переменных окружения.
+- `after_install` clears the standard ERPNext Project Type and Issue
+  Priority values before importing the application's values.
+- Required apps: `dinext_common`, `doctype_permission`, `erpnext`.
+- Global JS/CSS, scheduler events, doc events and overrides are not enabled
+  at app level: the corresponding examples in `hooks.py` are commented out.
+- Environment variables and server parameters use the standard
+  Bench/Frappe mechanism; this repository declares no environment variables of its own.
 
-После изменения объектов, управляемых Frappe (например, Custom Field, Client
-Script, Server Script или Workflow), экспортируйте fixtures из Bench и добавьте
-обновлённые JSON в коммит:
+After changing Frappe-managed objects (for example, Custom Field, Client
+Script, Server Script or Workflow), export fixtures from Bench and include
+the updated JSON in the commit:
 
 ```bash
 bench --site your-site.local export-fixtures
 ```
 
-Изменения в UI без последующего экспорта fixtures создают расхождение между
-сайтом и репозиторием.
+UI changes without a subsequent fixture export create a discrepancy between
+the site and the repository.
 
-## ✅ Требования
+## ✅ Requirements
 
-- [Bench](https://github.com/frappe/bench) с Frappe и ERPNext.
-- Python **>= 3.10** (закреплено в `pyproject.toml`).
-- Совместимые версии Frappe/ERPNext для используемой поставки Dinext.
-- Для разработки JS/CSS: Node.js и yarn, используемые вашим Bench.
-- Для локальных проверок: pre-commit.
+- [Bench](https://github.com/frappe/bench) with Frappe and ERPNext.
+- Python **>= 3.10** (declared in `pyproject.toml`).
+- Frappe/ERPNext versions compatible with your Dinext distribution.
+- For JS/CSS development: the Node.js and yarn versions used by your Bench.
+- For local checks: pre-commit.
 
-## 🤝 Разработка и сопровождение
+## 🤝 Development and maintenance
 
-### Рабочий процесс
+### Workflow
 
-1. Создайте отдельную ветку.
-2. Для любого изменения сначала пройдите обязательный OpenSpec lifecycle из
-   [AGENTS.md](AGENTS.md); proposal, design, tasks и specs хранятся в central
-   Store `dinext-docs`.
-3. Вносите изменения в код и metadata только в соответствии с готовыми задачами
+1. Create a separate branch.
+2. For any change, first follow the mandatory OpenSpec lifecycle in
+   [AGENTS.md](AGENTS.md).
+3. Make code and metadata changes only in accordance with the change's ready
    change.
-4. При изменении metadata экспортируйте fixtures.
-5. Запустите проверки и обновите README, если меняется его фактическое
-   содержание.
+4. Export fixtures when changing metadata.
+5. Run checks and update the README when its factual content
+   changes.
 
-### Локальные проверки
+### Local checks
 
 ```bash
 cd apps/dinext_projects
@@ -211,97 +212,92 @@ pre-commit install
 pre-commit run --all-files
 ```
 
-Настроенные hooks проверяют Python (`ruff` и форматирование), JavaScript
-(`eslint`), JavaScript/Vue/SCSS (`prettier`), а также пробелы, merge conflict
-маркеры, AST, JSON, TOML, YAML и debug-выражения.
+The configured hooks check Python (`ruff` and formatting), JavaScript
+(`eslint`), JavaScript/Vue/SCSS (`prettier`), plus whitespace, merge conflict
+markers, AST, JSON, TOML, YAML and debug statements.
 
-### Где искать логику
+### Where to find logic
 
-- `fixtures/` — основная часть поведения и экспортируемых метаданных.
-- `dinext_projects/doctype/` — JSON-описания и контроллеры custom DocType.
-- `dinext_projects/report/` — в текущей версии единственный Report Builder JSON
-  «Статус по всем ком. проектам»; Script Report при добавлении будет содержать
-  Python для колонок/данных и JavaScript для фильтров.
-- `dinext_projects/workspace/` — конфигурация Desk-workspaces.
-- `dinext_projects/number_card/` — KPI-карточки; локальных определений
-  Dashboard Chart нет.
-- `dinext_projects/notification/` — ExampleCustomer08 уведомлений и их Python-контекст;
-  текущие два Notification отключены.
-- `install.py` — обработчик `after_install`.
-- `patches/` — миграционные патчи.
+- `fixtures/` — most behavior and exported metadata.
+- `dinext_projects/doctype/` — custom DocType JSON definitions and controllers.
+- `dinext_projects/report/` — currently the single Report Builder JSON
+  Status of All Commercial Projects; a Script Report, if added, will contain
+  Python for columns/data and JavaScript for filters.
+- `dinext_projects/workspace/` — Desk workspace configuration.
+- `dinext_projects/number_card/` — KPI cards; there are no local
+  Dashboard Chart definitions.
+- `dinext_projects/notification/` — notification ExampleCustomer08 and their Python context;
+  the current two Notifications are disabled.
+- `install.py` — the `after_install` handler.
+- `patches/` — migration patches.
 
-Не используйте README как замену инженерному контракту: navigation stub
-[AGENTS.md](AGENTS.md) ведёт к каноническим правилам Frappe и Dinext.
+The README does not replace the engineering contract: the navigation stub
+[AGENTS.md](AGENTS.md) points to the canonical Frappe and Dinext rules.
 
-## 📄 Документация
+## 📄 Documentation
 
-- [AGENTS.md](AGENTS.md) — вход в central Dinext guidance и обязательный
+- [AGENTS.md](AGENTS.md) — entry point for central Dinext guidance and the mandatory
   OpenSpec workflow.
-- [Frappe Framework](https://frappeframework.com/docs) — документация платформы.
-- [Bench](https://github.com/frappe/bench) — установка и управление окружением.
+- [Frappe Framework](https://frappeframework.com/docs) — platform documentation.
+- [Bench](https://github.com/frappe/bench) — installation and environment management.
 
-## ❤️ Благодарности
+## 📝 Changelog
 
-- [Frappe Technologies](https://frappe.io/) — Frappe и экосистема.
-- Dinext — разработка и поддержка приложения (`info@dinext.ru`).
+A brief historical summary from the commit history:
 
-## 📝 История изменений
-
-Краткая историческая сводка по commit history:
-
-- Контуры были разделены: timesheets — в `dinext_timesheets`, финансы — в
-  `dinext_projects_pl`, трудозатраты и utilisation — в
-  `project_workload_assignment`; `dinext_projects` оставляет PM-функции и
-  скорректированные fixture filters.
-- Удалены устаревшие файлы и конфигурации, связанные с бюджетом проектов,
-  риск-менеджментом (категории, уровни, воздействия, стратегии, приоритеты и
-  вероятности), назначением рабочей нагрузки, а также устаревшие Server Script
-  и Client Script.
-- Дорабатывались task dashboard, Project-planning UI, P&L-отчёты и стили
-  элементов бюджета; для действий P&L добавлялось выпадающее меню.
-- Обновлялись роли и права, включая возврат `Dinext_Support_Dispatcher`,
-  Custom Field, fixtures, notifications, workspace DiLike и метаданные модуля;
-  менялись видимость полей и название модуля (Dinext Risk Management → Dinext
+- Domains were separated: timesheets into `dinext_timesheets`, finance into
+  `dinext_projects_pl`, work effort and utilization into
+  `project_workload_assignment`; `dinext_projects` retains PM functionality and
+  adjusted fixture filters.
+- Removed obsolete files and configurations related to project budgeting,
+  risk management (categories, levels, impacts, strategies, priorities and
+  probabilities), workload assignment, and obsolete Server Script
+  and Client Script records.
+- Refined task dashboards, Project planning UI, P&L reports and budget element
+  styles; added a dropdown menu for P&L actions.
+- Updated roles and permissions, including restoring `Dinext_Support_Dispatcher`,
+  Custom Fields, fixtures, notifications, the DiLike workspace and module metadata;
+  changed field visibility and the module name (Dinext Risk Management → Dinext
   Projects).
-- Удалены неиспользуемые изображения, темы, настройки навигации, CSS и
-  JS-библиотеки (включая Gantt, ECharts, Frappe DataTable и HyperList).
+- Removed unused images, themes, navigation settings, CSS and
+  JS libraries (including Gantt, ECharts, Frappe DataTable and HyperList).
 
-За полным журналом обращайтесь к истории Git конкретной ветки.
+For the full log, consult the Git history of the specific branch.
 
-## 🗂️ Структура репозитория
+## 🗂️ Repository structure
 
 ```text
 dinext_projects/
-├── AGENTS.md                         # Navigation stub → central dinext-docs guidance
-├── README.md                         # Этот документ
-├── license.txt                       # Лицензия GPL-3
-├── pyproject.toml                    # Метаданные пакета, Python и ruff
-├── .pre-commit-config.yaml           # Локальные проверки
-├── openspec/config.yaml              # Указатель на Store dinext-docs
+├── AGENTS.md                         # Agent instructions
+├── README.md                         # This document
+├── license.txt                       # GPL-3 license
+├── pyproject.toml                    # Package metadata, Python and ruff
+├── .pre-commit-config.yaml           # Local checks
+├── openspec/config.yaml              # OpenSpec configuration
 └── dinext_projects/
-    ├── __init__.py                   # Версия приложения
-    ├── hooks.py                      # App configuration, dependencies и fixtures
+    ├── __init__.py                   # Application version
+    ├── hooks.py                      # App configuration, dependencies and fixtures
     ├── install.py                    # after_install hook
-    ├── modules.txt                   # Имя Desk-модуля
-    ├── patches.txt                   # Список миграционных патчей
-    ├── patches/                      # Реализация миграций
-    ├── fixtures/                     # Экспортированные Frappe metadata (JSON)
-    ├── translations/ru.csv           # Русские переводы
-    ├── public/                       # Public assets приложения
+    ├── modules.txt                   # Desk module name
+    ├── patches.txt                   # Migration patch list
+    ├── patches/                      # Migration implementations
+    ├── fixtures/                     # Exported Frappe metadata (JSON)
+    ├── translations/ru.csv           # Russian translations
+    ├── public/                       # Application public assets
     ├── templates/                    # Frappe templates
     └── dinext_projects/
         ├── doctype/                  # Custom DocType: JSON, controllers, tests, JS
         ├── report/                   # Frappe reports
-        ├── workspace/                # Мои проекты, Мои задачи, DiLike
-        ├── number_card/              # KPI-карточки PM/Issue/DiLike
-        └── notification/             # Notifications и Python-контекст
+        ├── workspace/                # My Projects, My Tasks, DiLike
+        ├── number_card/              # PM/Issue/DiLike KPI cards
+        └── notification/             # Notifications and Python context
 ```
 
-Соседние приложения предоставляют таймшитные DocType и workspace
-«Мои таймшиты», финансовые P&L-объекты и планирование нагрузки; они не входят в
-это дерево.
+Related applications provide timesheet DocTypes and the My Timesheets
+workspace, financial P&L objects and workload planning; these are not included
+in this tree.
 
-## 🔗 Схема взаимодействия
+## 🔗 Interaction diagram
 
 ```mermaid
 flowchart LR
@@ -320,11 +316,11 @@ flowchart LR
   PM -. workload boundaries .-> Workload[project_workload_assignment]
 ```
 
-Bench загружает `hooks.py`; fixtures формируют Frappe metadata и сценарии Desk,
-а `after_install` и миграционные патчи поддерживают корректное состояние сайта.
-Смежные контуры остаются в отдельных приложениях и интегрируются через
-согласованные Frappe-сущности.
+Bench loads `hooks.py`; fixtures form the Frappe metadata and Desk workflows,
+while `after_install` and migration patches maintain the site's correct state.
+Related domains remain in separate applications and integrate through
+agreed Frappe entities.
 
-## 📜 Лицензия
+## 📜 License
 
 [GNU GPL v3](license.txt).
