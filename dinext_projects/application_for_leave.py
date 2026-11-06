@@ -9,9 +9,9 @@ from frappe.model.document import Document
 from frappe.utils import flt, getdate
 
 AFL_WORKFLOW = "AFL Workflow"
-AFL_PENDING_STATE = "На согласовании"
-AFL_REJECTION_ACTION = "Не согласовано"
-AFL_REJECTION_STATE = "Отклонено"
+AFL_PENDING_STATE = "Pending Approval"
+AFL_REJECTION_ACTION = "Reject"
+AFL_REJECTION_STATE = "Rejected"
 AFL_CORRECTION_TEMPLATE = "Dinext Workflow Correction"
 
 _AFL_SERVER_SCRIPTS = ("AFL_Calculate_Hours", "AFL_Projects")
@@ -238,6 +238,8 @@ def configure_application_for_leave() -> None:
 		ignore_permissions=True,
 		ignore_missing=True,
 	)
+	if frappe.db.exists("Client Script", "ApFL_Status_Color"):
+		frappe.db.set_value("Client Script", "ApFL_Status_Color", "enabled", 0, update_modified=False)
 	frappe.clear_cache()
 
 

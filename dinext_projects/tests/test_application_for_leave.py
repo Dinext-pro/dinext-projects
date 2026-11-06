@@ -196,7 +196,7 @@ class TestApplicationForLeave(TestCase):
 
 	def test_rebuilds_projects_once_in_deterministic_order(self):
 		doc = LeaveDocument(
-			status="На согласовании",
+			status="Pending Approval",
 			lauser="worker@example.com",
 			alfrom_date="2026-01-05",
 			alto_date="2026-01-08",
@@ -260,13 +260,13 @@ class TestApplicationForLeave(TestCase):
 		workflow = frappe._dict(
 			transitions=[
 				frappe._dict(
-					state="На согласовании",
+					state="Pending Approval",
 					action=AFL_REJECTION_ACTION,
 					custom_comment_is_required=0,
 				),
 				frappe._dict(
-					state="На согласовании",
-					action="Согласовано",
+					state="Pending Approval",
+					action="Approve",
 					custom_comment_is_required=0,
 				),
 			],
