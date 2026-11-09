@@ -1,4 +1,5 @@
 app_name = "dinext_projects"
+workflow_deadline_extensions = ["dinext_projects.workflow_deadlines.get_extensions"]
 app_title = "Dinext Projects"
 app_publisher = "Dinext"
 app_description = "Dinext Projects"
