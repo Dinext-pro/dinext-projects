@@ -7,5 +7,8 @@
   "skip_test_records": true,
   "post_install": [
     "dinext_timesheets"
-  ]
+  ],
+  "dependency_revisions": {
+    "dinext_common": "cbb6245afd43adc818eb2bbddff8cd98e4682df0"
+  }
 }

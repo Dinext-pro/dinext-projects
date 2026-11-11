@@ -43,8 +43,8 @@ HUB_ITEMS = (
 )
 
 HUB_SECTIONS = (
-	{"section": "My Work", "list_limit": 5},
-	{"section": "Project Management", "list_limit": 8},
+	{"section": "My Work", "list_limit": 5, "card_columns": 3},
+	{"section": "Project Management", "list_limit": 8, "card_columns": 4},
 )
 
 HUB_DOCTYPE_ITEMS = (
@@ -123,4 +123,13 @@ def register_dinext_hub_items() -> None:
 
 	register_hub_items(HUB_ITEMS, source_app=APP_NAME)
 	register_hub_sections(HUB_SECTIONS, source_app=APP_NAME)
-	register_hub_doctype_items(HUB_DOCTYPE_ITEMS, source_app=APP_NAME)
+	items = []
+	for item in HUB_DOCTYPE_ITEMS:
+		if item["document_type"] == "Task":
+			item = {
+				**item,
+				"fallback_source_app": "dinext_kanban",
+				"fallback_defaults": {**item, "show_liked": 0},
+			}
+		items.append(item)
+	register_hub_doctype_items(items, source_app=APP_NAME)
