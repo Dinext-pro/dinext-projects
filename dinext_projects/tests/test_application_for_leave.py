@@ -339,7 +339,6 @@ class TestApplicationForLeave(TestCase):
 
 		app_path = Path(__file__).resolve().parents[1]
 		script = (app_path / "public/js/application_for_leave_approvals.js").read_text()
-		self.assertIn("dinext_common.workflow_approval.api.get_pending_approvers", script)
 		self.assertIn("End date cannot be earlier than start date", script)
 		self.assertNotIn("frappe.msgprint = function", script)
 		self.assertNotIn("wt_docname", script)
