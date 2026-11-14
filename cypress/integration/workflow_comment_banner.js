@@ -1,30 +1,41 @@
 Cypress.removeAllListeners("uncaught:exception");
-const helper = "dinext_common.tests.required_pending_ui";
-let fixture;
+const helper = "dinext_projects.tests.ui_test_helpers";
+const commentsBanner = ".form-message.dinext-workflow-comments";
+const pendingBanner = ".form-message.dinext-pending-approvers";
 
 context("Leave shared approval messages", () => {
+	let fixture;
+
 	before(() => {
-		cy.setCookie("sid", Cypress.env("sid"), { httpOnly: true });
-		cy.openDesk("/app");
-		cy.call(`${helper}.seed_workflow_comment_leave_cypress`, {})
-			.then((res) => { fixture = res.body.message; });
+		cy.login();
+		cy.openDesk();
+		cy.call(`${helper}.seed_workflow_comment_leave`, {}).its("body.message").then(data => { fixture = data; });
 	});
+
 	after(() => {
-		cy.setCookie("sid", Cypress.env("sid"), { httpOnly: true });
-		cy.openDesk("/app");
-		cy.call(`${helper}.cleanup_required_pending_cypress`, {});
+		cy.login();
+		cy.openDesk();
+		cy.call(`${helper}.cleanup_workflow_comment_leave`, {});
 	});
-	it("uses the shared comments and pending message without the legacy refresh exception", () => {
-		cy.login(fixture.viewer, fixture.password);
-		cy.openDesk(`/app/application-for-leave/${encodeURIComponent(fixture.leave)}`);
-		for (const theme of ["dark", "light"]) {
-			cy.window().then((win) => win.frappe.ui.set_theme(theme));
-			cy.get(".form-message.dinext-workflow-comments").should("have.length", 1)
-				.and("contain", fixture.required).and("contain", fixture.mixed);
-			cy.get(".form-message.dinext-pending-approvers").should("have.length", 1);
-			cy.get(".form-dashboard-section.dinext-pending-approvers").should("not.exist");
-			cy.window().then((win) => win.cur_frm.reload_doc());
-		}
-		cy.get(".form-message.dinext-workflow-comments").should("have.length", 1);
-	});
+
+	for (const language of ["en", "ru"]) {
+		it(`keeps the leave approval messages after refresh and a theme change in ${language}`, () => {
+			cy.login(fixture.viewers[language], fixture.password);
+			cy.openDesk(`/app/application-for-leave/${encodeURIComponent(fixture.leave)}`);
+			cy.window().its("frappe.boot.lang").should("eq", language);
+
+			for (const theme of ["dark", "light"]) {
+				cy.window().then(win => win.frappe.ui.set_theme(theme));
+				cy.document().its("documentElement").invoke("attr", "data-theme").should("eq", theme);
+				cy.get(commentsBanner).should("have.length", 1).and("be.visible");
+				for (const text of [...fixture.authors, ...fixture.comments]) {
+					cy.get(commentsBanner).should("contain.text", text);
+				}
+				cy.get(pendingBanner).should("have.length", 1).and("contain.text", fixture.pending);
+				cy.get(".form-dashboard-section.dinext-pending-approvers").should("not.exist");
+				cy.window().then(win => win.cur_frm.reload_doc());
+			}
+			cy.get(commentsBanner).should("have.length", 1);
+		});
+	}
 });
