@@ -6,12 +6,12 @@ from unittest import TestCase
 from unittest.mock import patch
 
 import frappe
+from frappe.core.doctype.server_script import server_script_utils
 
 from dinext_projects.application_for_leave import (
 	AFL_REJECTION_ACTION,
 	AFL_REJECTION_STATE,
 	calculate_total_hours,
-	configure_application_for_leave,
 	rebuild_user_projects,
 	validate_application_for_leave,
 )
@@ -32,6 +32,11 @@ class LeaveDocument(frappe._dict):
 
 
 class TestApplicationForLeave(TestCase):
+	def setUp(self):
+		legacy_scripts = patch.object(server_script_utils, "get_server_script_map", return_value={})
+		self.legacy_scripts = legacy_scripts.start()
+		self.addCleanup(legacy_scripts.stop)
+
 	def test_dates_are_required_and_ordered(self):
 		for values in (
 			{"alfrom_date": None, "alto_date": "2026-01-05"},
@@ -40,6 +45,53 @@ class TestApplicationForLeave(TestCase):
 		):
 			with self.subTest(values=values), self.assertRaises(frappe.ValidationError):
 				validate_application_for_leave(LeaveDocument(**values))
+
+	def test_requires_the_workers_user_before_calculating_hours_or_projects(self):
+		for worker_user in (None, "worker@example.com"):
+			with self.subTest(worker_user=worker_user):
+				doc = LeaveDocument(
+					alfrom_date="2026-01-05",
+					alto_date="2026-01-06",
+					alworker="WRKR-1",
+					lauser="other@example.com",
+					status="Pending Approval",
+					user_projects=[frappe._dict(project="BEFORE")],
+				)
+				worker = frappe._dict(wuser=worker_user, wholiday_list="RU Holidays")
+
+				def get_doc(doctype, name):
+					self.assertEqual((doctype, name), ("Worker", "WRKR-1"))
+					return worker
+
+				with (
+					patch("dinext_projects.application_for_leave.frappe.get_doc", side_effect=get_doc),
+					self.assertRaises(frappe.ValidationError),
+				):
+					validate_application_for_leave(doc)
+
+				self.assertIsNone(doc.al_total_hours)
+				self.assertEqual(doc.user_projects, [{"project": "BEFORE"}])
+
+	def test_legacy_before_save_scripts_keep_ownership_until_cutover(self):
+		self.legacy_scripts.return_value = {
+			"Application For Leave": {"Before Save": ["AFL_Calculate_Hours", "AFL_Projects"]},
+		}
+		doc = LeaveDocument(
+			doctype="Application For Leave",
+			alfrom_date="2026-01-05",
+			alto_date="2026-01-06",
+			alworker="WRKR-1",
+			status="Pending Approval",
+			al_total_hours=7,
+			user_projects=[frappe._dict(project="BEFORE")],
+		)
+		worker = frappe._dict(wuser="worker@example.com")
+		with patch("dinext_projects.application_for_leave.frappe.get_doc", return_value=worker):
+			validate_application_for_leave(doc)
+
+		self.assertEqual(doc.lauser, "worker@example.com")
+		self.assertEqual(doc.al_total_hours, 7)
+		self.assertEqual(doc.user_projects, [{"project": "BEFORE"}])
 
 	def test_calculates_hours_with_holidays_overrides_and_boundary_clamps(self):
 		doc = LeaveDocument(
@@ -256,7 +308,9 @@ class TestApplicationForLeave(TestCase):
 			["PROJ-1", "PROJ-2"],
 		)
 
-	def test_cutover_sets_rejection_contract_and_disables_only_afl_duplicates(self):
+	def test_ordinary_migration_configures_rejection_without_changing_scripts(self):
+		from dinext_projects.install import after_migrate
+
 		workflow = frappe._dict(
 			transitions=[
 				frappe._dict(
@@ -297,8 +351,9 @@ class TestApplicationForLeave(TestCase):
 			patch(
 				"dinext_projects.application_for_leave.frappe.clear_cache"
 			) as clear_cache,
+			patch("dinext_projects.setup.dinext_hub.register_dinext_hub_items"),
 		):
-			configure_application_for_leave()
+			after_migrate()
 
 		self.assertEqual(workflow.transitions[0].custom_comment_is_required, 1)
 		self.assertEqual(workflow.transitions[1].custom_comment_is_required, 0)
@@ -307,19 +362,8 @@ class TestApplicationForLeave(TestCase):
 			"Dinext Workflow Correction",
 		)
 		self.assertEqual(workflow.save_count, 1)
-		disabled_names = {
-			call.args[1]
-			for call in set_value.call_args_list
-			if call.args[0] == "Server Script"
-		}
-		self.assertEqual(disabled_names, {"AFL_Calculate_Hours", "AFL_Projects"})
-		delete_doc.assert_called_once_with(
-			"Client Script",
-			"AFL_Approval_V3",
-			force=True,
-			ignore_permissions=True,
-			ignore_missing=True,
-		)
+		set_value.assert_not_called()
+		delete_doc.assert_not_called()
 		clear_cache.assert_called_once_with()
 
 	def test_hook_owns_afl_validation(self):

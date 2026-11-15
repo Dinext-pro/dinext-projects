@@ -215,6 +215,7 @@
 "Pending approvers","Ожидаются согласования от",""
 "Worker is required.","Исполнитель обязателен.",""
 "Worker {0} has no user.","У исполнителя {0} не указан пользователь.",""
+"User must match the selected Worker's user.","Укажите пользователя, привязанного к выбранному исполнителю.",""
 "Worker {0} has no Holiday List.","У исполнителя {0} не указан календарь праздников.",""
 "Worker {0} has no Timesheet Template.","У исполнителя {0} не указан шаблон таймшита.",""
 "Timesheet Template {0} has no Working Hours On Date.","В шаблоне таймшита {0} не указан справочник дат исключений.",""

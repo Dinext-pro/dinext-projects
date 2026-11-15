@@ -63,6 +63,34 @@ class TestWorkingDayDeadlines(unittest.TestCase):
 			with self.assertRaises(ValueError):
 				working_day_slot(context)
 
+	def test_working_day_digest_rebases_to_current_calendar_in_recipient_timezone(self):
+		from dinext_projects.workflow_deadlines import working_day_slot
+
+		calendar = SimpleNamespace(
+			from_date="2027-01-01",
+			to_date="2027-12-31",
+			holidays=[SimpleNamespace(holiday_date="2027-01-02")],
+		)
+		context = {
+			"recipient": "manager",
+			"timezone_name": "Asia/Tokyo",
+			"interval": 2,
+			"anchor": datetime(2026, 12, 29, 12, tzinfo=timezone.utc),
+			"created_at": datetime(2026, 12, 29, tzinfo=timezone.utc),
+			"now": datetime(2026, 12, 31, 16, tzinfo=timezone.utc),
+			"send_times": (time(0, 30),),
+		}
+		with (
+			patch("dinext_projects.workflow_deadlines._worker", return_value=SimpleNamespace(wholiday_list="calendar")),
+			patch("dinext_projects.workflow_deadlines.frappe.get_doc", return_value=calendar),
+		):
+			self.assertEqual(working_day_slot(context), datetime(2026, 12, 31, 15, 30, tzinfo=timezone.utc))
+			context["now"] = datetime(2027, 1, 3, 16, tzinfo=timezone.utc)
+			self.assertEqual(working_day_slot(context), datetime(2027, 1, 3, 15, 30, tzinfo=timezone.utc))
+			context["now"] = datetime(2026, 12, 31, 14, tzinfo=timezone.utc)
+			with self.assertRaises(ValueError):
+				working_day_slot(context)
+
 	def test_manager_uses_latest_applicable_date_and_static_fallback(self):
 		from dinext_projects.workflow_deadlines import manager_on_date
 

@@ -75,12 +75,14 @@ def working_day_slot(context):
 	zone = get_timezone(context["timezone_name"])
 	anchor = context["anchor"].astimezone(zone)
 	now = context["now"].astimezone(zone)
+	if not calendar.from_date or not calendar.to_date:
+		raise ValueError(_("Worker calendar does not cover the notification schedule"))
 	first, last = getdate(calendar.from_date), getdate(calendar.to_date)
-	if not first <= anchor.date() <= now.date() <= last:
+	if not first <= now.date() <= last:
 		raise ValueError(_("Worker calendar does not cover the notification schedule"))
 	holidays = {getdate(row.holiday_date) for row in calendar.holidays}
 	interval = positive_amount(context["interval"], integer=True)
-	day = anchor.date()
+	day = max(anchor.date(), first)
 	index = 0
 	latest = None
 	while day <= now.date():

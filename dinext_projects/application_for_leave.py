@@ -5,6 +5,7 @@ from typing import Any
 
 import frappe
 from frappe import _
+from frappe.core.doctype.server_script import server_script_utils
 from frappe.model.document import Document
 from frappe.utils import flt, getdate
 
@@ -14,9 +15,6 @@ AFL_REJECTION_ACTION = "Reject"
 AFL_REJECTION_STATE = "Rejected"
 AFL_CORRECTION_TEMPLATE = "Dinext Workflow Correction"
 
-_AFL_SERVER_SCRIPTS = ("AFL_Calculate_Hours", "AFL_Projects")
-_AFL_CLIENT_SCRIPT = "AFL_Approval_V3"
-
 
 def validate_application_for_leave(
 	doc: Document,
@@ -24,22 +22,25 @@ def validate_application_for_leave(
 ) -> None:
 	"""Validate AFL business data before generic workflow snapshot hooks run."""
 	del method
-	calculate_total_hours(doc)
-	rebuild_user_projects(doc)
+	# Frappe runs any registered Before Save scripts after this hook.
+	legacy_scripts = ()
+	if not (frappe.flags.in_install or frappe.flags.in_migrate):
+		legacy_scripts = (
+			server_script_utils.get_server_script_map().get("Application For Leave", {}).get("Before Save", ())
+		)
+	if "AFL_Calculate_Hours" in legacy_scripts:
+		_leave_dates(doc)
+		_validated_worker(doc)
+	else:
+		calculate_total_hours(doc)
+	if "AFL_Projects" not in legacy_scripts:
+		rebuild_user_projects(doc)
 
 
 def calculate_total_hours(doc: Document) -> None:
 	start_date, end_date = _leave_dates(doc)
-
-	worker_name = doc.get("alworker")
-	if not worker_name:
-		frappe.throw(_("Worker is required."))
-
-	worker = frappe.get_doc("Worker", worker_name)
-	if not doc.get("lauser"):
-		doc.lauser = worker.get("wuser")
-	if not doc.get("lauser"):
-		frappe.throw(_("Worker {0} has no user.").format(frappe.bold(worker_name)))
+	worker = _validated_worker(doc)
+	worker_name = doc.alworker
 
 	holiday_list_name = worker.get("wholiday_list")
 	if not holiday_list_name:
@@ -197,7 +198,7 @@ def rebuild_user_projects(doc: Document) -> None:
 
 
 def configure_application_for_leave() -> None:
-	"""Make the typed AFL owner authoritative after fixtures are synchronized."""
+	"""Configure rejection after fixtures are synchronized."""
 	workflow_changed = False
 	if frappe.db.exists("Workflow", AFL_WORKFLOW):
 		workflow = frappe.get_doc("Workflow", AFL_WORKFLOW)
@@ -221,26 +222,22 @@ def configure_application_for_leave() -> None:
 		if workflow_changed:
 			workflow.save(ignore_permissions=True)
 
-	for script_name in _AFL_SERVER_SCRIPTS:
-		if frappe.db.exists("Server Script", script_name):
-			frappe.db.set_value(
-				"Server Script",
-				script_name,
-				"disabled",
-				1,
-				update_modified=False,
-			)
-
-	frappe.delete_doc(
-		"Client Script",
-		_AFL_CLIENT_SCRIPT,
-		force=True,
-		ignore_permissions=True,
-		ignore_missing=True,
-	)
-	if frappe.db.exists("Client Script", "ApFL_Status_Color"):
-		frappe.db.set_value("Client Script", "ApFL_Status_Color", "enabled", 0, update_modified=False)
 	frappe.clear_cache()
+
+
+def _validated_worker(doc: Document) -> Document:
+	worker_name = doc.get("alworker")
+	if not worker_name:
+		frappe.throw(_("Worker is required."))
+
+	worker = frappe.get_doc("Worker", worker_name)
+	worker_user = worker.get("wuser")
+	if not worker_user:
+		frappe.throw(_("Worker {0} has no user.").format(frappe.bold(worker_name)))
+	if doc.get("lauser") and doc.lauser != worker_user:
+		frappe.throw(_("User must match the selected Worker's user."))
+	doc.lauser = worker_user
+	return worker
 
 
 def _leave_dates(doc: Document) -> tuple[date, date]:
