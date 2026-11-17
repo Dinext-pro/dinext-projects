@@ -14,6 +14,8 @@ from dinext_projects.application_for_leave import (
 	calculate_total_hours,
 	rebuild_user_projects,
 	validate_application_for_leave,
+	validate_leave_overlap,
+	validate_workflow_vote,
 )
 
 
@@ -30,12 +32,18 @@ class LeaveDocument(frappe._dict):
 	def append(self, fieldname: str, value: dict) -> None:
 		self.setdefault(fieldname, []).append(frappe._dict(value))
 
+	def is_new(self) -> bool:
+		return bool(self.get("__islocal"))
+
 
 class TestApplicationForLeave(TestCase):
 	def setUp(self):
 		legacy_scripts = patch.object(server_script_utils, "get_server_script_map", return_value={})
 		self.legacy_scripts = legacy_scripts.start()
 		self.addCleanup(legacy_scripts.stop)
+		get_value = patch.object(frappe.db, "get_value", return_value=None)
+		get_value.start()
+		self.addCleanup(get_value.stop)
 
 	def test_dates_are_required_and_ordered(self):
 		for values in (
@@ -59,7 +67,7 @@ class TestApplicationForLeave(TestCase):
 				)
 				worker = frappe._dict(wuser=worker_user, wholiday_list="RU Holidays")
 
-				def get_doc(doctype, name):
+				def get_doc(doctype, name, **kwargs):
 					self.assertEqual((doctype, name), ("Worker", "WRKR-1"))
 					return worker
 
@@ -92,6 +100,26 @@ class TestApplicationForLeave(TestCase):
 		self.assertEqual(doc.lauser, "worker@example.com")
 		self.assertEqual(doc.al_total_hours, 7)
 		self.assertEqual(doc.user_projects, [{"project": "BEFORE"}])
+
+	def test_rejects_negative_hours_before_legacy_or_native_calculation(self):
+		for scripts in ([], ["AFL_Calculate_Hours"]):
+			self.legacy_scripts.return_value = {"Application For Leave": {"Before Save": scripts}}
+			for field in ("alfrom_hours", "alto_hours"):
+				doc = LeaveDocument(
+					alfrom_date="2026-01-05",
+					alto_date="2026-01-06",
+					alworker="WRKR-1",
+					alfrom_hours=5,
+					alto_hours=3,
+				)
+				doc[field] = -1
+				worker = frappe._dict(wuser="worker@example.com")
+				with (
+					self.subTest(scripts=scripts, field=field),
+					patch("dinext_projects.application_for_leave.frappe.get_doc", return_value=worker),
+					self.assertRaisesRegex(frappe.ValidationError, "Leave hours cannot be negative"),
+				):
+					validate_application_for_leave(doc)
 
 	def test_calculates_hours_with_holidays_overrides_and_boundary_clamps(self):
 		doc = LeaveDocument(
@@ -136,7 +164,7 @@ class TestApplicationForLeave(TestCase):
 
 		with patch(
 			"dinext_projects.application_for_leave.frappe.get_doc",
-			side_effect=lambda doctype, name: documents[(doctype, name)],
+			side_effect=lambda doctype, name, **kwargs: documents[(doctype, name)],
 		):
 			calculate_total_hours(doc)
 
@@ -144,6 +172,85 @@ class TestApplicationForLeave(TestCase):
 		self.assertEqual(doc.alfrom_hours, 8)
 		self.assertEqual(doc.alto_hours, 3)
 		self.assertEqual(doc.al_total_hours, 17)
+
+		for holidays, expected in (
+			((date(2026, 1, 5), date(2026, 1, 6)), (0, 3, 9)),
+			((date(2026, 1, 6), date(2026, 1, 8)), (8, 0, 14)),
+			((date(2026, 1, 5), date(2026, 1, 8)), (0, 0, 14)),
+		):
+			with self.subTest(holidays=holidays):
+				doc.alfrom_hours = 10
+				doc.alto_hours = 3
+				holiday_list.holidays = [frappe._dict(holiday_date=day) for day in holidays]
+				with patch(
+					"dinext_projects.application_for_leave.frappe.get_doc",
+					side_effect=lambda doctype, name, **kwargs: documents[(doctype, name)],
+				):
+					calculate_total_hours(doc)
+
+				self.assertEqual((doc.alfrom_hours, doc.alto_hours, doc.al_total_hours), expected)
+
+	def test_overlapping_applications_include_boundary_dates_and_exclude_only_self_and_cancelled(self):
+		doc = LeaveDocument(
+			name="current",
+			alworker="WRKR-1",
+			alfrom_date="2026-01-05",
+			alto_date="2026-01-06",
+		)
+		worker = frappe._dict(wuser="worker@example.com")
+		for stored, new, blocked in (
+			({"alfrom_date": date(2026, 1, 6)}, False, True),
+			({"alto_date": date(2026, 1, 5), "status": "Rejected"}, False, True),
+			({"alfrom_date": date(2026, 1, 7)}, False, False),
+			({"docstatus": 2}, False, False),
+			({"alworker": "WRKR-2"}, False, False),
+			({"name": "current"}, False, False),
+			({"name": "current"}, True, True),
+		):
+			row = {
+				"name": "other",
+				"alworker": "WRKR-1",
+				"alfrom_date": date(2026, 1, 5),
+				"alto_date": date(2026, 1, 6),
+				"docstatus": 0,
+				**stored,
+			}
+			doc["__islocal"] = new
+
+			def get_value(doctype, filters, fieldname, *, for_update=False):
+				self.assertTrue(for_update)
+				self.assertEqual(doctype, "Application For Leave")
+				operators = {"<=": lambda a, b: a <= b, ">=": lambda a, b: a >= b, "!=": lambda a, b: a != b}
+				for field, expected in filters.items():
+					value = row[field]
+					if isinstance(expected, tuple):
+						operator, argument = expected
+						matches = operators[operator](value, argument)
+					else:
+						matches = value == expected
+					if not matches:
+						return None
+				return row[fieldname]
+
+			with (
+				self.subTest(stored=stored, new=new),
+				patch("dinext_projects.application_for_leave.frappe.get_doc", return_value=worker),
+				patch.object(frappe.db, "get_value", side_effect=get_value),
+			):
+				if blocked:
+					with self.assertRaisesRegex(frappe.ValidationError, "already has a leave application"):
+						validate_leave_overlap(doc)
+				else:
+					validate_leave_overlap(doc)
+
+	def test_approval_waits_if_all_snapshotted_projects_are_closed(self):
+		from dinext_common.workflow_approval.engine import WorkflowDomainRollbackError
+
+		doc = LeaveDocument(status="Pending Approval", user_projects=[frappe._dict(project="PROJ-1")])
+		with self.assertRaisesRegex(WorkflowDomainRollbackError, "All projects for this leave application"):
+			validate_workflow_vote(doc, "Approved")
+		with patch.object(frappe.db, "get_value", return_value="PROJ-1"):
+			validate_workflow_vote(doc, "Approved")
 
 	def test_one_day_leave_uses_only_first_day_clamp(self):
 		doc = LeaveDocument(
@@ -180,7 +287,7 @@ class TestApplicationForLeave(TestCase):
 
 		with patch(
 			"dinext_projects.application_for_leave.frappe.get_doc",
-			side_effect=lambda doctype, name: documents[(doctype, name)],
+			side_effect=lambda doctype, name, **kwargs: documents[(doctype, name)],
 		):
 			calculate_total_hours(doc)
 
@@ -240,7 +347,7 @@ class TestApplicationForLeave(TestCase):
 				with (
 					patch(
 						"dinext_projects.application_for_leave.frappe.get_doc",
-						side_effect=lambda doctype, name: documents[(doctype, name)],
+						side_effect=lambda doctype, name, **kwargs: documents[(doctype, name)],
 					),
 					self.assertRaises(frappe.ValidationError),
 				):
@@ -372,6 +479,10 @@ class TestApplicationForLeave(TestCase):
 		self.assertEqual(
 			hooks.doc_events["Application For Leave"]["validate"],
 			"dinext_projects.application_for_leave.validate_application_for_leave",
+		)
+		self.assertEqual(
+			hooks.doc_events["Application For Leave"]["before_validate"],
+			"dinext_projects.application_for_leave.validate_leave_overlap",
 		)
 		self.assertEqual(
 			hooks.doctype_js["Application For Leave"],

@@ -12,6 +12,7 @@ const context = {
     provide() {}, boot: { enable_parallel_workflow_approval: true },
     ui: { form: { on(_doctype, value) { handlers = value; } } },
     datetime: { get_diff: () => -1 }, show_alert() {},
+    throw(message) { throw new Error(message); },
     xcall: async () => { requests++; return []; },
   },
   __: (text) => text,
@@ -31,4 +32,11 @@ assert.equal(exception, undefined, "Leave refresh must not dereference the obsol
 assert.equal(requests, 0, "The shared form handler owns approval message loading");
 handlers.alto_date(form);
 assert.deepEqual(corrected, { fieldname: "alto_date", value: "2026-11-07" });
-console.log("Leave refresh and date validation regression passed");
+for (const field of ["alfrom_hours", "alto_hours"]) {
+  for (const value of [-1, "-1,5"]) {
+    const values = { alfrom_hours: 0, alto_hours: 1.5, [field]: value };
+    assert.throws(() => handlers.validate?.({ doc: values }), /Leave hours cannot be negative/);
+  }
+}
+assert.doesNotThrow(() => handlers.validate?.({ doc: { alfrom_hours: 0, alto_hours: 1.5 } }));
+console.log("Leave refresh, date and hours validation regression passed");

@@ -23,5 +23,11 @@
 	frappe.ui.form.on("Application For Leave", {
 		alfrom_date: validateLeaveDates,
 		alto_date: validateLeaveDates,
+		validate(frm) {
+			const hours = [frm.doc.alfrom_hours, frm.doc.alto_hours];
+			if (hours.some((value) => Number(String(value ?? "").replaceAll(",", "")) < 0)) {
+				frappe.throw(__("Leave hours cannot be negative."));
+			}
+		},
 	});
 })();

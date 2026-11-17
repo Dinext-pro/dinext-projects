@@ -322,8 +322,18 @@ after_migrate = "dinext_projects.install.after_migrate"
 # Hook on document methods and events
 
 doc_events = {
+	"Project": {
+		"validate": "dinext_projects.project_approval.sync_draft_activation",
+	},
 	"Application For Leave": {
+		"before_validate": "dinext_projects.application_for_leave.validate_leave_overlap",
 		"validate": "dinext_projects.application_for_leave.validate_application_for_leave",
+	},
+}
+
+workflow_approval_domain_handlers = {
+	"Application For Leave": {
+		"validate_vote": "dinext_projects.application_for_leave.validate_workflow_vote",
 	},
 }
 

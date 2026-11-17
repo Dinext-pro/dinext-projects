@@ -7,10 +7,11 @@ import frappe
 from frappe import _
 from frappe.core.doctype.server_script import server_script_utils
 from frappe.model.document import Document
-from frappe.utils import flt, getdate
+from frappe.utils import flt, getdate, strip_html
 
 AFL_WORKFLOW = "AFL Workflow"
 AFL_PENDING_STATE = "Pending Approval"
+AFL_APPROVED_STATE = "Approved"
 AFL_REJECTION_ACTION = "Reject"
 AFL_REJECTION_STATE = "Rejected"
 AFL_CORRECTION_TEMPLATE = "Dinext Workflow Correction"
@@ -30,7 +31,8 @@ def validate_application_for_leave(
 		)
 	if "AFL_Calculate_Hours" in legacy_scripts:
 		_leave_dates(doc)
-		_validated_worker(doc)
+		doc.lauser = _validated_worker(doc).wuser
+		_leave_boundary_hours(doc)
 	else:
 		calculate_total_hours(doc)
 	if "AFL_Projects" not in legacy_scripts:
@@ -40,7 +42,102 @@ def validate_application_for_leave(
 def calculate_total_hours(doc: Document) -> None:
 	start_date, end_date = _leave_dates(doc)
 	worker = _validated_worker(doc)
-	worker_name = doc.alworker
+	first_hours, last_hours = _leave_boundary_hours(doc)
+	holiday_list, template, working_hours = _leave_calendar(worker, start_date, end_date)
+	doc.lauser = worker.wuser
+
+	holiday_dates = {
+		getdate(row.holiday_date)
+		for row in holiday_list.get("holidays", [])
+		if row.get("holiday_date")
+	}
+	hours_by_date = {
+		getdate(row.wht_date): flt(row.wht_hours)
+		for row in working_hours.get("hod_working_hours_table", [])
+		if row.get("wht_date")
+	}
+	default_hours = flt(template.get("hours_on_date")) or 8
+
+	if start_date in holiday_dates:
+		doc.alfrom_hours = 0
+	if end_date in holiday_dates:
+		doc.alto_hours = 0
+
+	total_hours = 0.0
+	for working_date in _dates_between(start_date, end_date):
+		if working_date in holiday_dates:
+			continue
+
+		day_hours = hours_by_date.get(working_date, default_hours)
+		if working_date == start_date:
+			day_hours = min(first_hours, day_hours)
+			doc.alfrom_hours = day_hours
+		elif working_date == end_date:
+			day_hours = min(last_hours, day_hours)
+			doc.alto_hours = day_hours
+		total_hours += day_hours
+
+	doc.al_total_hours = total_hours
+
+
+def validate_workflow_vote(doc: Document, next_state: str) -> None:
+	"""Check current leave dependencies before a vote consumes the task."""
+	if next_state not in (AFL_PENDING_STATE, AFL_APPROVED_STATE):
+		return
+
+	from dinext_common.workflow_approval.engine import WorkflowDomainRollbackError
+
+	try:
+		if next_state == AFL_APPROVED_STATE:
+			_validate_approval_projects(doc)
+			return
+
+		start_date, end_date = _leave_dates(doc)
+		worker = _validated_worker(doc)
+		_leave_boundary_hours(doc)
+		_leave_calendar(worker, start_date, end_date)
+		_validate_overlap(doc, start_date, end_date)
+	except (frappe.ValidationError, frappe.DoesNotExistError) as error:
+		raise WorkflowDomainRollbackError(strip_html(str(error))) from error
+
+
+def validate_leave_overlap(doc: Document, method: str | None = None) -> None:
+	"""Reject overlapping dates before the workflow prepares a process."""
+	_validate_overlap(doc, *_leave_dates(doc))
+
+
+def _validate_overlap(doc: Document, start_date: date, end_date: date) -> None:
+	if doc.get("docstatus") == 2:
+		return
+
+	# Serialize leave writes for this worker. Use a current read so a transaction
+	# that waited for the Worker sees any leave saved by the prior transaction.
+	_validated_worker(doc, for_update=True)
+	filters = {
+		"alworker": doc.alworker,
+		"docstatus": ("!=", 2),
+		"alfrom_date": ("<=", end_date),
+		"alto_date": (">=", start_date),
+	}
+	if not doc.is_new():
+		filters["name"] = ("!=", doc.name)
+
+	if frappe.db.get_value("Application For Leave", filters, "name", for_update=True):
+		frappe.throw(_("This Worker already has a leave application that overlaps the selected dates."))
+
+
+def _validate_approval_projects(doc: Document) -> None:
+	project_names = [row.project for row in doc.get("user_projects", []) if row.project]
+	if project_names and not frappe.db.get_value(
+		"Project", {"name": ("in", project_names), "status": "Open"}, "name", for_update=True,
+	):
+		frappe.throw(_("All projects for this leave application are closed. Reopen a project before approving."))
+
+
+def _leave_calendar(
+	worker: Document, start_date: date, end_date: date
+) -> tuple[Document, Document, Document]:
+	worker_name = worker.name
 
 	holiday_list_name = worker.get("wholiday_list")
 	if not holiday_list_name:
@@ -83,33 +180,7 @@ def calculate_total_hours(doc: Document) -> None:
 		label=_("Working Hours On Date"),
 	)
 
-	holiday_dates = {
-		getdate(row.holiday_date)
-		for row in holiday_list.get("holidays", [])
-		if row.get("holiday_date")
-	}
-	hours_by_date = {
-		getdate(row.wht_date): flt(row.wht_hours)
-		for row in working_hours.get("hod_working_hours_table", [])
-		if row.get("wht_date")
-	}
-	default_hours = flt(template.get("hours_on_date")) or 8
-
-	total_hours = 0.0
-	for working_date in _dates_between(start_date, end_date):
-		if working_date in holiday_dates:
-			continue
-
-		day_hours = hours_by_date.get(working_date, default_hours)
-		if working_date == start_date:
-			day_hours = min(flt(doc.get("alfrom_hours")), day_hours)
-			doc.alfrom_hours = day_hours
-		elif working_date == end_date:
-			day_hours = min(flt(doc.get("alto_hours")), day_hours)
-			doc.alto_hours = day_hours
-		total_hours += day_hours
-
-	doc.al_total_hours = total_hours
+	return holiday_list, template, working_hours
 
 
 def rebuild_user_projects(doc: Document) -> None:
@@ -225,19 +296,26 @@ def configure_application_for_leave() -> None:
 	frappe.clear_cache()
 
 
-def _validated_worker(doc: Document) -> Document:
+def _validated_worker(doc: Document, *, for_update: bool = False) -> Document:
 	worker_name = doc.get("alworker")
 	if not worker_name:
 		frappe.throw(_("Worker is required."))
 
-	worker = frappe.get_doc("Worker", worker_name)
+	worker = frappe.get_doc("Worker", worker_name, for_update=for_update)
 	worker_user = worker.get("wuser")
 	if not worker_user:
 		frappe.throw(_("Worker {0} has no user.").format(frappe.bold(worker_name)))
 	if doc.get("lauser") and doc.lauser != worker_user:
 		frappe.throw(_("User must match the selected Worker's user."))
-	doc.lauser = worker_user
 	return worker
+
+
+def _leave_boundary_hours(doc: Document) -> tuple[float, float]:
+	first_hours = flt(doc.get("alfrom_hours"))
+	last_hours = flt(doc.get("alto_hours"))
+	if first_hours < 0 or last_hours < 0:
+		frappe.throw(_("Leave hours cannot be negative."))
+	return first_hours, last_hours
 
 
 def _leave_dates(doc: Document) -> tuple[date, date]:
