@@ -439,3 +439,5 @@ workflow_approval_email_profile_providers = ["dinext_projects.workflow_settings.
 workflow_approval_preserve_fixture_transition_ids = ['Project Approval']
 
 workflow_approval_cutover_providers = ["dinext_projects.workflow_cutover.configuration"]
+
+workflow_approval_number_card_state_fields = {"Application For Leave": "status"}
