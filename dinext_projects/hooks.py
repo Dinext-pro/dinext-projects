@@ -433,3 +433,9 @@ workflow_approval_domain_handlers = {
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
+
+workflow_approval_email_profile_providers = ["dinext_projects.workflow_settings.email_profiles"]
+
+workflow_approval_preserve_fixture_transition_ids = ['Project Approval']
+
+workflow_approval_cutover_providers = ["dinext_projects.workflow_cutover.configuration"]

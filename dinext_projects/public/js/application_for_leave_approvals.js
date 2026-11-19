@@ -3,6 +3,7 @@
 	const approvals = dinext_projects.approvals;
 	if (approvals.aflApprovalsInstalled) return;
 	approvals.aflApprovalsInstalled = true;
+	frappe.dinext?.registerWorkflowApprovalForm?.("Application For Leave");
 
 	const validateLeaveDates = (frm) => {
 		const start = frm.doc.alfrom_date;
