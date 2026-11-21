@@ -225,7 +225,6 @@ required_apps = ["dinext_common", "doctype_permission", "erpnext"]
 # Work Efforts UI → project_workload_assignment (ISS-2026-00002)
 doctype_js = {
 	"Project": "public/js/project_stakeholder_matrix.js",
-	"Application For Leave": "public/js/application_for_leave_approvals.js",
 }
 doctype_list_js = {"Project": "public/js/project_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -325,16 +324,11 @@ doc_events = {
 	"Project": {
 		"validate": "dinext_projects.project_approval.sync_draft_activation",
 	},
-	"Application For Leave": {
-		"before_validate": "dinext_projects.application_for_leave.validate_leave_overlap",
-		"validate": "dinext_projects.application_for_leave.validate_application_for_leave",
-	},
 }
 
-workflow_approval_domain_handlers = {
-	"Application For Leave": {
-		"validate_vote": "dinext_projects.application_for_leave.validate_workflow_vote",
-	},
+application_for_leave_project_handlers = {
+	"rebuild": "dinext_projects.application_for_leave.rebuild_user_projects",
+	"validate_approval": "dinext_projects.application_for_leave.validate_approval_projects",
 }
 
 # Scheduled Tasks
@@ -437,7 +431,3 @@ workflow_approval_domain_handlers = {
 workflow_approval_email_profile_providers = ["dinext_projects.workflow_settings.email_profiles"]
 
 workflow_approval_preserve_fixture_transition_ids = ['Project Approval']
-
-workflow_approval_cutover_providers = ["dinext_projects.workflow_cutover.configuration"]
-
-workflow_approval_number_card_state_fields = {"Application For Leave": "status"}
