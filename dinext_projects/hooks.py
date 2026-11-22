@@ -324,6 +324,9 @@ doc_events = {
 	"Project": {
 		"validate": "dinext_projects.project_approval.sync_draft_activation",
 	},
+	"ToDo": {
+		"on_update": "dinext_projects.issue_assignment.sync_issue_user_groups",
+	},
 }
 
 application_for_leave_project_handlers = {
