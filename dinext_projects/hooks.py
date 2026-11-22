@@ -1,4 +1,5 @@
 app_name = "dinext_projects"
+workflow_deadline_extensions = ["dinext_projects.workflow_deadlines.get_extensions"]
 app_title = "Dinext Projects"
 app_publisher = "Dinext"
 app_description = "Dinext Projects"
@@ -319,13 +320,16 @@ after_migrate = "dinext_projects.install.after_migrate"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Project": {
+		"validate": "dinext_projects.project_approval.sync_draft_activation",
+	},
+}
+
+application_for_leave_project_handlers = {
+	"rebuild": "dinext_projects.application_for_leave.rebuild_user_projects",
+	"validate_approval": "dinext_projects.application_for_leave.validate_approval_projects",
+}
 
 # Scheduled Tasks
 # ---------------
@@ -423,3 +427,7 @@ after_migrate = "dinext_projects.install.after_migrate"
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
+
+workflow_approval_email_profile_providers = ["dinext_projects.workflow_settings.email_profiles"]
+
+workflow_approval_preserve_fixture_transition_ids = ['Project Approval']

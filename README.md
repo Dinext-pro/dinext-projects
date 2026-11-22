@@ -92,14 +92,10 @@ site, check this order against the versions and dependencies of the actual envir
 
 ### Approvals and automation
 
-- Project workflow and related Workflow State / Workflow Action Master records
-  are exported by this application.
-- **Workflow Task** describes approval tasks: current and next
-  states, action, assigned user and available transitions.
-- **Approval Required** and **Correction Required** notifications.
-- Populating Issue from incoming communications, creating Task from Meeting Notes,
-  mirroring Issue–Task tags and other workflows are configured by Server Script in
-  fixtures.
+- This application exports Project workflow and related Workflow State / Workflow Action Master records.
+- **Workflow Task** is the shared parallel-approval ledger owned by `dinext_common`. This application does not own that DocType or send the retired approval/correction Notifications.
+- Timesheets owns the Application For Leave form and validation. Projects supplies project membership, project links, and approval checks for the linked projects.
+- Server Script fixtures configure Issue autofill from incoming communications, Task creation from Meeting Notes, Issue–Task tag mirroring and related automation.
 
 Workflows for Expense Claim, Purchase Invoice and Sales Invoice, and permissions
 for Sales Invoice, Purchase Invoice and GL Entry belong to
@@ -131,6 +127,7 @@ participant selection and synchronize `Worker.wuser` with `pt_participant`.
 
 ## 🚀 Installation
 
+
 The application is installed into an existing Bench with Frappe and usually
 ERPNext. Use the actual Git URL and branch of your distribution.
 
@@ -156,14 +153,23 @@ For local development, the application can be cloned into
 
 After installation, the **Dinext Projects** module is available in Desk.
 
-- **My Projects** — projects by type, status and customer, reference data and reports.
-- **My Tasks** — the current user's tasks.
-- The **Analytics** workspace (nested under My Projects) appears after
-  installing `dinext_projects_pl`.
-- Workflow tasks are performed in standard Frappe forms through workflows and
-  Client/Server Script.
-- Time tracking and the **My Timesheets** workspace appear after installing
-  `dinext_timesheets`.
+- **My Projects** provides projects by type, status and customer, reference data and reports.
+- **My Tasks** shows the current user's tasks.
+- The Analytics workspace under My Projects becomes available with `dinext_projects_pl`.
+- Approvals use `dinext_common.workflow_approval` when `enable_parallel_workflow_approval` is enabled. Queue and history are available in My Approvals.
+- Time tracking and My Timesheets become available with `dinext_timesheets`.
+
+### Workflow calendar and recipient extensions
+
+`dinext_common` owns the approval engine, tasks, notification scheduling and email templates. This application owns AFL date/validation UX and `workflow_deadlines.py`, registered through `workflow_deadline_extensions`. The provider does not import Timesheets: it resolves Worker and User Group through Frappe metadata when available.
+
+**Working Days** uses the approver's `Worker.wholiday_list`, skips holiday dates, validates calendar coverage and preserves the local time. Short days count as one working date. The sending provider supports working-date cadence in the recipient's timezone. **Worker Group Manager** resolves `Worker.wuser_group` and the latest applicable dated `custom_table.teamlead` in User Group, falling back to `custom_teamlead`; active recipient/access checks remain in Common at delivery time. Missing Worker/calendar data produces an explicit diagnostic rather than a fabricated deadline.
+
+Project Approval inherits the general approval digest at `08:00, 17:00`; its rejection state uses the correction template. Timesheets owns the AFL lifecycle. Projects validates linked projects through its registered AFL hooks. Changes to workflows, calendars, permission rules and templates must be made in the owning app and exported with standard Bench tools.
+
+```bash
+bench --site your-test-site.local run-tests --module dinext_projects.tests.test_workflow_deadlines
+```
 
 ## 📦 Technologies
 
@@ -177,20 +183,12 @@ After installation, the **Dinext Projects** module is available in Desk.
 
 The main configuration is in `dinext_projects/hooks.py`.
 
-- `fixtures` export Role Profile, Project Type, Issue Priority, Custom
-  HTML Block, Issue Type, Task Type, Custom Field, Property Setter, Client
-  Script, Server Script, Web Page, roles, Custom DocPerm, Project workflow,
-  Workflow State, Workflow Action Master and some DocType Permission records.
-- Module JSON under `dinext_projects/dinext_projects/` supplies custom DocTypes,
-  workspaces, the Report Builder report, Number Cards and Notifications separately from
-  fixture export.
-- `after_install` clears the standard ERPNext Project Type and Issue
-  Priority values before importing the application's values.
-- Required apps: `dinext_common`, `doctype_permission`, `erpnext`.
-- Global JS/CSS, scheduler events, doc events and overrides are not enabled
-  at app level: the corresponding examples in `hooks.py` are commented out.
-- Environment variables and server parameters use the standard
-  Bench/Frappe mechanism; this repository declares no environment variables of its own.
+- `fixtures` exports Role Profile, Project Type, Issue Priority, Custom HTML Block, Issue Type, Task Type, Custom Field, Property Setter, Client Script, Server Script, Web Page, roles, Custom DocPerm, Project workflow, Workflow State, Workflow Action Master and selected DocType Permission records.
+- Module JSON under `dinext_projects/dinext_projects/` supplies custom DocTypes, workspaces, Report Builder reports, Number Cards and Notifications separately from fixture exports.
+- `after_install` clears standard ERPNext Project Type and Issue Priority values before importing application values.
+- Required applications: `dinext_common`, `doctype_permission`, `erpnext`.
+- `application_for_leave_project_handlers` registers the project list and approval checks for the Timesheets AFL controller.
+- Environment and server configuration use standard Bench/Frappe settings; this repository defines no extra environment variables.
 
 After changing Frappe-managed objects (for example, Custom Field, Client
 Script, Server Script or Workflow), export fixtures from Bench and include
@@ -215,14 +213,11 @@ the site and the repository.
 
 ### Workflow
 
-1. Create a separate branch.
-2. For any change, first follow the mandatory OpenSpec lifecycle in
-   [AGENTS.md](AGENTS.md).
-3. Make code and metadata changes only in accordance with the change's ready
-   change.
-4. Export fixtures when changing metadata.
-5. Run checks and update the README when its factual content
-   changes.
+1. Create a feature branch following the canonical Dinext GitHub development process.
+2. Follow the mandatory OpenSpec lifecycle in [AGENTS.md](AGENTS.md); proposal, design, tasks and specs live in the central `dinext-docs` Store.
+3. Change code and metadata according to the prepared change tasks.
+4. Export fixtures after metadata changes.
+5. Run checks and update both README language versions when their content changes.
 
 ### Local checks
 
@@ -238,18 +233,14 @@ markers, AST, JSON, TOML, YAML and debug statements.
 
 ### Where to find logic
 
-- `fixtures/` — most behavior and exported metadata.
-- `dinext_projects/doctype/` — custom DocType JSON definitions and controllers.
-- `dinext_projects/report/` — currently the single Report Builder JSON
-  Status of All Commercial Projects; a Script Report, if added, will contain
-  Python for columns/data and JavaScript for filters.
-- `dinext_projects/workspace/` — Desk workspace configuration.
-- `dinext_projects/number_card/` — KPI cards; there are no local
-  Dashboard Chart definitions.
-- `dinext_projects/notification/` — notification ExampleCustomer08 and their Python context;
-  the current two Notifications are disabled.
-- `install.py` — the `after_install` handler.
-- `patches/` — migration patches.
+- `fixtures/` supplies exported metadata and much of the application behavior.
+- `dinext_projects/doctype/` contains custom DocType JSON and controllers.
+- `dinext_projects/report/` contains the Report Builder JSON; a Script Report also requires Python columns/data and JavaScript filters.
+- `dinext_projects/workspace/` defines Desk workspaces.
+- `dinext_projects/number_card/` defines KPI cards; there are no local Dashboard Chart definitions.
+- `dinext_projects/notification/` contains notification templates and Python context; the retained notifications are disabled.
+- `install.py` implements `after_install`.
+- `patches/` contains migrations.
 
 The README does not replace the engineering contract: the navigation stub
 [AGENTS.md](AGENTS.md) points to the canonical Frappe and Dinext rules.
@@ -264,6 +255,11 @@ The README does not replace the engineering contract: the navigation stub
 ## 📝 Changelog
 
 A brief historical summary from the commit history:
+
+### 2026-09-10
+
+- Parallel approval moved to `dinext_common`; the old approval/correction Notifications were removed.
+- Projects supplies project membership and project authorization for the AFL controller in Timesheets.
 
 - Domains were separated: timesheets into `dinext_timesheets`, finance into
   `dinext_projects_pl`, work effort and utilization into
@@ -288,15 +284,16 @@ For the full log, consult the Git history of the specific branch.
 
 ```text
 dinext_projects/
-├── AGENTS.md                         # Agent instructions
-├── README.md                         # This document
+├── AGENTS.md                         # Navigation stub → central dinext-docs guidance
+├── README.md                         # English documentation; full Russian version in README.ru.md
 ├── license.txt                       # GPL-3 license
-├── pyproject.toml                    # Package metadata, Python and ruff
+├── pyproject.toml                    # Package metadata, Python and Ruff
 ├── .pre-commit-config.yaml           # Local checks
-├── openspec/config.yaml              # OpenSpec configuration
+├── openspec/config.yaml              # Pointer to the dinext-docs Store
 └── dinext_projects/
     ├── __init__.py                   # Application version
-    ├── hooks.py                      # App configuration, dependencies and fixtures
+    ├── hooks.py                      # Application configuration, dependencies and fixtures
+    ├── application_for_leave.py      # Validate/configure AFL
     ├── install.py                    # after_install hook
     ├── modules.txt                   # Desk module name
     ├── patches.txt                   # Migration patch list
@@ -334,12 +331,11 @@ flowchart LR
   PM -. shared boundaries .-> Timesheets[dinext_timesheets]
   PM -. financial boundaries .-> Finance[dinext_projects_pl]
   PM -. workload boundaries .-> Workload[project_workload_assignment]
+  AFLJs[Timesheets AFL form] --> CommonEngine[dinext_common.workflow_approval]
+  AFLJs --> AFLDoc[Application For Leave]
 ```
 
-Bench loads `hooks.py`; fixtures form the Frappe metadata and Desk workflows,
-while `after_install` and migration patches maintain the site's correct state.
-Related domains remain in separate applications and integrate through
-agreed Frappe entities.
+Bench loads `hooks.py`; fixtures form Frappe metadata and Desk behavior, while `after_install` and migration patches maintain site state. Related domains remain separate applications connected through agreed Frappe entities. The AFL form reads pending approvers from `dinext_common`; its DocType remains in `dinext_timesheets`.
 
 ## 📜 License
 
