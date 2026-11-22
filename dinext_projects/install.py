@@ -9,6 +9,8 @@ rows are removed here; the next step may re-import the same names from dinext_pr
 import frappe
 from frappe import _
 
+from dinext_projects.issue_assignment import retire_legacy_issue_assignment
+
 # ERPNext install_fixtures.py (setup wizard)
 _STANDARD_PROJECT_TYPES = ("Internal", "External", "Other")
 _STANDARD_ISSUE_PRIORITY_MSGIDS = ("Low", "Medium", "High")
@@ -19,12 +21,14 @@ def after_install():
 	from dinext_projects.setup.dinext_hub import register_dinext_hub_items
 
 	register_dinext_hub_items()
+	retire_legacy_issue_assignment()
 
 
 def after_migrate():
 	from dinext_projects.setup.dinext_hub import register_dinext_hub_items
 
 	register_dinext_hub_items()
+	retire_legacy_issue_assignment()
 
 
 def clear_standard_project_type_and_issue_priority():
