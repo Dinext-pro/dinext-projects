@@ -2,6 +2,17 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
+  "dt": "Application For Leave",
+  "enabled": 0,
+  "modified": "2026-09-30 14:43:19.789823",
+  "module": "Dinext Projects",
+  "name": "Utility-FormConflictMerge-AFL",
+  "script": "// Managed By: ISS-2025-01286\n\nconst docType = \"Application For Leave\"\n\nfunction form_conflict_merge_install(frm) {\n\tif (!frm || frm.is_new() || frm.doctype !== docType) return;\n\n\tfrappe.require(\"/assets/dinext_common/js/form_conflict_merge.js\", () => {\n\t\tif (!window.dinext_common || !dinext_common.formConflictMerge) {\n\t\t\tconsole.error(\"FormConflictMerge: модуль не загружен\");\n\t\t\treturn;\n\t\t}\n\n\t\tdinext_common.formConflictMerge.install(frm, {\n\t\t\tfields: [],\n\t\t\tconflict_policy: \"server_wins\",\n\t\t\tapply_server_changes_on_realtime: true,\n\t\t\trefresh_docinfo_on_server_apply: true,\n\t\t\twatch_docinfo_keys: [\"assignments\", \"attachments\"],\n\t\t\tpoll_server_changes_interval_ms: 5000,\n\t\t\tdebug_log: true,\n\t\t\tstartup_warmup_ms: 0,\n\t\t});\n\t});\n}\n\nfrappe.ui.form.on(docType, {\n\tonload(frm) {\n\t\tform_conflict_merge_install(frm);\n\t},\n\trefresh(frm) {\n\t\tform_conflict_merge_install(frm);\n\t},\n});\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
   "dt": "Project",
   "enabled": 0,
   "modified": "2026-09-30 14:43:59.668295",
@@ -217,17 +228,6 @@
   "module": "Dinext Projects",
   "name": "Task_Type_Parent_Task_Filter",
   "script": "frappe.ui.form.on(\"Task\", {\r\n    refresh: function(frm) {\r\n        set_parent_task_query(frm);\r\n    },\r\n    type: function(frm) {\r\n        set_parent_task_query(frm);\r\n    }\r\n});\r\n\r\nfunction set_parent_task_query(frm) {\r\n    // Проверяем значение поля type\r\n    if (frm.doc.type === \"Stage\") {\r\n        // Устанавливаем фильтр для поля parent_task для типа Stage\r\n        frm.set_query(\"parent_task\", function() {\r\n            return {\r\n                filters: [\r\n                    [\"Task\", \"type\", \"in\", [\"Phase\", \"Sprint\"]]\r\n                ]\r\n            };\r\n        });\r\n    } else if (frm.doc.type === \"Sprint\") {\r\n        // Устанавливаем фильтр для поля parent_task для типа Sprint\r\n        frm.set_query(\"parent_task\", function() {\r\n            return {\r\n                filters: [\r\n                    [\"Task\", \"type\", \"in\", [\"Phase\", \"Stage\"]]\r\n                ]\r\n            };\r\n        });\r\n        \r\n    } else {\r\n        // Если type не \"Stage\", \"Sprint\" или \"Phase\", фильтр не устанавливается\r\n        frm.set_query(\"parent_task\", null); // Сбрасываем фильтр\r\n    }\r\n\r\n    // Скрываем поле confirm и ограничиваем значения в поле status\r\n    if ([\"Stage\", \"Sprint\", \"Phase\"].includes(frm.doc.type)) {\r\n        frm.set_df_property('confirm', 'hidden', 1); // Скрываем поле confirm\r\n        frm.set_df_property('status', 'options', 'Open\\nWorking\\nOverdue\\nTemplate\\nCompleted\\nCancelled'); // Ограничиваем значения в поле status\r\n    } else {\r\n        frm.set_df_property('confirm', 'hidden', 0); // Показываем поле confirm\r\n        frm.set_df_property('status', 'options', 'Open\\nWorking\\nPending Review\\nOverdue\\nTemplate\\nCompleted\\nCancelled'); \r\n    }\r\n}\r\n",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
-  "dt": "Workflow Task",
-  "enabled": 1,
-  "modified": "2025-11-25 10:10:06.346692",
-  "module": "Dinext Projects",
-  "name": "Workflow_Task_Route",
-  "script": "frappe.ui.form.on('Workflow Task', {\r\n    onload(frm) {\r\n        //console.log('ONLOAD - Current doc:', frm.doc);\r\n        \r\n        // Проверяем корректные поля для перенаправления\r\n        if (frm.doc.doc && frm.doc.wt_docname) {\r\n            console.log('Redirecting to:', frm.doc.doc, 'with name:', frm.doc.wt_docname);\r\n            \r\n            //setTimeout(() => {\r\n                // Перенаправляем на форму документа\r\n                history.replaceState(null, null, frappe.router.make_url( frappe.get_prev_route() ) );\r\n                frappe.set_route('form', frm.doc.doc.toLowerCase(), frm.doc.wt_docname);\r\n            //}, 100); // Увеличиваем задержку для надёжности\r\n        }\r\n    }\r\n});",
   "view": "Form"
  },
  {

@@ -94,9 +94,10 @@ Meeting Notes и Assignments, расширения Project/Task/Issue, прое�
 
 - Project workflow и связанные Workflow State / Workflow Action Master
   экспортируются этим приложением.
-- **Workflow Task** описывает задачи согласования: текущее и следующее
-  состояние, действие, назначенного пользователя и доступные переходы.
-- Уведомления **«Требуется согласование»** и **«Требуется исправление»**.
+- **Workflow Task** — общий ledger параллельного согласования в
+  `dinext_common`. Это приложение не владеет DocType и не шлёт legacy
+  Notification «Требуется согласование» / «Требуется исправление».
+- Timesheets владеет формой и проверками заявки на отсутствие. Projects заполняет список проектов и проверяет доступ к ним при согласовании.
 - Автозаполнение Issue по входящей коммуникации, создание Task из Meeting Notes,
   зеркалирование тегов Issue–Task и другие сценарии задаются Server Script в
   fixtures.
@@ -131,6 +132,7 @@ Workflow для Expense Claim, Purchase Invoice и Sales Invoice, а также 
 
 ## 🚀 Установка
 
+
 Приложение устанавливается в существующий Bench с Frappe и, как правило,
 ERPNext. Используйте фактический Git URL и ветку вашей поставки.
 
@@ -160,10 +162,23 @@ bench --site your-site.local clear-cache
 - **Мои задачи** — задачи текущего пользователя.
 - Workspace **«Аналитика»** (вложенный под «Мои проекты») появляется после
   установки `dinext_projects_pl`.
-- Workflow-задачи выполняются в стандартных формах Frappe посредством workflow и
-  Client/Server Script.
+- Согласование идёт через общий engine `dinext_common.workflow_approval`, когда
+  включён `enable_parallel_workflow_approval`. Очередь и история — workspace
+  «Мои согласования».
 - Учёт времени и workspace **«Мои таймшиты»** появляются после установки
   `dinext_timesheets`.
+
+### Расширения календаря и получателей Workflow
+
+`dinext_common` владеет движком согласования, заданиями, расписанием уведомлений и шаблонами. Это приложение отвечает за даты/валидацию AFL и `workflow_deadlines.py`, зарегистрированный через `workflow_deadline_extensions`. Провайдер не импортирует Timesheets: Worker и User Group читаются через метаданные Frappe, если доступны.
+
+**Working Days** использует `Worker.wholiday_list` согласующего, пропускает нерабочие даты, проверяет покрытие календаря и сохраняет местное время. Короткий день считается одной рабочей датой. Провайдер отправки поддерживает периодичность по рабочим датам в часовом поясе получателя. **Worker Group Manager** определяет `Worker.wuser_group` и последнюю применимую датированную строку `custom_table.teamlead` в User Group; запасной вариант — `custom_teamlead`. Активность и доступ получателя проверяются Common перед доставкой. Отсутствие Worker или календаря даёт явную ошибку вместо выдуманного срока.
+
+Project Approval наследует общую сводку согласования в `08:00, 17:00`; состояние отклонения использует шаблон корректировки. Метаданные AFL принадлежат `dinext_timesheets`, а адаптер формы/валидации этого приложения использует общее API ожидающих согласующих. Процессы, календари, права и шаблоны меняются в приложении-владельце и экспортируются штатными средствами Bench.
+
+```bash
+bench --site your-test-site.local run-tests --module dinext_projects.tests.test_workflow_deadlines
+```
 
 ## 📦 Технологии
 
@@ -187,8 +202,7 @@ bench --site your-site.local clear-cache
 - `after_install` очищает стандартные ERPNext значения Project Type и Issue
   Priority перед импортом значений приложения.
 - Список required apps: `dinext_common`, `doctype_permission`, `erpnext`.
-- На уровне app не включены глобальные JS/CSS, scheduler events, doc events или
-  overrides: соответствующие примеры в `hooks.py` закомментированы.
+- `application_for_leave_project_handlers` регистрирует формирование списка проектов и проверки согласования для контроллера AFL в Timesheets.
 - Переменные окружения и серверные параметры задаются стандартным механизмом
   Bench/Frappe; этот репозиторий не объявляет собственных переменных окружения.
 
@@ -217,7 +231,8 @@ bench --site your-site.local export-fixtures
 
 1. Создайте отдельную ветку.
 2. Для любого изменения сначала пройдите обязательный OpenSpec lifecycle из
-   [AGENTS.md](AGENTS.md).
+   [AGENTS.md](AGENTS.md); proposal, design, tasks и specs хранятся в central
+   Store `dinext-docs`.
 3. Вносите изменения в код и metadata только в соответствии с готовыми задачами
    change.
 4. При изменении metadata экспортируйте fixtures.
@@ -246,7 +261,7 @@ pre-commit run --all-files
 - `dinext_projects/workspace/` — конфигурация Desk-workspaces.
 - `dinext_projects/number_card/` — KPI-карточки; локальных определений
   Dashboard Chart нет.
-- `dinext_projects/notification/` — ExampleCustomer08 уведомлений и их Python-контекст;
+- `dinext_projects/notification/` — шаблоны уведомлений и их Python-контекст;
   текущие два Notification отключены.
 - `install.py` — обработчик `after_install`.
 - `patches/` — миграционные патчи.
@@ -264,6 +279,12 @@ pre-commit run --all-files
 ## 📝 История изменений
 
 Краткая историческая сводка по commit history:
+
+### 2026-09-10
+
+- Параллельное согласование вынесено в `dinext_common`. Удалены Notification
+  «Требуется согласование» и «Требуется исправление».
+- Projects передаёт контроллеру AFL список проектов и проверки доступа.
 
 - Контуры были разделены: timesheets — в `dinext_timesheets`, финансы — в
   `dinext_projects_pl`, трудозатраты и utilisation — в
@@ -288,16 +309,17 @@ pre-commit run --all-files
 
 ```text
 dinext_projects/
-├── AGENTS.md                         # Инструкции для агентов
-├── README.md                         # Этот документ
+├── AGENTS.md                         # Указатель на общие правила dinext-docs
+├── README.md                         # Английская документация
 ├── license.txt                       # Лицензия GPL-3
 ├── pyproject.toml                    # Метаданные пакета, Python и ruff
 ├── .pre-commit-config.yaml           # Локальные проверки
-├── openspec/config.yaml              # Конфигурация OpenSpec
+├── openspec/config.yaml              # Указатель на Store dinext-docs
 └── dinext_projects/
     ├── __init__.py                   # Версия приложения
     ├── hooks.py                      # App configuration, dependencies и fixtures
-    ├── install.py                    # after_install hook
+    ├── application_for_leave.py      # Проверки и настройка AFL
+    ├── install.py                    # Хук after_install
     ├── modules.txt                   # Имя Desk-модуля
     ├── patches.txt                   # Список миграционных патчей
     ├── patches/                      # Реализация миграций
@@ -326,20 +348,23 @@ flowchart LR
   Hooks --> Install[after_install]
   Hooks --> Fixtures[fixtures]
   Fixtures --> Metadata[DocTypes, Custom Fields, Workflows]
-  Metadata --> Desk[Workspaces, Reports, Number Cards, Notifications]
-  Metadata --> Automation[Client Scripts and Server Scripts]
+  Metadata --> Desk[Рабочие пространства, отчёты, карточки, уведомления]
+  Metadata --> Automation[Клиентские и серверные скрипты]
   Automation --> Core[Project, Task, Issue]
-  Core --> PM[Teams, Portfolios, Meetings]
-  App --> Patches[Migration patches]
-  PM -. shared boundaries .-> Timesheets[dinext_timesheets]
-  PM -. financial boundaries .-> Finance[dinext_projects_pl]
-  PM -. workload boundaries .-> Workload[project_workload_assignment]
+  Core --> PM[Команды, портфели, встречи]
+  App --> Patches[Патчи миграций]
+  PM -. связь с учётом времени .-> Timesheets[dinext_timesheets]
+  PM -. связь с финансами .-> Finance[dinext_projects_pl]
+  PM -. связь с загрузкой .-> Workload[project_workload_assignment]
+  AFLJs[Timesheets AFL form] --> CommonEngine[dinext_common.workflow_approval]
+  AFLJs --> AFLDoc[Application For Leave]
 ```
 
 Bench загружает `hooks.py`; fixtures формируют Frappe metadata и сценарии Desk,
 а `after_install` и миграционные патчи поддерживают корректное состояние сайта.
 Смежные контуры остаются в отдельных приложениях и интегрируются через
-согласованные Frappe-сущности.
+согласованные Frappe-сущности. AFL-форма читает pending approvers из
+`dinext_common`, сам DocType остаётся в `dinext_timesheets`.
 
 ## 📜 Лицензия
 
